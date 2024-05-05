@@ -1,0 +1,377 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Java_Basic | ZengCP's BLOGS</title><meta name="author" content="ZengCP"><meta name="copyright" content="ZengCP"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1.    Java 语言特点 面向对象 平台无关 支持多线程C++ 语言没有内置的多线程机制，因此必须调用操作系统的多线程功能来进行多线程程序设计，而 Java 语言却提供了多线程支持 编译与解释并存  2.    JDK、JRE、JVM 关系JVM：Java Virtual Machine，也就是 Java 虚拟机，是 Java 实现跨平台的关键所在，针对不同的操作系统，有不同的 JVM 实现">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java_Basic">
+<meta property="og:url" content="http://example.com/2024/05/06/Java-Basic/index.html">
+<meta property="og:site_name" content="ZengCP&#39;s BLOGS">
+<meta property="og:description" content="1.    Java 语言特点 面向对象 平台无关 支持多线程C++ 语言没有内置的多线程机制，因此必须调用操作系统的多线程功能来进行多线程程序设计，而 Java 语言却提供了多线程支持 编译与解释并存  2.    JDK、JRE、JVM 关系JVM：Java Virtual Machine，也就是 Java 虚拟机，是 Java 实现跨平台的关键所在，针对不同的操作系统，有不同的 JVM 实现">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png">
+<meta property="article:published_time" content="2024-05-05T16:19:51.000Z">
+<meta property="article:modified_time" content="2024-05-05T16:20:39.019Z">
+<meta property="article:author" content="ZengCP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png"><link rel="shortcut icon" href="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/longmao.png"><link rel="canonical" href="http://example.com/2024/05/06/Java-Basic/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Java_Basic',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-05-06 00:20:39'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="ZengCP's BLOGS"><span class="site-name">ZengCP's BLOGS</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Java_Basic</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-05-05T16:19:51.000Z" title="发表于 2024-05-06 00:19:51">2024-05-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-05-05T16:20:39.019Z" title="更新于 2024-05-06 00:20:39">2024-05-06</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Java_Basic"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="1-Java-语言特点"><a href="#1-Java-语言特点" class="headerlink" title="1.    Java 语言特点"></a>1.    Java 语言特点</h2><ul>
+<li><strong>面向对象</strong></li>
+<li><strong>平台无关</strong></li>
+<li><strong>支持多线程</strong><br>C++ 语言没有内置的多线程机制，因此必须调用操作系统的多线程功能来进行多线程程序设计，而 Java 语言却提供了多线程支持</li>
+<li><strong>编译与解释并存</strong></li>
+</ul>
+<h2 id="2-JDK、JRE、JVM-关系"><a href="#2-JDK、JRE、JVM-关系" class="headerlink" title="2.    JDK、JRE、JVM 关系"></a>2.    JDK、JRE、JVM 关系</h2><p><strong>JVM</strong>：Java Virtual Machine，也就是 Java 虚拟机，是 Java 实现跨平台的关键所在，针对不同的操作系统，有不同的 JVM 实现。JVM 负责将 Java 字节码转换为特定平台的机器码，并执行。</p>
+<p><strong>JRE</strong>：Java Runtime Environment，也就是 Java 运行时环境，包含了运行 Java 程序所必需的库，以及 Java 虚拟机（JVM）。</p>
+<p><strong>JDK</strong>：Java Development Kit，是一套完整的 Java SDK（软件开发工具包），包括了 JRE 以及译器（javac）、Java 文档生成工具（Javadoc）、Java 调试器等开发工具。</p>
+<p>简单来说，JDK 包含 JRE，JRE 包含 JVM。</p>
+<h2 id="3-什么是字节码"><a href="#3-什么是字节码" class="headerlink" title="3.    什么是字节码"></a>3.    什么是字节码</h2><p>字节码，就是 Java 程序经过编译之类产生的.class 文件，字节码能够被虚拟机识别，从而实现 Java 程序的跨平台性。</p>
+<p><strong>Java</strong> 程序从源代码到运行主要有三步：</p>
+<ul>
+<li><strong>编译</strong>：将我们的代码（.java）编译成虚拟机可以识别理解的字节码(.class)</li>
+<li><strong>解释</strong>：虚拟机执行 Java 字节码，将字节码翻译成机器能识别的机器码</li>
+<li><strong>执行</strong>：对应的机器执行二进制机器码</li>
+</ul>
+<p>Java 跨平台特性其实就是为不同平台提供不同的 JVM，JVM 基于平台特性调整字节码解释实现，从而使得字节码在不同平台均可运行</p>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20240505211415926.png" alt="image-20240505211415926" style="zoom:67%;" />
+
+
+
+<h2 id="4-什么是面向对象"><a href="#4-什么是面向对象" class="headerlink" title="4.    什么是面向对象"></a>4.    什么是面向对象</h2><p><strong>面向对象是一种 相对面向过程 而言的编程范式</strong></p>
+<p><strong>面向过程</strong>程序设计是具体化的，流程化的；面向过程的代码设计通过着手于事物的实现流程，根据已有条件如何一步一步生成结果。</p>
+<p>因此，基于面向过程思路所涉及的代码通常不便于扩展和代码复用，此外，面向过程的思路在处理复杂问题时，编程难度将显著增加。</p>
+<p>而<strong>面向对象</strong>程序设计是模型化的，把对象作为基本单位，将问题抽象建模为一系列对象之间的交互，使得程序易于理解、维护。具有相同行为和属性的对象泛化为类的实例。此外，面向对象具有三大特性——封装、继承与多态</p>
+<h4 id="4-1-封装"><a href="#4-1-封装" class="headerlink" title="4.1    封装"></a>4.1    封装</h4><p><strong>概念</strong>：将一些属性和相关方法封装在一个对象中，对外隐藏内部实现细节。内部具体实现，外界不需要关心，而只需要根据”内部提供的接口“去使用就可以。</p>
+<p><strong>好处</strong>：</p>
+<ul>
+<li><p>使用起来更加方便</p>
+</li>
+<li><p>保证数据的安全，针对于安全级别高的数据，可以设置成”私有“，可以控制数据为只读（外界无法修改）</p>
+</li>
+<li><p>利于代码维护：如果后期功能实现逻辑需要调整，则保持接口名不变，修改实现代码即可，外界不需要做任何代码修改。</p>
+</li>
+</ul>
+<h4 id="4-2-继承"><a href="#4-2-继承" class="headerlink" title="4.2    继承"></a>4.2    继承</h4><p>继承允许一个类（子类）继承现有类（父类或者基类）的属性和方法。</p>
+<p>可提高代码的复用性，建立类之间的层次关系。</p>
+<p>同时，子类还可以重写或者扩展从父类继承来的属性和方法，从而实现多态。</p>
+<h4 id="4-3-多态"><a href="#4-3-多态" class="headerlink" title="4.3    多态"></a>4.3    多态</h4><p>同一个方法，在不同的对象上有不同的表现形式</p>
+<p><strong>多态的要点：</strong></p>
+<ol>
+<li>多态是方法的多态，不是属性的多态（多态与属性无关）。</li>
+<li>多态的存在要有3个必要条件：继承，方法重写，父类引用指向子类对象。</li>
+<li>父类引用指向子类对象后，用该父类引用调用子类重写的方法，此时多态就出现了。</li>
+</ol>
+<h2 id="5-访问权限"><a href="#5-访问权限" class="headerlink" title="5.    访问权限"></a>5.    访问权限</h2><ul>
+<li><strong><code>default</code></strong> （即默认，什么也不写）: 在同一包内可见，不使用任何修饰符。可以修饰在类、接口、变量、方法。</li>
+<li><strong><code>private</code></strong> : 在同一类内可见。可以修饰变量、方法。<strong>注意：不能修饰类（外部类）</strong></li>
+<li><strong><code>public</code></strong> : 对所有类可见。可以修饰类、接口、变量、方法</li>
+<li><strong><code>protected</code></strong> : 对同一包内的类和所有子类可见。可以修饰变量、方法。<strong>注意：不能修饰类（外部类）</strong>。</li>
+</ul>
+<h2 id="6-final-关键字"><a href="#6-final-关键字" class="headerlink" title="6.    final 关键字"></a>6.    final 关键字</h2><ul>
+<li>当 <code>final</code> 修饰一个类时，表明这个类不能被继承。比如，<code>String</code> 类、<code>Integer</code> 类和其他包装类都是用 <code>final</code> 修饰的。</li>
+<li>当 <code>final</code> 修饰一个方法时，表明这个方法不能被重写（<code>@Override</code>）。也就是说，如果一个类继承了某个类，并且想要改变父类中被 <code>final</code> 修饰的方法的行为，是不被允许的。</li>
+<li>当 <code>final</code> 修饰一个变量时，表明这个变量的值一旦被初始化就不能被修改。<ul>
+<li>如果是基本数据类型的变量，其数值一旦在初始化之后就不能更改；</li>
+<li>如果是引用类型的变量，在对其初始化之后就不能再让其指向另一个对象。</li>
+</ul>
+</li>
+</ul>
+<h2 id="7-引用数据类型-、基本数据类型-与-包装类"><a href="#7-引用数据类型-、基本数据类型-与-包装类" class="headerlink" title="7.    引用数据类型 、基本数据类型 与 包装类"></a>7.    引用数据类型 、基本数据类型 与 包装类</h2><h4 id="7-1-引用数据类型"><a href="#7-1-引用数据类型" class="headerlink" title="7.1    引用数据类型"></a>7.1    引用数据类型</h4><ul>
+<li>类</li>
+<li>接口</li>
+<li>数组</li>
+</ul>
+<h4 id="7-2-基本数据类型"><a href="#7-2-基本数据类型" class="headerlink" title="7.2    基本数据类型"></a>7.2    基本数据类型</h4><table>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>默认值</th>
+<th>大小</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>boolean</td>
+<td>false</td>
+<td>1 比特</td>
+</tr>
+<tr>
+<td>char</td>
+<td>‘\u0000’</td>
+<td>2 字节</td>
+</tr>
+<tr>
+<td>byte</td>
+<td>0</td>
+<td>1 字节</td>
+</tr>
+<tr>
+<td>short</td>
+<td>0</td>
+<td>2 字节</td>
+</tr>
+<tr>
+<td>int</td>
+<td>0</td>
+<td>4 字节</td>
+</tr>
+<tr>
+<td>long</td>
+<td>0L</td>
+<td>8 字节</td>
+</tr>
+<tr>
+<td>float</td>
+<td>0.0f</td>
+<td>4 字节</td>
+</tr>
+<tr>
+<td>double</td>
+<td>0.0</td>
+<td>8 字节</td>
+</tr>
+</tbody></table>
+<h4 id="7-3-包装类"><a href="#7-3-包装类" class="headerlink" title="7.3    包装类"></a>7.3    包装类</h4><p><strong>用途</strong>：除了定义一些常量和局部变量之外，我们在其他地方比如方法参数、对象属性中很少会使用基本类型来定义变量。</p>
+<p><strong>存储方式</strong>：基本数据类型的局部变量存放在 Java 虚拟机栈中的局部变量表中，基本数据类型的成员变量（未被 <code>static</code> 修饰 ）存放在 Java 虚拟机的堆中。包装类型属于对象类型，而几乎所有对象实例都存在于堆中。</p>
+<p><strong>占用空间</strong>：相比于包装类型（对象类型）， 基本数据类型占用的空间往往非常小。</p>
+<p><strong>默认值</strong>：成员变量包装类型不赋值就是 <code>null</code> ，而基本类型有默认值且不是 <code>null</code>。</p>
+<p><strong>比较方式</strong>：对于基本数据类型来说，<code>==</code> 比较的是值。对于包装数据类型来说，<code>==</code> 比较的是对象的内存地址。所有整型包装类对象之间值的比较，全部使用 <code>equals()</code> 方法。</p>
+<h5 id="7-3-1-包装类常量池-缓存"><a href="#7-3-1-包装类常量池-缓存" class="headerlink" title="7.3.1    包装类常量池(缓存)"></a>7.3.1    包装类常量池(缓存)</h5><p>byte、int、long 类型 均缓存有 -128~127 的值在常量池中</p>
+<p>char 缓存所有char</p>
+<h2 id="8-Java-拷贝机制"><a href="#8-Java-拷贝机制" class="headerlink" title="8.    Java 拷贝机制"></a>8.    Java 拷贝机制</h2><ul>
+<li><strong>浅拷贝</strong>：值类型拷贝，引用类型指向同一对象</li>
+<li><strong>深拷贝</strong>：值类型拷贝，引用类型则拷贝了一个新对象，且引用类型内部按此规则递归</li>
+</ul>
+<h4 id="8-1-cloneable-接口与-clone"><a href="#8-1-cloneable-接口与-clone" class="headerlink" title="8.1    cloneable 接口与 clone()"></a>8.1    cloneable 接口与 clone()</h4><p><code>clone()</code> 默认浅拷贝， 且相应对象若未实现 <code>cloneable</code> 接口，会抛出异常</p>
+<h4 id="8-2-如何实现-深拷贝"><a href="#8-2-如何实现-深拷贝" class="headerlink" title="8.2    如何实现 深拷贝"></a>8.2    如何实现 深拷贝</h4><ul>
+<li>自定义拷贝构造函数（递归）</li>
+<li>递归实现 <code>cloneable</code> 接口并重写 <code>clone()</code> 方法</li>
+<li>序列化</li>
+</ul>
+<h2 id="9-String-相关"><a href="#9-String-相关" class="headerlink" title="9.    String 相关"></a>9.    String 相关</h2><h4 id="9-1-String、StringBuffer、StringBuilder"><a href="#9-1-String、StringBuffer、StringBuilder" class="headerlink" title="9.1    String、StringBuffer、StringBuilder"></a>9.1    String、StringBuffer、StringBuilder</h4><p><code>String</code> 是不可变的（自然线程安全）</p>
+<p><code>StringBuilder</code> 与 <code>StringBuffer</code> 是可变的，且 <code>StringBuffer</code> 对字符串的操作方法都添加了同步锁，因此性能安全，但同时影响了性能</p>
+<h4 id="9-2-String-为什么不可变"><a href="#9-2-String-为什么不可变" class="headerlink" title="9.2    String 为什么不可变"></a>9.2    String 为什么不可变</h4><ul>
+<li>String 类中 核心数组 被final修饰，此外，String 类中未提供修改 数组内元素的方法</li>
+<li>String 类自身也是 final 的，可以避免子类提供数组修改方法</li>
+</ul>
+<h4 id="9-3-String-为什么要设计成不可变的"><a href="#9-3-String-为什么要设计成不可变的" class="headerlink" title="9.3    String 为什么要设计成不可变的"></a>9.3    String 为什么要设计成不可变的</h4><ul>
+<li><strong>安全</strong> —— String 类型经常用来做参数，比如 url、pwd 之类的</li>
+<li><strong>允许缓存 HashCode</strong> —— Java中String对象的哈希码被频繁地使用, 比如在hashMap 等容器中。字符串不变性保证了hash码的唯一性，因此可以放心地进行缓存</li>
+<li><strong>字符串常量池需要</strong></li>
+</ul>
+<h2 id="10-Object"><a href="#10-Object" class="headerlink" title="10.    Object"></a>10.    Object</h2><h4 id="10-1-常用方法"><a href="#10-1-常用方法" class="headerlink" title="10.1    常用方法"></a>10.1    常用方法</h4><p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20240505224438372.png" alt="image-20240505224438372"></p>
+<h4 id="10-2-和-equals"><a href="#10-2-和-equals" class="headerlink" title="10.2    &#x3D;&#x3D; 和 equals"></a>10.2    &#x3D;&#x3D; 和 equals</h4><ul>
+<li>&#x3D;&#x3D; 判断值类型是否相等，引用类型是否指向同一对象</li>
+<li><code>equals</code> 默认情况下与 &#x3D;&#x3D; 等价，重写后可能不等价</li>
+</ul>
+<h4 id="10-3-为什么重写-equals-时必须重写-hashCode-方法"><a href="#10-3-为什么重写-equals-时必须重写-hashCode-方法" class="headerlink" title="10.3    为什么重写 equals() 时必须重写 hashCode() 方法"></a>10.3    为什么重写 equals() 时必须重写 hashCode() 方法</h4><p>因为两个相等的对象的 <code>hashCode</code> 值必须是相等。也就是说如果 <code>equals</code> 方法判断两个对象是相等的，那这两个对象的 <code>hashCode</code> 值也要相等。</p>
+<p>如果重写 <code>equals()</code> 时没有重写 <code>hashCode()</code> 方法的话就可能会导致 <code>equals</code> 方法判断是相等的两个对象，<code>hashCode</code> 值却不相等。</p>
+<p>导致 HashMap 可能存入两个逻辑相等的对象</p>
+<h2 id="11-序列化、反序列化"><a href="#11-序列化、反序列化" class="headerlink" title="11.    序列化、反序列化"></a>11.    序列化、反序列化</h2><h4 id="11-1-什么是序列化、反序列化"><a href="#11-1-什么是序列化、反序列化" class="headerlink" title="11.1    什么是序列化、反序列化"></a>11.1    什么是序列化、反序列化</h4><ul>
+<li>序列化：把 Java 对象转换为字节序列的过程</li>
+<li>反序列：把字节序列恢复为 Java 对象的过程</li>
+</ul>
+<h4 id="11-2-注意点"><a href="#11-2-注意点" class="headerlink" title="11.2    注意点"></a>11.2    注意点</h4><ul>
+<li>static 静态变量和 transient 修饰的字段是不会被序列化的</li>
+<li>serialVersionUID问题</li>
+<li>如果某个序列化类的成员变量是对象类型，则该对象类型的类必须实现序列化</li>
+<li>子类实现了序列化，父类没有实现序列化，父类中的字段丢失问题</li>
+</ul>
+<h4 id="11-3-不推荐使用-JDK-自带的序列化"><a href="#11-3-不推荐使用-JDK-自带的序列化" class="headerlink" title="11.3    不推荐使用 JDK 自带的序列化"></a>11.3    不推荐使用 JDK 自带的序列化</h4><p>我们很少或者说几乎不会直接使用 JDK 自带的序列化方式，主要原因有下面这些原因：</p>
+<ul>
+<li><strong>不支持跨语言调用</strong> : 如果调用的是其他语言开发的服务的时候就不支持了。</li>
+<li><strong>性能差</strong>：相比于其他序列化框架性能更低，主要原因是序列化之后的字节数组体积较大，导致传输成本加大。</li>
+<li><strong>存在安全问题</strong>：序列化和反序列化本身并不存在问题。但当输入的反序列化的数据可被用户控制，那么攻击者即可通过构造恶意输入，让反序列化产生非预期的对象，在此过程中执行构造的任意代码</li>
+</ul>
+<h2 id="12-异常"><a href="#12-异常" class="headerlink" title="12.    异常"></a>12.    异常</h2><h4 id="12-1-异常层级"><a href="#12-1-异常层级" class="headerlink" title="12.1    异常层级"></a>12.1    异常层级</h4><p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20240505230455539.png" alt="image-20240505230455539"></p>
+<ul>
+<li>**<code>Throwable</code>**：是 java 中所有异常和错误的超类,其两个子类为 <strong><code>Error</code></strong>(错误) 和 <strong><code>Exception</code></strong>(异常)<ul>
+<li><strong>Error</strong>： 是程序中无法处理的错误，表示运行应用程序中出现了严重的错误。此类错误一般表示代码运行时JVM出现问题。通常有Virtual MachineError（虚拟机运行错误）、NoClassDefFoundError（类定义错误）等。比如说当jvm耗完可用内存时，将出现OutOfMemoryError。此类错误发生时，JVM将终止线程。非代码性错误。因此，当此类错误发生时，应用不应该去处理此类错误。</li>
+<li>**<code>Exception</code>**： 是程序本身可以捕获并且可以处理的异常。其中可分为运行时异常（RuntimeException）和非运行时异常，也叫做受检异常<ul>
+<li>**运行时异常(不受检异常)**： RuntimeException类极其子类表示JVM在运行期间可能出现的错误。编译器不会检查此类异常，并且不要求处理异常，比如用空值对象的引用（NullPointerException）、数组下标越界（ArrayIndexOutBoundException）。此类异常属于不可查异常，一般是由程序逻辑错误引起的，在程序中可以选择捕获处理，也可以不处理。</li>
+<li>**非运行时异常(受检异常)**： Exception中除RuntimeException极其子类之外的异常。编译器会检查此类异常，如果程序中出现此类异常，比如说IOException，必须对该异常进行处理，要么使用try-catch捕获，要么使用throws语句抛出，否则编译不通过。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="12-1-try-with-finally"><a href="#12-1-try-with-finally" class="headerlink" title="12.1    try - with - finally"></a>12.1    try - with - finally</h4><ul>
+<li><p>无论是否捕获或处理异常，<code>finally</code> 块里的语句都会被执行。当在 <code>try</code> 块或 <code>catch</code> 块中遇到 <code>return</code> 语句时，<code>finally</code> 语句块将在方法返回之前被执行。</p>
+</li>
+<li><p>不要在 finally 语句块中使用 return， 因为当 try 语句和 finally 语句中都有 return 语句时，try 语句块中的 return 语句会被忽略</p>
+</li>
+<li><p>finally 语句在 线程被杀死、JVM 关闭等情况时也不一定会执行</p>
+</li>
+<li><p>对必须关闭的资源，推荐使用 <code>try with resources</code></p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> (<span class="type">Scanner</span> <span class="variable">scanner</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Scanner</span>(<span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;test.txt&quot;</span>))) &#123;</span><br><span class="line">    <span class="keyword">while</span> (scanner.hasNext()) &#123;</span><br><span class="line">        System.out.println(scanner.nextLine());</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (FileNotFoundException fnfe) &#123;</span><br><span class="line">    fnfe.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="13-注解"><a href="#13-注解" class="headerlink" title="13.    注解"></a>13.    注解</h2><h4 id="13-1-注解作用"><a href="#13-1-注解作用" class="headerlink" title="13.1    注解作用"></a>13.1    注解作用</h4><p>Java 注解（Annotation）又称 Java 标注，是 JDK5.0 引入的一种注释机制。<br>Java 语言中的类、方法、变量、参数和包等都可以被标注。和 Javadoc 不同，Java 标注可以通过反射获取标注内容。在编译器生成类文件时，标注可以被嵌入到字节码中。Java 虚拟机可以保留标注内容，在运行时可以获取到标注内容 ，并可添加根据注解内容而执行的特定逻辑。</p>
+<h4 id="13-2-注解类型"><a href="#13-2-注解类型" class="headerlink" title="13.2    注解类型"></a>13.2    注解类型</h4><ul>
+<li><p>元注解</p>
+<ul>
+<li>@Retention</li>
+<li>@Documented</li>
+<li>@Target</li>
+<li>@Inherited</li>
+<li>@Repeatable</li>
+</ul>
+</li>
+<li><p>内置普通注解</p>
+<ul>
+<li>@Override</li>
+<li>@Deprecated</li>
+<li>@SupressWarnings</li>
+<li>@SafeVarargs</li>
+</ul>
+</li>
+<li><p>自定义注解</p>
+</li>
+</ul>
+<h4 id="13-3-其他"><a href="#13-3-其他" class="headerlink" title="13.3    其他"></a>13.3    其他</h4><ul>
+<li>注解也是一个类，可以添加属性，并设置默认值</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target(ElementType.TYPE)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Coder &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">id</span><span class="params">()</span> <span class="keyword">default</span> -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">name</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;GRQ&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">language</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;C++&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">company</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;China_Company&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">ZengCP</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/05/06/Java-Basic/">http://example.com/2024/05/06/Java-Basic/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">ZengCP's BLOGS</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZengCP</div><div class="author-info__description">记录心得，见证成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">1</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Java-%E8%AF%AD%E8%A8%80%E7%89%B9%E7%82%B9"><span class="toc-number">1.</span> <span class="toc-text">1.    Java 语言特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-JDK%E3%80%81JRE%E3%80%81JVM-%E5%85%B3%E7%B3%BB"><span class="toc-number">2.</span> <span class="toc-text">2.    JDK、JRE、JVM 关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%BB%80%E4%B9%88%E6%98%AF%E5%AD%97%E8%8A%82%E7%A0%81"><span class="toc-number">3.</span> <span class="toc-text">3.    什么是字节码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E4%BB%80%E4%B9%88%E6%98%AF%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="toc-number">4.</span> <span class="toc-text">4.    什么是面向对象</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-%E5%B0%81%E8%A3%85"><span class="toc-number">4.0.1.</span> <span class="toc-text">4.1    封装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-%E7%BB%A7%E6%89%BF"><span class="toc-number">4.0.2.</span> <span class="toc-text">4.2    继承</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-%E5%A4%9A%E6%80%81"><span class="toc-number">4.0.3.</span> <span class="toc-text">4.3    多态</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E8%AE%BF%E9%97%AE%E6%9D%83%E9%99%90"><span class="toc-number">5.</span> <span class="toc-text">5.    访问权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-final-%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">6.</span> <span class="toc-text">6.    final 关键字</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E5%BC%95%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B-%E3%80%81%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B-%E4%B8%8E-%E5%8C%85%E8%A3%85%E7%B1%BB"><span class="toc-number">7.</span> <span class="toc-text">7.    引用数据类型 、基本数据类型 与 包装类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-1-%E5%BC%95%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">7.0.1.</span> <span class="toc-text">7.1    引用数据类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-2-%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">7.0.2.</span> <span class="toc-text">7.2    基本数据类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-3-%E5%8C%85%E8%A3%85%E7%B1%BB"><span class="toc-number">7.0.3.</span> <span class="toc-text">7.3    包装类</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#7-3-1-%E5%8C%85%E8%A3%85%E7%B1%BB%E5%B8%B8%E9%87%8F%E6%B1%A0-%E7%BC%93%E5%AD%98"><span class="toc-number">7.0.3.1.</span> <span class="toc-text">7.3.1    包装类常量池(缓存)</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-Java-%E6%8B%B7%E8%B4%9D%E6%9C%BA%E5%88%B6"><span class="toc-number">8.</span> <span class="toc-text">8.    Java 拷贝机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#8-1-cloneable-%E6%8E%A5%E5%8F%A3%E4%B8%8E-clone"><span class="toc-number">8.0.1.</span> <span class="toc-text">8.1    cloneable 接口与 clone()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-2-%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0-%E6%B7%B1%E6%8B%B7%E8%B4%9D"><span class="toc-number">8.0.2.</span> <span class="toc-text">8.2    如何实现 深拷贝</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-String-%E7%9B%B8%E5%85%B3"><span class="toc-number">9.</span> <span class="toc-text">9.    String 相关</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#9-1-String%E3%80%81StringBuffer%E3%80%81StringBuilder"><span class="toc-number">9.0.1.</span> <span class="toc-text">9.1    String、StringBuffer、StringBuilder</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-2-String-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%8F%AF%E5%8F%98"><span class="toc-number">9.0.2.</span> <span class="toc-text">9.2    String 为什么不可变</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-3-String-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E8%AE%BE%E8%AE%A1%E6%88%90%E4%B8%8D%E5%8F%AF%E5%8F%98%E7%9A%84"><span class="toc-number">9.0.3.</span> <span class="toc-text">9.3    String 为什么要设计成不可变的</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-Object"><span class="toc-number">10.</span> <span class="toc-text">10.    Object</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#10-1-%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">10.0.1.</span> <span class="toc-text">10.1    常用方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-2-%E5%92%8C-equals"><span class="toc-number">10.0.2.</span> <span class="toc-text">10.2    &#x3D;&#x3D; 和 equals</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-3-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%87%8D%E5%86%99-equals-%E6%97%B6%E5%BF%85%E9%A1%BB%E9%87%8D%E5%86%99-hashCode-%E6%96%B9%E6%B3%95"><span class="toc-number">10.0.3.</span> <span class="toc-text">10.3    为什么重写 equals() 时必须重写 hashCode() 方法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-%E5%BA%8F%E5%88%97%E5%8C%96%E3%80%81%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">11.</span> <span class="toc-text">11.    序列化、反序列化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#11-1-%E4%BB%80%E4%B9%88%E6%98%AF%E5%BA%8F%E5%88%97%E5%8C%96%E3%80%81%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">11.0.1.</span> <span class="toc-text">11.1    什么是序列化、反序列化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#11-2-%E6%B3%A8%E6%84%8F%E7%82%B9"><span class="toc-number">11.0.2.</span> <span class="toc-text">11.2    注意点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#11-3-%E4%B8%8D%E6%8E%A8%E8%8D%90%E4%BD%BF%E7%94%A8-JDK-%E8%87%AA%E5%B8%A6%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">11.0.3.</span> <span class="toc-text">11.3    不推荐使用 JDK 自带的序列化</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12-%E5%BC%82%E5%B8%B8"><span class="toc-number">12.</span> <span class="toc-text">12.    异常</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#12-1-%E5%BC%82%E5%B8%B8%E5%B1%82%E7%BA%A7"><span class="toc-number">12.0.1.</span> <span class="toc-text">12.1    异常层级</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#12-1-try-with-finally"><span class="toc-number">12.0.2.</span> <span class="toc-text">12.1    try - with - finally</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#13-%E6%B3%A8%E8%A7%A3"><span class="toc-number">13.</span> <span class="toc-text">13.    注解</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#13-1-%E6%B3%A8%E8%A7%A3%E4%BD%9C%E7%94%A8"><span class="toc-number">13.0.1.</span> <span class="toc-text">13.1    注解作用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#13-2-%E6%B3%A8%E8%A7%A3%E7%B1%BB%E5%9E%8B"><span class="toc-number">13.0.2.</span> <span class="toc-text">13.2    注解类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#13-3-%E5%85%B6%E4%BB%96"><span class="toc-number">13.0.3.</span> <span class="toc-text">13.3    其他</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/05/06/Java-Basic/" title="Java_Basic">Java_Basic</a><time datetime="2024-05-05T16:19:51.000Z" title="发表于 2024-05-06 00:19:51">2024-05-06</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By ZengCP</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
