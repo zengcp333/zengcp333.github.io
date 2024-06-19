@@ -53,7 +53,7 @@
   isHome: true,
   isHighlightShrink: false,
   isToc: false,
-  postUpdate: '2024-06-01 02:27:36'
+  postUpdate: '2024-06-20 00:27:44'
 }</script><script>(win=>{
       win.saveToLocal = {
         set: (key, value, ttl) => {
@@ -150,7 +150,130 @@
         }
       }
       detectApple()
-    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">8</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url('https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/longmao_wallpaper_1.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="ZengCP's BLOGS"><span class="site-name">ZengCP's BLOGS</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">ZengCP's BLOGS</h1></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/05/12/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B/IPC--%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/" title="IPC --- 共享内存">IPC --- 共享内存</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-05-12T13:33:26.000Z" title="发表于 2024-05-12 21:33:26">2024-05-12</time></span></div><div class="content">共享内存基本概念共享内存，顾名思义就是允许两个不相关的进程访问同一个逻辑内存，共享内存是两个正在运行的进程之间共享和传递数据的一种非常有效的方式。
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">17</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url('https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/longmao_wallpaper_1.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="ZengCP's BLOGS"><span class="site-name">ZengCP's BLOGS</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">ZengCP's BLOGS</h1></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/06/19/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%20%E7%8A%B6%E6%80%81%E8%AF%A6%E8%A7%A3/" title="TCP 状态详解">TCP 状态详解</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-06-19T14:49:45.000Z" title="发表于 2024-06-19 22:49:45">2024-06-19</time></span></div><div class="content">TCP 状态详解TCP 状态机
+TCP 状态梳理
+
+
+状态
+描述
+
+
+
+LISTEN
+等待来自远程TCP应用程序的请求
+
+
+SYN_SENT
+发送连接请求后等待来自远程端点的确认。TCP第一次握手后客户端所处的状态
+
+
+SYN-RECEIVED
+该端点已经接收到连接请求并发送确认。 该端点正在等待最终确认。TCP第二次握手后服务端所处的状态
+
+
+ESTABLISHED
+代表连接已经建立起来了。这是连接数据传输阶段的正常状态
+
+
+FIN_WAIT_1
+等待来自远程TCP的终止连接请求或终止请求的确认
+
+
+FIN_WAIT_2
+在此端点发送终止连接请求后，等待来自远程TCP的连接终止请求
+
+
+CLOSE_WAIT
+该端点已经收到来自远程端点的关闭请求，此TCP正在等待本地应用程序的连接终止请求
+
+
+CLOSING
+等待来自远程TCP的连接终止请求确认
+
+
+LAST_ACK
+等待先前发送到远程TCP的连接终止请求的确认
+
+
+TIME_WAIT
+等待足够的时间来确保远程TCP接收到其连接终止请求的确认
+
+
+牢记： TCP 到处都是坑， 现在就开始找坑
+SYN_SENT
+归属： 客户端独有
+
+原 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/HDFS%20%E6%A6%82%E8%BF%B0/" title="HDFS 详解">HDFS 详解</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-06-15T15:40:43.000Z" title="发表于 2024-06-15 23:40:43">2024-06-15</time></span></div><div class="content">HDFS BASIC  当需要存储的数据集的大小超过了一台独立的物理计算机的存储能力时，就需要对数据进行分区并存储到若干台计算机上去。管理网络中跨多台计算机存储的文件系统统称为分布式文件系统（distributed fileSystem）。
+  分布式文件系统由于其跨计算机的特性，所以依赖于网络的传输，势必会比普通的本地文件系统更加复杂，比如：如何使得文件系统能够容忍节点的故障并且保证不丢失数据，这就是一个很大的挑战
+HDFS简介及其基本概念  HDFS（Hadoop Distributed File System）是hadoop生态系统的一个重要组成部分，是hadoop中的的存储组件，在整个Hadoop中的地位非同一般，是最基础的一部分，因为它涉及到数据存储，MapReduce等计算模型都要依赖于存储在HDFS中的数据。HDFS是一个分布式文件系统，以流式数据访问模式存储超大文件，将数据分块存储到一个商业硬件集群内的不同机器上。
+  这里重点介绍其中涉及到的几个概念：
+（1）超大文件。目前的hadoop集群能够存储几百TB甚至PB级的数据。
+（2）流式数据访问。HDFS的访问模式是： ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/HDFS%20%E9%85%8D%E7%BD%AE%E4%B8%8E%E9%83%A8%E7%BD%B2/" title="hadoop 概述">hadoop 概述</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-06-15T15:07:12.000Z" title="发表于 2024-06-15 23:07:12">2024-06-15</time></span></div><div class="content">部署HDFSHDFS的基本操作可以分为集群管理和文件系统操作两种类型：
+
+集群管理：包括Namenodede 的格式化、集群的启动和停止、集群信息查看等。
+文件系统：包括对目录、文件和权限等内容的操作。
+
+HDFS中的命令主要在sbin和bin目录下[一般要进行环境变量的设置]：
+
+sbin:集群控制脚本(.sh)。
+bin:hadoop的文件系统命令和其他管理维护工具。
+
+hadoop安装和维护的方式主要有2种方式：
+
+一是从开源软件的官网网站直接下载软件包。
+二是利用集成化软件对Hadoop集群进行部署和维护。[集成化工具：amabri、cloudera manager、华为的FusionInsight]
+
+第一种方式缺点：
+
+配置优化难度
+组件整合难度
+
+部署HDFS的核心步骤和部署原则集群规划
+hadoop系统的规模
+
+组件和角色规划
+
+A.确定需要安装哪些组件：比如要实现Namenode的高可用性，就需要额外安装ZK组件。
+B.确定组件中的不同角色分别安装在哪些节点上：比如需要几个Datanode，分别安装在哪些服务器上，Namenode是安装在独立服务器上，还是和某个Dat ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/hadoop%20%E6%A6%82%E8%BF%B0/" title="hadoop 概述">hadoop 概述</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-06-15T15:07:12.000Z" title="发表于 2024-06-15 23:07:12">2024-06-15</time></span></div><div class="content">引言在学习Hadoop之前，先了解一下典型的大数据平台架构图：
+
+可以看到Hadoop在大数据平台里处于一个技术核心的地位
+概述Hadoop定义Hadoop 是一个开源的分布式计算框架，由 Apache Software Foundation 开发和维护。它主要用于处理和分析大数据。Hadoop 的核心设计理念是将计算任务分布到多个节点上，以实现高度可扩展性和容错性。
+Hadoop组成Hadoop 大数据技术生态，具体包含组件如下：
+
+
+Hadoop HDFS（核心）：Hadoop 分布式存储系统；
+Yarn（核心）：Hadoop 2.x版本开始才有的资源管理系统；
+MapReduce（核心）：并行处理框架；
+HBase：基于HDFS的列式存储数据库，它是一种 NoSQL 数据库，非常适用于存储海量的稀疏的数据集；
+Hive：Apache Hive是一个数据仓库基础工具，它适用于处理结构化数据。它提供了简单的 sql 查询功能，可以将sql语句转换为 MapReduce任务进行运行；
+Pig：它是一种高级脚本语言。利用它不需要开发Java代码就可以写出复杂的数据处理程序；
+Flume： ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/YARN%20%E6%A6%82%E8%BF%B0/" title="YARN 概述">YARN 概述</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-06-15T15:07:12.000Z" title="发表于 2024-06-15 23:07:12">2024-06-15</time></span></div><div class="content">YARN简介Apache Hadoop YARN （Yet Another Resource Negotiator，另一种资源协调者）是一种新的 Hadoop 资源管理器，它是一个通用资源管理系统，可为上层应用提供统一的资源管理和调度，它的引入为集群在利用率、资源统一管理和数据共享等方面带来了巨大好处。
+YARN的由来在YARN出来之前，其实在Hadoop体系里面，负责资源管理和作业控制的是MRv1（Hadoop 1.0）体系中的JobTracker在承担，但是MRv1体系其实有其缺点，如下：
+
+可靠性差 &#x2F; 单点故障
+
+JobTracker 既做资源管理，又做任务调度，任务太重，易产生单点故障
+
+
+资源利用率低
+
+MRv1 资源描述模型过于简单，仅把 Task 数量作为资源分配依据，没有考虑任务本身的性能消耗差异
+强制把资源分成 Map Task Slot 和 Reduce Task Slot，且不允许它们之 间共享，常常会导致一种槽位资源紧张而另外一种闲置(比如一个作业刚刚提交时， 只会运行 Map Task，此时 Reduce Slot 闲置)。
+
+
+扩展性差 ： 在M ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%9F%BA%E7%A1%80/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%80%E4%BB%8B/" title="大数据基础">大数据基础</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-06-15T14:21:38.000Z" title="发表于 2024-06-15 22:21:38">2024-06-15</time></span></div><div class="content">数据通用操作
+采集
+处理
+存储
+分析
+
+最后通过数据分析结果，进行预测、调优等等
+什么是大数据大数据（Big Data）是指在传统数据处理方法难以处理的情况下，需要新的处理模式来具有更强的决策力、洞察发现力和过程优化能力的海量、高增长率和多样化的信息资产。大数据的特征通常被概括为“4V”，即：
+
+Volume（容量）：大数据的规模非常庞大，通常以 TB（太字节）、PB（拍字节）或 EB（艾字节）为单位，甚至更高。例如，2020 年全球互联网用户产生的数据量达到了 59ZB（泽字节），相当于每天产生 160 亿 GB 的数据。
+Velocity（速度）：大数据的产生和处理速度非常快，需要实时或近实时的响应。例如，社交媒体、电子商务、物联网等领域的数据流动非常快，需要快速分析和处理。
+Variety（多样性）：大数据的来源和类型非常多样，包括结构化的数据（如数据库表）、半结构化的数据（如 XML、JSON 等）和非结构化的数据（如文本、图像、音频、视频等）。例如，互联网上的用户行为数据、传感器数据、地理位置数据、社交网络数据等都属于大数据的范畴。
+Value（价值）：大数据的价值密度相对较 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/05/12/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B/IPC--%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/" title="IPC --- 共享内存">IPC --- 共享内存</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-05-12T13:33:26.000Z" title="发表于 2024-05-12 21:33:26">2024-05-12</time></span></div><div class="content">共享内存基本概念共享内存，顾名思义就是允许两个不相关的进程访问同一个逻辑内存，共享内存是两个正在运行的进程之间共享和传递数据的一种非常有效的方式。
 不同进程之间共享的内存通常为同一段物理内存。进程可以将同一段物理内存连接到他们自己的地址空间中，所有的进程都可以访问共享内存中的地址。如果某个进程向共享内存写入数据，所做的改动将立即影响到可以访问同一段共享内存的任何其他进程。
 共享内存并未提供锁机制，也就是说，在某一个进程对共享内存的进行读写的时候，不会阻止其它的进程对它的读写。如果要对共享内存的互斥访问，可以使用信号量。
 共享内存实现方式共享内存通常是各种 IPC 之中效率最高的方式。Linux 之中实现共享内存的方式通常有如下几类：
@@ -173,61 +296,14 @@ fd 为 文件描述符数组，是函数的核心返回值， fd[0] 指向管道
 信号量的工作原理由于信号量只能进行两种操作等待和发送信号，即 P(sv)和V(sv),他们的行为是这样的：
 **P(sv)**：如果 sv 的值大于零，就给它减 1；如果它的值为零，就挂起该进程的执行
 **V(sv)**：如果有其他进程因等待 sv 而被挂起，就让它恢复运行，如果没有进程因等待 sv 而挂起，就给它加 1.
-举个例子，就是两个进程共享信号量sv，一旦其中一个进程执行了P(sv)操作，它将得到信号量，并可以进入临界区，使sv减1。而第二个进程将被阻止进入临界区，因为当它试图执行 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/05/11/Java%20%E5%9F%BA%E7%A1%80/Java%20%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" title="Java 并发编程">Java 并发编程</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-05-11T11:46:31.000Z" title="发表于 2024-05-11 19:46:31">2024-05-11</time></span></div><div class="content">JAVA 并发编程基础
+举个例子，就是两个进程共享信号量sv，一旦其中一个进程执行了P(sv)操作，它将得到信号量，并可以进入临界区，使sv减1。而第二个进程将被阻止进入临界区，因为当它试图执行 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/05/11/Java%20%E5%9F%BA%E7%A1%80/Java%20%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" title="Java 并发编程">Java 并发编程</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-05-11T11:46:31.000Z" title="发表于 2024-05-11 19:46:31">2024-05-11</time></span></div><div class="content">JMM
 JVM 线程对主存中的共享变量进行修改时，必须先将共享变量读到自身工作内存中（实际就是CPU Cache），并在工作内存中进行修改，最后再刷回主存。
 （CPU Cache： 缓解 内存 和 CPU 速度相差过大问题， 但 Cache 引入势必造成一致性问题）
-JMM内存交互操作（保证原子性）
+内存交互操作（保证原子性）
 read： 作用于主内存的变量，它把一个变量的值从主内存传输到线程的工作内存中，以便随后的 load 动作使用。
 load： 把 read 操作从主内存中得到的变量值放入工作内存的变量的副本中。
 use： 把工作内存中的一个变量的值传给执行引擎，每当虚拟机遇到一个使用到变量的指令时都会使用该指令。
 assign： 作用于工作内存的变量，它把一个从执行引擎接收到的值赋给工作内存的变量，每当虚拟机遇到一个给变量赋值的字节码指令时执行这个操作
 store： 作用于工作内存的变量，它把工作内存中一个变量的值传送到主内存中，以便随后的 write 操作使用。
 write： 作用于主内存中的变量，它把store操作从工作内存中得到的变量的值放入主内存的变量中
-lock： 作用于主内存的 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/05/09/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B/Linux%20%E7%BA%BF%E7%A8%8B%E6%A6%82%E5%BF%B5%E4%B8%8E%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6/" title="Linux 线程">Linux 线程</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-05-08T17:21:47.000Z" title="发表于 2024-05-09 01:21:47">2024-05-09</time></span></div><div class="content">一、Linux线程概念1、什么是线程
-首先从 进程 讲起，一个进程有自己对应的 PCB，虚拟地址空间，页表以及映射的物理内存，也即 进程 = 内核数据结构 + 进程对应的代码和数据。
-对于虚存：虚拟内存决定了进程能够看到的”资源”。因为每一个进程都有对应的虚拟内存，所以进程具有独立性，从而进程需要通信的前提是看到同一份资源。
-通过 fork 创建子进程的时候，会将父进程的PCB的内容，进程地址空间和页表都给子进程拷贝一份。
-而如果创建多个 PCB，并将这些 PCB 使用同一个进程地址空间和页表，这样就可以看到同一份资源了，这就是线程。
-因此可以将 线程 理解为 进程 内的一个执行流，线程在进程内运行，线程在进程的地址空间内运行，拥有该进程的一部分资源。
-也即 线程是 CPU 调度的基本单位。进程 则是承担系统资源的基本实体，内部可以有一个或多个执行流。因为我们可以通过虚拟地址空间+页表的方式对进程的资源进行划分，单个”进程”(线程)执行粒度，一定要比之前的进程要细。
-如果 OS 要专门设计线程的概念，就需要对线程进行管理，也就需要先描述，再组织，即一定要为线程设计专门的数据结构表示线程 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/05/08/Java%20%E5%9F%BA%E7%A1%80/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/" title="并发编程基础">并发编程基础</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-05-08T12:53:17.000Z" title="发表于 2024-05-08 20:53:17">2024-05-08</time></span></div><div class="content">进程与线程什么是进程
-进程可以理解为程序的一次执行过程，系统运行一个程序即是一个进程从创建，运行到消亡的过程。
-现代操作系统对于进程会分配独立的 内存地址空间和其他系统资源（IO）
-对 Java 而言，main() 函数启动时其实就是启动了一个 JVM 的进程，而 main() 函数所在的线程就是这个进程中的一个线程，也称主线程。
-
-什么是线程
-线程是依托于进程的一个指令执行序列
-一个进程可以产生多个线程
-linux中，线程又叫做轻量级进程（light-weight process LWP），也有PCB，创建线程使用的底层函数和进程底层一样，都是clone，但没有独立的地址空间；而进程有独立地址空间，拥有PCB。
-
-进程与线程对比
-本质区别：进程是操作系统资源分配的基本单位，而线程是处理器任务调度和执行的基本单位。
-包含关系：一个进程至少有一个线程，线程是进程的一部分，所以线程也被称为轻权进程或者轻量级进程。
-资源开销：每个进程都有独立的地址空间，进程之间的切换会有较大的开销；线程可以看做轻量级的进程，同一个进程内的线程共享进程的地址空间，每个线程都有自己独立的运行栈和程序计数器，线程 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/05/05/Java%20%E5%9F%BA%E7%A1%80/Java%20%E9%9B%86%E5%90%88/" title="Java 集合">Java 集合</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-05-05T10:31:49.000Z" title="发表于 2024-05-05 18:31:49">2024-05-05</time></span></div><div class="content">Java 集合概览Java 集合，也叫作容器，主要是由两大接口派生而来：一个是 Collection接口，主要用于存放单一元素，Collection 接口派生三个子接口 List Set Queue；另一个是 Map 接口，主要用于存放键值对。
-
-
-List (对付顺序的好帮手): 存储的元素是有序的、可重复的。
-ArrayList: 底层 Object 数组
-Vector: 底层 Object 数组
-LinkedList: 底层双向链表
-
-
-Set (注重独一无二的性质): 存储的元素不可重复的。
-HashSet(无序，唯一): 基于 HashMap 实现的，底层采用 HashMap 来保存元素。
-LinkedHashSet: LinkedHashSet 是 HashSet 的子类，并且其内部是通过 LinkedHashMap 来实现的
-TreeSet(有序，唯一): 红黑树(自平衡的排序二叉树)
-
-
-Queue : 按特定的排队规则来确定先后顺序，存储的元素是有序的、可重复的。
-PriorityQueue: Object[] 数组来实现小顶堆
-DelayQueue:&#96;Pri ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/05/04/Java%20%E5%9F%BA%E7%A1%80/Java%20%E5%9F%BA%E7%A1%80/" title="Java 基础">Java 基础</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-05-04T07:19:51.000Z" title="发表于 2024-05-04 15:19:51">2024-05-04</time></span></div><div class="content">1.    Java 语言特点
-面向对象
-平台无关
-支持多线程C++ 语言没有内置的多线程机制，因此必须调用操作系统的多线程功能来进行多线程程序设计，而 Java 语言却提供了多线程支持
-编译与解释并存
-
-2.    JDK、JRE、JVM 关系JVM：Java Virtual Machine，也就是 Java 虚拟机，是 Java 实现跨平台的关键所在，针对不同的操作系统，有不同的 JVM 实现。JVM 负责将 Java 字节码转换为特定平台的机器码，并执行。
-JRE：Java Runtime Environment，也就是 Java 运行时环境，包含了运行 Java 程序所必需的库，以及 Java 虚拟机（JVM）。
-JDK：Java Development Kit，是一套完整的 Java SDK（软件开发工具包），包括了 JRE 以及译器（javac）、Java 文档生成工具（Javadoc）、Java 调试器等开发工具。
-简单来说，JDK 包含 JRE，JRE 包含 JVM。
-3.    什么是字节码字节码，就是 Java 程序经过编译之类产生的.class 文件，字节码能够被 ...</div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZengCP</div><div class="author-info__description">记录心得，见证成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">8</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/05/12/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B/IPC--%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/" title="IPC --- 共享内存">IPC --- 共享内存</a><time datetime="2024-05-12T13:33:26.000Z" title="发表于 2024-05-12 21:33:26">2024-05-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/05/12/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B/IPC--%E7%AE%A1%E9%81%93/" title="IPC --- 管道">IPC --- 管道</a><time datetime="2024-05-12T13:33:26.000Z" title="发表于 2024-05-12 21:33:26">2024-05-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/05/12/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B/IPC--%E4%BF%A1%E5%8F%B7%20%E4%B8%8E%20%E4%BF%A1%E5%8F%B7%E9%87%8F/" title="IPC --- 信号量">IPC --- 信号量</a><time datetime="2024-05-12T11:28:14.000Z" title="发表于 2024-05-12 19:28:14">2024-05-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/05/11/Java%20%E5%9F%BA%E7%A1%80/Java%20%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" title="Java 并发编程">Java 并发编程</a><time datetime="2024-05-11T11:46:31.000Z" title="发表于 2024-05-11 19:46:31">2024-05-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/05/09/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B/Linux%20%E7%BA%BF%E7%A8%8B%E6%A6%82%E5%BF%B5%E4%B8%8E%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6/" title="Linux 线程">Linux 线程</a><time datetime="2024-05-08T17:21:47.000Z" title="发表于 2024-05-09 01:21:47">2024-05-09</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/Linux/" style="font-size: 1.3em; color: #99a1ac">Linux</a> <a href="/tags/Java/" style="font-size: 1.2em; color: #999da3">Java</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 1.4em; color: #99a5b6">操作系统</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 1.1em; color: #999">数据结构</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 1.5em; color: #99a9bf">并发</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/05/"><span class="card-archive-list-date">五月 2024</span><span class="card-archive-list-count">8</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">8</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2024-05-31T18:27:36.866Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By ZengCP</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
+lock： 作用于主内存的变量，把一个变量标识为 ...</div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/#content-inner">2</a><a class="extend next" rel="next" href="/page/2/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZengCP</div><div class="author-info__description">记录心得，见证成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">17</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/19/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%20%E7%8A%B6%E6%80%81%E8%AF%A6%E8%A7%A3/" title="TCP 状态详解">TCP 状态详解</a><time datetime="2024-06-19T14:49:45.000Z" title="发表于 2024-06-19 22:49:45">2024-06-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/HDFS%20%E6%A6%82%E8%BF%B0/" title="HDFS 详解">HDFS 详解</a><time datetime="2024-06-15T15:40:43.000Z" title="发表于 2024-06-15 23:40:43">2024-06-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/HDFS%20%E9%85%8D%E7%BD%AE%E4%B8%8E%E9%83%A8%E7%BD%B2/" title="hadoop 概述">hadoop 概述</a><time datetime="2024-06-15T15:07:12.000Z" title="发表于 2024-06-15 23:07:12">2024-06-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/hadoop%20%E6%A6%82%E8%BF%B0/" title="hadoop 概述">hadoop 概述</a><time datetime="2024-06-15T15:07:12.000Z" title="发表于 2024-06-15 23:07:12">2024-06-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/YARN%20%E6%A6%82%E8%BF%B0/" title="YARN 概述">YARN 概述</a><time datetime="2024-06-15T15:07:12.000Z" title="发表于 2024-06-15 23:07:12">2024-06-15</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/hdfs/" style="font-size: 1.2em; color: #999da3">hdfs</a> <a href="/tags/Java/" style="font-size: 1.5em; color: #99a9bf">Java</a> <a href="/tags/yarn/" style="font-size: 1.1em; color: #999">yarn</a> <a href="/tags/hadoop/" style="font-size: 1.3em; color: #99a1ac">hadoop</a> <a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" style="font-size: 1.4em; color: #99a5b6">并发编程</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 1.1em; color: #999">计算机网络</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 1.3em; color: #99a1ac">并发</a> <a href="/tags/Linux/" style="font-size: 1.3em; color: #99a1ac">Linux</a> <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" style="font-size: 1.4em; color: #99a5b6">大数据</a> <a href="/tags/TCP/" style="font-size: 1.1em; color: #999">TCP</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 1.4em; color: #99a5b6">操作系统</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 1.1em; color: #999">数据结构</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/06/"><span class="card-archive-list-date">六月 2024</span><span class="card-archive-list-count">6</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/05/"><span class="card-archive-list-date">五月 2024</span><span class="card-archive-list-count">11</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">17</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2024-06-19T16:27:44.488Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By ZengCP</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

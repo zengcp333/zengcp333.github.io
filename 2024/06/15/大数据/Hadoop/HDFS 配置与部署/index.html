@@ -1,0 +1,300 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>hadoop 概述 | ZengCP's BLOGS</title><meta name="author" content="ZengCP"><meta name="copyright" content="ZengCP"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="部署HDFSHDFS的基本操作可以分为集群管理和文件系统操作两种类型：  集群管理：包括Namenodede 的格式化、集群的启动和停止、集群信息查看等。 文件系统：包括对目录、文件和权限等内容的操作。  HDFS中的命令主要在sbin和bin目录下[一般要进行环境变量的设置]：  sbin:集群控制脚本(.sh)。 bin:hadoop的文件系统命令和其他管理维护工具。  hadoop安装和维护">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hadoop 概述">
+<meta property="og:url" content="http://example.com/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/HDFS%20%E9%85%8D%E7%BD%AE%E4%B8%8E%E9%83%A8%E7%BD%B2/index.html">
+<meta property="og:site_name" content="ZengCP&#39;s BLOGS">
+<meta property="og:description" content="部署HDFSHDFS的基本操作可以分为集群管理和文件系统操作两种类型：  集群管理：包括Namenodede 的格式化、集群的启动和停止、集群信息查看等。 文件系统：包括对目录、文件和权限等内容的操作。  HDFS中的命令主要在sbin和bin目录下[一般要进行环境变量的设置]：  sbin:集群控制脚本(.sh)。 bin:hadoop的文件系统命令和其他管理维护工具。  hadoop安装和维护">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png">
+<meta property="article:published_time" content="2024-06-15T15:07:12.000Z">
+<meta property="article:modified_time" content="2024-06-16T13:36:01.124Z">
+<meta property="article:author" content="ZengCP">
+<meta property="article:tag" content="大数据">
+<meta property="article:tag" content="hadoop">
+<meta property="article:tag" content="hdfs">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png"><link rel="shortcut icon" href="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/longmao.png"><link rel="canonical" href="http://example.com/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/HDFS%20%E9%85%8D%E7%BD%AE%E4%B8%8E%E9%83%A8%E7%BD%B2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'hadoop 概述',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-06-16 21:36:01'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">17</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="ZengCP's BLOGS"><span class="site-name">ZengCP's BLOGS</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">hadoop 概述</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-06-15T15:07:12.000Z" title="发表于 2024-06-15 23:07:12">2024-06-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-06-16T13:36:01.124Z" title="更新于 2024-06-16 21:36:01">2024-06-16</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="hadoop 概述"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="部署HDFS"><a href="#部署HDFS" class="headerlink" title="部署HDFS"></a>部署HDFS</h1><p>HDFS的基本操作可以分为集群管理和文件系统操作两种类型：</p>
+<ul>
+<li>集群管理：包括Namenodede 的格式化、集群的启动和停止、集群信息查看等。</li>
+<li>文件系统：包括对目录、文件和权限等内容的操作。</li>
+</ul>
+<p>HDFS中的命令主要在sbin和bin目录下[一般要进行环境变量的设置]：</p>
+<ul>
+<li>sbin:集群控制脚本(.sh)。</li>
+<li>bin:hadoop的文件系统命令和其他管理维护工具。</li>
+</ul>
+<h2 id="hadoop安装和维护的方式"><a href="#hadoop安装和维护的方式" class="headerlink" title="hadoop安装和维护的方式"></a>hadoop安装和维护的方式</h2><p>主要有2种方式：</p>
+<ul>
+<li>一是从开源软件的官网网站直接下载软件包。</li>
+<li>二是利用集成化软件对Hadoop集群进行部署和维护。[集成化工具：amabri、cloudera manager、华为的FusionInsight]</li>
+</ul>
+<p>第一种方式缺点：</p>
+<ul>
+<li>配置优化难度</li>
+<li>组件整合难度</li>
+</ul>
+<h2 id="部署HDFS的核心步骤和部署原则"><a href="#部署HDFS的核心步骤和部署原则" class="headerlink" title="部署HDFS的核心步骤和部署原则"></a>部署HDFS的核心步骤和部署原则</h2><h3 id="集群规划"><a href="#集群规划" class="headerlink" title="集群规划"></a>集群规划</h3><ul>
+<li><p>hadoop系统的规模</p>
+</li>
+<li><p>组件和角色规划</p>
+<ul>
+<li>A.确定需要安装哪些组件：比如要实现Namenode的高可用性，就需要额外安装ZK组件。</li>
+<li>B.确定组件中的不同角色分别安装在哪些节点上：比如需要几个Datanode，分别安装在哪些服务器上，Namenode是安装在独立服务器上，还是和某个Datanode共享一台服务器。</li>
+<li>C.根据角色规划确定所需的服务器性能需求：比如namenode所在服务器可以适当加大内存，以适应fsimage的可能大小，并且安装多块硬盘，将元数据信息保存在多个硬盘路径上，防止单个硬盘发生故障。</li>
+<li>D.节点扩增：计算和存储能力不够时，很多时候就通过节点数量解决。</li>
+</ul>
+</li>
+<li><p>配置规划：Datanode和Namenode一般都可以配置多个存储路径。</p>
+<ul>
+<li>A.Datanode实现多硬盘均匀存储。</li>
+<li>B.Namenode可以实现多副本备份。</li>
+</ul>
+</li>
+</ul>
+<h3 id="linux环境准备"><a href="#linux环境准备" class="headerlink" title="linux环境准备"></a>linux环境准备</h3><p>HDFS作为hadoop的核心组件，随Hadoop一起整体部署。</p>
+<p>安装hadoop前的环境准备：</p>
+<ol>
+<li>配置java环境变量：export JAVA_HOME&#x3D;&#x2F;opt&#x2F;java&#x2F;jdk</li>
+<li>hadoop部署在多台服务器上，主从节点之间、各节点之间可以通过TCP&#x2F;IP协议相互访问[通过设置DNS或hosts文件，使得主机名和IP地址绑定，实现通过主机名就能访问对方]</li>
+<li>确保hadoop所需端口打开：hadoop以及各类配套模板需要使用大量网络端口，但是自带的防火墙软件，设置不当造成功能无法正确运行。</li>
+<li>SSH接口免密登录</li>
+<li>Hadoop以及分布式NoSQL数据库要求各个节点之间的时间同步：最常见的集群时间同步方案是部署NTP服务。</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//确保hadoop所需端口打开，通过命令禁用并停止防火墙服务</span><br><span class="line">systemctl mask filewalld</span><br><span class="line">systemctl stop fillwalld</span><br></pre></td></tr></table></figure>
+
+<h3 id="Hadoop的软件包部署"><a href="#Hadoop的软件包部署" class="headerlink" title="Hadoop的软件包部署"></a>Hadoop的软件包部署</h3><ul>
+<li>sbin目录：存放HDFS和Yarn组件的集群控制命令。</li>
+<li>bin目录：存放HDFS的文件系统命令行工具以及Yarn等组件的命令行工具。</li>
+<li>etc&#x2F;hadoop目录：存放hadoop的配置文件。</li>
+<li>share目录：存放hadoop的各类库包(Jar)。</li>
+</ul>
+<p>PS:分布式的时候，hadoop软件包需要解压缩，并复制到所有节点上，并且在每个节点上的存储位置都是相同的，并给予足够的用户访问权限。其次，进行系统配置。</p>
+<h1 id="HDFS的基本配置"><a href="#HDFS的基本配置" class="headerlink" title="HDFS的基本配置"></a>HDFS的基本配置</h1><p>HDFS的配置文件：大多数默认是XML和TXT格式存在。配置文件默认存放在&#x2F;etc&#x2F;hadoop目录下。</p>
+<p>HDFS中6个重要的配置文件：</p>
+<ol>
+<li><strong>core-site.xml</strong>: Hadoop全局的配置文件，也包含一些HDFS的宏观配置。</li>
+<li><strong>dfs-site.xml</strong>: HDFS配置文件。</li>
+<li><strong>yarn-site.xml</strong>: YARN配置文件。</li>
+<li><strong>mapred-sie.xml</strong>: MapReduce配置文件。</li>
+<li><strong>slaves</strong>: 从节点列表。</li>
+<li><strong>hadoop-env.sh</strong>: 与运行脚本的环境变量相关的配置文件。</li>
+</ol>
+<h2 id="core-site-xml"><a href="#core-site-xml" class="headerlink" title="core-site.xml"></a>core-site.xml</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//core-site.xml文件</span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span>       </span><br><span class="line">   <span class="tag">&lt;<span class="name">property</span>&gt;</span><span class="comment">&lt;!--指定namenode的地址--&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.defaultFS<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://node1:8020<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">description</span>&gt;</span>node1节点为该集群的Namenode,对应节点的端口是8020<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">property</span>&gt;</span>   </span><br><span class="line">   <span class="tag">&lt;<span class="name">property</span>&gt;</span><span class="comment">&lt;!--用来指定使用hadoop时产生文件的存放目录--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.tmp.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">value</span>&gt;</span>file:/data/hadoop/hadoop-2.6.0/tmp<span class="tag">&lt;/<span class="name">value</span>&gt;</span> </span><br><span class="line">   <span class="tag">&lt;/<span class="name">property</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="dfs-site-xml"><a href="#dfs-site-xml" class="headerlink" title="dfs-site.xml"></a>dfs-site.xml</h2><p><strong>dfs-site.xml</strong> 是HDFS的重要配置文件，其Namenode节点和Datanode节点相关的配置项不同。</p>
+<p><strong>Namenode</strong>主要有3个配置项: <code>dfs.namenode.name.dir</code>、<code>dfs.blocksize</code>、<code>dfs.replication</code>。</p>
+<p><strong>Datanode</strong>主要有1个配置项：<code>dfs.datanode.data.dir</code>。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">//Namenode主要有3个配置项dfs.namenode.name.dir、dfs.blocksize、dfs.replication。</span><br><span class="line">//Datanode主要有1个配置项</span><br><span class="line">dfs.datanode.data.dir   </span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span> </span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.name.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span>                 </span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>/opt/dfs/name<span class="tag">&lt;/<span class="name">value</span>&gt;</span> </span><br><span class="line">         <span class="tag">&lt;<span class="name">description</span>&gt;</span>namenode的目录位置，对应的目录需要存在value里面的路径<span class="tag">&lt;/<span class="name">description</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span> </span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.datanode.data.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span>         </span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>/opt/dfs/data<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">description</span>&gt;</span>datanode的目录位置，对应的目录需要存在value里面的路径，可以是一个或多个用逗号分隔的本地路径<span class="tag">&lt;/<span class="name">description</span>&gt;</span>         </span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span> </span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span> </span><br><span class="line">          <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="name">name</span>&gt;</span> </span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>2<span class="tag">&lt;/<span class="name">value</span>&gt;</span> <span class="tag">&lt;<span class="name">description</span>&gt;</span>hdfs系统的副本数量    </span><br><span class="line">         <span class="tag">&lt;/<span class="name">description</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span> </span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span> </span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.secondary.http-address<span class="tag">&lt;/<span class="name">name</span>&gt;</span>     </span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>master:9001<span class="tag">&lt;/<span class="name">value</span>&gt;</span> </span><br><span class="line">        <span class="tag">&lt;<span class="name">description</span>&gt;</span>备份namenode的http地址，master是主机名<span class="tag">&lt;/<span class="name">description</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">                 </span><br></pre></td></tr></table></figure>
+
+<h2 id="slave-xml"><a href="#slave-xml" class="headerlink" title="slave.xml"></a>slave.xml</h2><p>slaves:在Namenode节点还需要建立一个名为slaves的文本文件，里面记录Datanode的子节点机名，用换行分割。</p>
+<h2 id="hadoop-env-sh"><a href="#hadoop-env-sh" class="headerlink" title="hadoop-env.sh"></a>hadoop-env.sh</h2><p>JAVA_HOME进行环境变量配置：export JAVA_HOME&#x3D;&#x2F;opt&#x2F;java&#x2F;jdk</p>
+<h2 id="配置机架感知策略"><a href="#配置机架感知策略" class="headerlink" title="配置机架感知策略"></a>配置机架感知策略</h2><p>需要实现机架感知的配置内容，在core-site.xml中实现两个配置项。</p>
+<p>net.topology.node.switch.mapping.imp:org.apache.hadoop.net.TableMapping,表示采用映射文件的方式实现机架映射。</p>
+<p>net.topology.table.file.name:内容为映射文件的路径和名称。</p>
+<h1 id="集群的启动和停止"><a href="#集群的启动和停止" class="headerlink" title="集群的启动和停止"></a>集群的启动和停止</h1><p>软件包sbin目录下的start-dfs.sh和stop-dfs.sh为HDFS的集群启动和停止命令。</p>
+<p>单独启动或停止一个HDFS进程，或者对单独的角色进行控制命令：hadoop-daemon.sh start | stop namenode |datanode|secondarynamenode</p>
+<p>其次可以通过查看<a target="_blank" rel="noopener" href="http://namenode:50070/%E6%9F%A5%E7%9C%8B%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%8A%B6%E6%80%81%EF%BC%8C%E6%AF%94%E5%A6%82%E8%AF%A5%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%90%AF%E5%8A%A8%E6%97%B6%E9%97%B4%E3%80%81%E7%89%88%E6%9C%AC%E3%80%81%E9%9B%86%E7%BE%A4ID%E7%AD%89%E4%BF%A1%E6%81%AF%E3%80%82">http://namenode:50070/查看系统的状态，比如该系统的启动时间、版本、集群ID等信息。</a></p>
+<h2 id="使用和管理HDFS"><a href="#使用和管理HDFS" class="headerlink" title="使用和管理HDFS"></a>使用和管理HDFS</h2><p>作为文件系统，HDFS的使用主要指对<strong>文件的上传、下载和移动，以及查看内容、建立或删除目录</strong>等。</p>
+<p>查看HDFS状态，主要指查看节点的健康状态，查看存储容量，查看分块信息等。</p>
+<p>控制HDFS，主要指对系统进行初始化，增加或删除子节点，以及提高HDFS的可用性等。</p>
+<h2 id="管理和操作命令"><a href="#管理和操作命令" class="headerlink" title="管理和操作命令"></a>管理和操作命令</h2><p>hdfs的命令行操作用命令hdfs实现，即命令行敲入：hdfs.hdfs命令文件放在Hadoop目录下的bin子目录中，包含了HDFS绝大多数的用户命令，不带任何参数地执行hdfs，可以看到所有可用的指令。</p>
+<ol>
+<li>dfs:HDFS的文件系统操作指令。</li>
+<li>dfsadmin:HDFS的集群管理命令，比如：查看机架感知状态，可以执行hdfs dfsadmin-printTopology。</li>
+<li>fsck:HDFS的集群检查工具。</li>
+<li>namenode-format:主节点格式化指令。</li>
+<li>balaner:数据平衡指令。</li>
+</ol>
+<h2 id="格式化Namenode"><a href="#格式化Namenode" class="headerlink" title="格式化Namenode"></a>格式化Namenode</h2><p>hdfs namenode -format</p>
+<h2 id="Namenode的安全模式"><a href="#Namenode的安全模式" class="headerlink" title="Namenode的安全模式"></a>Namenode的安全模式</h2><p>当namenode启动时，需要将fsimage等信息读入内存，并且等待各个Datanode上报存储状态，在这个过程完成之前，叫安全模式。（safenode）</p>
+<p>此时namenode为只读状态，只能读取不能写入，当足够数量的节点以及数据块处在健康状态时，系统会自动退出安全模式。</p>
+<p>手动对安全模式进行管理：hdfs dfsadmin -safemode [enter | leave |get |wait]</p>
+<h2 id="元数据恢复"><a href="#元数据恢复" class="headerlink" title="元数据恢复"></a>元数据恢复</h2><p>由于secondary namenode在进行元数据合并时，保存了元数据的副本信息，当Namenode发生损坏时，可以利用secondary namenode中的数据进行恢复。</p>
+<ol>
+<li>利用stop-dfs.sh命令停止整个集群</li>
+<li>清空namenode原有的元数据信息，路径可以从配置项dfs.namenode.name.dir中获得。</li>
+<li>如果secondary namenode和namenode没有部署在同一个节点上，需要将secondary namenode存储的副本信息复制到namenode,其路径和secondary namenode中的元数据副本的路径一致，可以从配置项dfs.namenode.checkpoint.dir中获得。</li>
+<li>执行hadoop namenode-importCheckpoint,系统将检查副本数据，并将其复制到dfs.namenode.name.dir所指示的路径当中。</li>
+</ol>
+<h2 id="子节点添加与删除"><a href="#子节点添加与删除" class="headerlink" title="子节点添加与删除"></a>子节点添加与删除</h2><p>大数据业务要求数据被不断采集、不断积累，需要分布式存储和NoSQL数据库等实现方便的横向扩展（scale out）。HDFS可以很方便的进行Datanode节点添加和删除。</p>
+<h3 id="1-静态添加-删除Datanode的方法"><a href="#1-静态添加-删除Datanode的方法" class="headerlink" title="1.静态添加&#x2F;删除Datanode的方法"></a>1.静态添加&#x2F;删除Datanode的方法</h3><ul>
+<li>利用stop-dfs.sh命令停止整个集群</li>
+<li>在namenode节点上的slaves配置文件中添加新的节点，或删掉旧的节点。添加新节点时，要确保新节点和其他节点之间主机名和IP地址可以相互访问，可以实现SSH无密码访问等。</li>
+<li>利用start-dfs.sh重新启动集群，在新节点配置正确的情况下，会随命令启动Datanode角色，并和Namenode连接。</li>
+<li>可以执行hdfs balancer命令，在节点之间进行手动的数据平衡。删除节点之后，namenode会自动检查副本数量，并选择新的节点存储不足的副本。</li>
+</ul>
+<h3 id="2-动态添加Datanode的方法"><a href="#2-动态添加Datanode的方法" class="headerlink" title="2.动态添加Datanode的方法"></a>2.动态添加Datanode的方法</h3><ul>
+<li>HDFS集群保持运行状态</li>
+<li>在namenode节点上的slaves配置文件中添加新的节点。</li>
+<li>在新节点执行hadoop-daemon.sh start datanode ,启动Datanode角色</li>
+<li>在主节点执行hdfs dfsadmin -refreshNodes,刷新节点列表，Namenode会根据新列表和子节点建立联系。</li>
+</ul>
+<h3 id="3-动态删除Datanode的方法"><a href="#3-动态删除Datanode的方法" class="headerlink" title="3.动态删除Datanode的方法"></a>3.动态删除Datanode的方法</h3><ul>
+<li>HDFS集群保持运行状态</li>
+<li>提前在hdfs-site.xml中配置dfs.hosts.exclude属性，内容为一个本地文本文件的路径，该文件可以称为exclude文件，其结构和slave文件的相同，即为每行一个节点主机名的列表。 记录在exclude文件中的主机，会在刷新之后被记作禁用状态，并在界面上看到这个状态。</li>
+<li>在主节点执行hdfs dfsadmin -refreshNodes,刷新节点列表。</li>
+<li>在节点写入exclude文件，并执行hdfs dfsadmin -refreshNodes，刷新节点列表。</li>
+</ul>
+<p>添加&#x2F;删除Datanode完成之后，可以通过两种手段查看结果。</p>
+<ul>
+<li>在命令行执行hdfs dfsadmin -report 查看节点列表信息。</li>
+<li>通过web界面，切换到Datanodes标签，可以查看子节点的列表，in operation表示正在使用的节点，decommissinoning，表示目前禁用的节点。</li>
+</ul>
+<h2 id="HDFS文件系统操作"><a href="#HDFS文件系统操作" class="headerlink" title="HDFS文件系统操作"></a>HDFS文件系统操作</h2><p>可以通过执行hdfs dfs指令来进行各类操作，包括建立、删除目录、HDFS上的文件复制、移动和改名、本地文件系统和HDFS系统之间的文件相互复制等、文件的权限操作等。</p>
+<ul>
+<li>hdfs dfs -ls &#x2F;  —-查看文件目录状态</li>
+<li>hdfs dfs -lsr &#x2F; —-递归查看hdfs的根目录下的内容的</li>
+<li>hdfs dfs -mkdir &#x2F;d1 —-在hdfs上创建文件夹d1</li>
+<li>hdfs dfs -put <linux source > <hdfs destination> —-把数据从linux[本地文件]上传到hdfs的特定路径中[HDFS文件或路径]</li>
+<li>hdfs dfs -get <hdfs source> <linux destination>—-把数据从hdfs下载到linux的特定路径下</li>
+<li>hdfs dfs -mv&#x2F;-cp <hdfs source > <hdfs destination>—在HDFS系统中进行文件移动或复制，参数为HDFS的源地址和目的地址。</li>
+<li>hdfs dfs -text &lt;hdfs文件&gt; —将序列号文件转换成文本显示出来。</li>
+<li>hdfs dfs -rm &lt;hdfs文件&gt; —-删除文件或空目录</li>
+<li>hdfs dfs -rmr &lt;hdfs文件&gt; —-递归删除文件或空目录</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//查看文件目录状态，-ls之后必须指明需要查看的目录</span><br><span class="line">hdfs dfs -ls /hdfsdir/file1</span><br><span class="line">hdfs dfs -ls hdfs://node1:8020/hdfsdir/file1</span><br><span class="line">//建立新目录</span><br><span class="line">hdfs dfs -mkdir /hdfsdir/dir1</span><br><span class="line">//从本地文件系统向HDFS复制文件。-put、-copyFromLocal。</span><br><span class="line">hdfs dfs -put localfile/hdfsdir/file1</span><br><span class="line">hdfs dfs -put -f localfile1 localfile2/hadoopdir</span><br><span class="line">//从HDFS向本地复制文件。-get、-copyToLocal。</span><br><span class="line">hdfs dfs -get /hdfsdir/hdfsfile localfile</span><br></pre></td></tr></table></figure>
+
+<h2 id="以web方式查看文件系统"><a href="#以web方式查看文件系统" class="headerlink" title="以web方式查看文件系统"></a>以web方式查看文件系统</h2><p>访问<a target="_blank" rel="noopener" href="http://namenode:50070/explorer.html,%E9%80%89%E6%8B%A9%22browse">http://namenode:50070/explorer.html,选择&quot;browse</a> the file system”选项，可以对HDFS的目录结构进行查看。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">ZengCP</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/HDFS%20%E9%85%8D%E7%BD%AE%E4%B8%8E%E9%83%A8%E7%BD%B2/">http://example.com/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/HDFS%20%E9%85%8D%E7%BD%AE%E4%B8%8E%E9%83%A8%E7%BD%B2/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">ZengCP's BLOGS</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a><a class="post-meta__tags" href="/tags/hadoop/">hadoop</a><a class="post-meta__tags" href="/tags/hdfs/">hdfs</a></div><div class="post_share"><div class="social-share" data-image="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/HDFS%20%E6%A6%82%E8%BF%B0/" title="HDFS 详解"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">HDFS 详解</div></div></a></div><div class="next-post pull-right"><a href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/hadoop%20%E6%A6%82%E8%BF%B0/" title="hadoop 概述"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">hadoop 概述</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/HDFS%20%E6%A6%82%E8%BF%B0/" title="HDFS 详解"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-15</div><div class="title">HDFS 详解</div></div></a></div><div><a href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/hadoop%20%E6%A6%82%E8%BF%B0/" title="hadoop 概述"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-15</div><div class="title">hadoop 概述</div></div></a></div><div><a href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/YARN%20%E6%A6%82%E8%BF%B0/" title="YARN 概述"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-15</div><div class="title">YARN 概述</div></div></a></div><div><a href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%9F%BA%E7%A1%80/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%80%E4%BB%8B/" title="大数据基础"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-15</div><div class="title">大数据基础</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZengCP</div><div class="author-info__description">记录心得，见证成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">17</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2HDFS"><span class="toc-number">1.</span> <span class="toc-text">部署HDFS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#hadoop%E5%AE%89%E8%A3%85%E5%92%8C%E7%BB%B4%E6%8A%A4%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="toc-number">1.1.</span> <span class="toc-text">hadoop安装和维护的方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2HDFS%E7%9A%84%E6%A0%B8%E5%BF%83%E6%AD%A5%E9%AA%A4%E5%92%8C%E9%83%A8%E7%BD%B2%E5%8E%9F%E5%88%99"><span class="toc-number">1.2.</span> <span class="toc-text">部署HDFS的核心步骤和部署原则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4%E8%A7%84%E5%88%92"><span class="toc-number">1.2.1.</span> <span class="toc-text">集群规划</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#linux%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="toc-number">1.2.2.</span> <span class="toc-text">linux环境准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hadoop%E7%9A%84%E8%BD%AF%E4%BB%B6%E5%8C%85%E9%83%A8%E7%BD%B2"><span class="toc-number">1.2.3.</span> <span class="toc-text">Hadoop的软件包部署</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#HDFS%E7%9A%84%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE"><span class="toc-number">2.</span> <span class="toc-text">HDFS的基本配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#core-site-xml"><span class="toc-number">2.1.</span> <span class="toc-text">core-site.xml</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dfs-site-xml"><span class="toc-number">2.2.</span> <span class="toc-text">dfs-site.xml</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#slave-xml"><span class="toc-number">2.3.</span> <span class="toc-text">slave.xml</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hadoop-env-sh"><span class="toc-number">2.4.</span> <span class="toc-text">hadoop-env.sh</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%9C%BA%E6%9E%B6%E6%84%9F%E7%9F%A5%E7%AD%96%E7%95%A5"><span class="toc-number">2.5.</span> <span class="toc-text">配置机架感知策略</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4%E7%9A%84%E5%90%AF%E5%8A%A8%E5%92%8C%E5%81%9C%E6%AD%A2"><span class="toc-number">3.</span> <span class="toc-text">集群的启动和停止</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%92%8C%E7%AE%A1%E7%90%86HDFS"><span class="toc-number">3.1.</span> <span class="toc-text">使用和管理HDFS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%A1%E7%90%86%E5%92%8C%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4"><span class="toc-number">3.2.</span> <span class="toc-text">管理和操作命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%BC%E5%BC%8F%E5%8C%96Namenode"><span class="toc-number">3.3.</span> <span class="toc-text">格式化Namenode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Namenode%E7%9A%84%E5%AE%89%E5%85%A8%E6%A8%A1%E5%BC%8F"><span class="toc-number">3.4.</span> <span class="toc-text">Namenode的安全模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%83%E6%95%B0%E6%8D%AE%E6%81%A2%E5%A4%8D"><span class="toc-number">3.5.</span> <span class="toc-text">元数据恢复</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%90%E8%8A%82%E7%82%B9%E6%B7%BB%E5%8A%A0%E4%B8%8E%E5%88%A0%E9%99%A4"><span class="toc-number">3.6.</span> <span class="toc-text">子节点添加与删除</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%9D%99%E6%80%81%E6%B7%BB%E5%8A%A0-%E5%88%A0%E9%99%A4Datanode%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">3.6.1.</span> <span class="toc-text">1.静态添加&#x2F;删除Datanode的方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%8A%A8%E6%80%81%E6%B7%BB%E5%8A%A0Datanode%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">3.6.2.</span> <span class="toc-text">2.动态添加Datanode的方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%8A%A8%E6%80%81%E5%88%A0%E9%99%A4Datanode%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">3.6.3.</span> <span class="toc-text">3.动态删除Datanode的方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFS%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E6%93%8D%E4%BD%9C"><span class="toc-number">3.7.</span> <span class="toc-text">HDFS文件系统操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A5web%E6%96%B9%E5%BC%8F%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="toc-number">3.8.</span> <span class="toc-text">以web方式查看文件系统</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/19/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%20%E7%8A%B6%E6%80%81%E8%AF%A6%E8%A7%A3/" title="TCP 状态详解">TCP 状态详解</a><time datetime="2024-06-19T14:49:45.000Z" title="发表于 2024-06-19 22:49:45">2024-06-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/HDFS%20%E6%A6%82%E8%BF%B0/" title="HDFS 详解">HDFS 详解</a><time datetime="2024-06-15T15:40:43.000Z" title="发表于 2024-06-15 23:40:43">2024-06-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/HDFS%20%E9%85%8D%E7%BD%AE%E4%B8%8E%E9%83%A8%E7%BD%B2/" title="hadoop 概述">hadoop 概述</a><time datetime="2024-06-15T15:07:12.000Z" title="发表于 2024-06-15 23:07:12">2024-06-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/hadoop%20%E6%A6%82%E8%BF%B0/" title="hadoop 概述">hadoop 概述</a><time datetime="2024-06-15T15:07:12.000Z" title="发表于 2024-06-15 23:07:12">2024-06-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/YARN%20%E6%A6%82%E8%BF%B0/" title="YARN 概述">YARN 概述</a><time datetime="2024-06-15T15:07:12.000Z" title="发表于 2024-06-15 23:07:12">2024-06-15</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By ZengCP</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
