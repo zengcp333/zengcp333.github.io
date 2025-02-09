@@ -1,0 +1,253 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>HTTP/1、HTTP/2 和 HTTP/3 对比 | ZengCP's BLOGS</title><meta name="author" content="ZengCP"><meta name="copyright" content="ZengCP"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="QUIC 协议介绍概述QUIC，发音同quick，是”Quick UDP Internet Connections”的简称，是一种通用的传输层网络协议。QUIC与TCP相同，是一种有连接的传输协议。但是与TCP不同的是QUIC是建立在UDP传输层协议之上的，实现了在两个端点之间的多路复用。QUIC的是在用户空间实现的，TCP&#x2F;UDP则是在内核空间实现的。 QUIC所处的网络层次如下图所示">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTP&#x2F;1、HTTP&#x2F;2 和 HTTP&#x2F;3 对比">
+<meta property="og:url" content="http://example.com/2024/07/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/QUIC%20%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D/index.html">
+<meta property="og:site_name" content="ZengCP&#39;s BLOGS">
+<meta property="og:description" content="QUIC 协议介绍概述QUIC，发音同quick，是”Quick UDP Internet Connections”的简称，是一种通用的传输层网络协议。QUIC与TCP相同，是一种有连接的传输协议。但是与TCP不同的是QUIC是建立在UDP传输层协议之上的，实现了在两个端点之间的多路复用。QUIC的是在用户空间实现的，TCP&#x2F;UDP则是在内核空间实现的。 QUIC所处的网络层次如下图所示">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png">
+<meta property="article:published_time" content="2024-07-09T15:07:26.000Z">
+<meta property="article:modified_time" content="2025-02-09T13:57:01.532Z">
+<meta property="article:author" content="ZengCP">
+<meta property="article:tag" content="计算机网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png"><link rel="shortcut icon" href="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/longmao.png"><link rel="canonical" href="http://example.com/2024/07/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/QUIC%20%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'HTTP/1、HTTP/2 和 HTTP/3 对比',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-02-09 21:57:01'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">48</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">24</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="ZengCP's BLOGS"><span class="site-name">ZengCP's BLOGS</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">HTTP/1、HTTP/2 和 HTTP/3 对比</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-07-09T15:07:26.000Z" title="发表于 2024-07-09 23:07:26">2024-07-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-02-09T13:57:01.532Z" title="更新于 2025-02-09 21:57:01">2025-02-09</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="HTTP/1、HTTP/2 和 HTTP/3 对比"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="QUIC-协议介绍"><a href="#QUIC-协议介绍" class="headerlink" title="QUIC 协议介绍"></a>QUIC 协议介绍</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>QUIC，发音同quick，是”Quick UDP Internet Connections”的简称，是一种通用的传输层网络协议。QUIC与TCP相同，是一种有连接的传输协议。但是与TCP不同的是QUIC是建立在UDP传输层协议之上的，实现了在两个端点之间的多路复用。QUIC的是在用户空间实现的，TCP&#x2F;UDP则是在内核空间实现的。</p>
+<p>QUIC所处的网络层次如下图所示。</p>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/1653979-20220307194320126-1654964147.png" style="zoom:67%;" />
+
+<h2 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h2><p>Quic 相比现在广泛应用的 http2+tcp+tls 协议有如下优势：<br>1、减少了 TCP 三次握手及 TLS 握手时间。<br>2、改进的拥塞控制。<br>3、避免队头阻塞的多路复用。<br>4、连接迁移。<br>5、前向安全。</p>
+<h3 id="快速建联"><a href="#快速建联" class="headerlink" title="快速建联"></a>快速建联</h3><p>QUIC实现了快速握手，并把握手过程分为两种情况，分别是1-RTT和0-RTT。（前置知识： Diffie-Hellman算法的基本原理）</p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/1653979-20220307194321095-535625030.png" alt="image_202"></p>
+<p>在上图中显示了三种不同情况的连接过程。其中最左边的图表示的是第一次连接时的情况，中间的图表示重复连接的情况（在一定条件下，客户端可以重新连接服务器而不需要从初始化情况连接），最右边的图则是重连失败之后从初始话连接的情况。最后一种情况是第一种情况的组会，0-RTT也是1-RTT的一部分，后文中将重点介绍1-RTT的连接过程。</p>
+<h4 id="1-RTT"><a href="#1-RTT" class="headerlink" title="1-RTT"></a>1-RTT</h4><p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/1653979-20220307194321846-1226453431.png" alt="QUIC_1_RTT"></p>
+<p><strong>第一次握手</strong>：</p>
+<ul>
+<li>客户端主动向服务器发送Inchoate CHLO报文</li>
+<li>服务器会向客户端发送REJ报文。REJ报文包含了服务器的配置信息，如长期的Diffie-Hellman值，服务器配置的签名，source-address-token(stk, 用于验证的加密块，包含有服务器看到的客户端的IP地址和服务器当前的时间戳，之后客户端会将该stk发回)等，为了进行身份证明还会使用私钥进行签名，同时也可以防篡改；</li>
+<li>在收到服务器的配置信息后，客户端会通过证书链机制验签，并实现对服务器的身份认证。</li>
+</ul>
+<p><strong>第二次握手</strong>：</p>
+<ul>
+<li>客户端在通过对服务器的验证之后，客户端会生成一个Diffie-Hellman值。此时客户端有了自身和对方的Diffie-Hellman值，就可以计算出初始密钥（initial key, ik）；</li>
+<li>客户端将包含有DH公开之的明文Complete CHLO发送至服务器；</li>
+<li>客户端使用ik对请求数据加密，发送至服务器；</li>
+<li>服务器收到Complete CHLO之后就可以获得客户端的Diffie-Hellman的值，就可以计算出初始密钥。</li>
+<li>服务器立即向客户端发送SHLO报文（ik加密的）。SHLO报文含有一个服务器临时Diffie-Hellman值，可以用于计算前向安全的密钥（会话密钥）；</li>
+<li>服务器收到加密的请求数据，使用初始密钥进行解密；</li>
+<li>服务器使用会话密钥对响应数据进行加密，发回给客户端。</li>
+<li>客户端在收到SHLO之后使用初始密钥解密得到服务器的临时DH公开值，根据该临时值计算出会话密钥；</li>
+<li>客户端收到加密的响应数据后，使用会话密钥进行解密。</li>
+</ul>
+<p>整个握手过程会在2个RTT内完成。</p>
+<h4 id="0-RTT"><a href="#0-RTT" class="headerlink" title="0-RTT"></a>0-RTT</h4><p>客户端在重连同一个服务器时，会使用已经缓存的服务器相关配置信息（stk，DH公开值等信息），并直接向服务器发送Complete CHLO报文，并使用ik对请求报文进行加密。但是服务器方面会标识相应的stk等信息已经过期，这时服务器会发送REJ信息，客户端需要重新与服务器进行连接。</p>
+<p>如果没有过期的话，就可以直接建立连接，省下了重新建立连接的开销。</p>
+<p>【注】其实需要发送 initial 报文，明文提供历史会话信息 和 客户端 ID ，供服务端查找 PSK </p>
+<h4 id="多路复用机制"><a href="#多路复用机制" class="headerlink" title="多路复用机制"></a>多路复用机制</h4><p>基于TCP的应用程序会在TCP单字节流抽象层中实现多路复用。为了避免由于TCP顺序传递导致的头部阻塞（head-of-line blocking），QUIC支持在单个UDP连接中复用多个流，并保证UDP报文的丢失仅影响相应的流，而不会影响其他的流（stream）。</p>
+<p>可以在QUIC流上构建任意大小的应用程序报文，最多支持264264的字节。并且stream的实现是轻量级的，即使消息报文很小也可以为它们使用单独的流。每一个Stream都有stream ID唯一标识。这些流ID由客户端&#x2F;服务器进行静态分配。客户端主动发起的流的ID永远是奇数，服务器发起的流的ID是偶数。这样可以避免冲突。当在一个未使用过的流上发送数据时，流会自动创建；当需要关闭时，就会在最后一帧数据上设置一个FIN的标志指示接收方关闭流。如果发送方或接收方确定不再需要流上的数据，则可以取消流，而无需断开整个 QUIC 连接。尽管流是可靠的抽象，但 QUIC 不会为已取消的流重新传输数据。</p>
+<p>一个QUIC包是由一个公共的头后面跟着一个或多个帧组成的，如下图所示。QUIC流复用是通过将流数据封装在一个或多个流帧中来实现的，单个QUIC包可以携带来自多个流的流帧.</p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/1653979-20220307194322442-307715805.png" alt="image_205"></p>
+<h3 id="丢包重传"><a href="#丢包重传" class="headerlink" title="丢包重传"></a>丢包重传</h3><p>TCP 序列号有助于提高可靠性，并表示在接收方传送字节的顺序。这种混淆会导致“重传模糊”（retransmission ambiguity）问题，因为重传的 TCP 段携带与原始数据包相同的序列号 。 TCP ACK 的接收者无法确定 ACK 是为原始传输还是为重传而发送，并且通常通过昂贵的超时来检测重传段的丢失。每个 QUIC 数据包都携带一个新的数据包编号，包括那些携带重传数据的数据包。这种设计不需要单独的机制来区分重传的 ACK 和原始传输的 ACK，从而避免了 TCP 的重传模糊问题。流帧中的流偏移用于传递排序，数据包编号表示一个明确的时间顺序，这使得丢失检测比 TCP 更简单、更准确。</p>
+<p>QUIC的ACK显示地记录了接收的数据报文和ACK之间的延迟。单调增加的报文编号一起，可以精确估算RTT，有助于丢失检测。QUIC的确认报文支持多达256个ACK，这是使得QUIC比带有SACK的TCP更能适应重新排序或丢失的情况下在线路上保留更多字节。</p>
+<h3 id="流量控制-Flow-Control"><a href="#流量控制-Flow-Control" class="headerlink" title="流量控制(Flow Control)"></a>流量控制(Flow Control)</h3><p>当应用程序从QUIC的接收缓冲区中读取数据较慢时，留恋控制就会限制接收者必须保持的接收缓冲区大小。一个缓慢耗尽的stream会逐渐耗尽整个连接connection的缓冲区，因此必须要限制QUIC连接上的每个流可以消耗的缓冲区大小，避免消耗其他流的缓冲区的大小。这样可以改善流之间潜在的队头阻塞（head-of-line blocking）。因此QUIC采用连接级别的流量控制（connection-level flow control），这样可以限制发送者在所有流中接收者使用的聚合缓冲区；采用流级别的流量控制(stream-level flow control)可以限制发送者在任何给定流上使用的缓冲区。</p>
+<p>与HTTP&#x2F;2类似，QUIC采用基于信用的流量控制。QUIC接收器在每个流中通告接收器愿意接收数据的绝对字节偏移量。在特定流上发送、接收和传递数据时，接收器会定期发送窗口更新帧，以增加该流的窗口偏移限制，从而允许对等方在该流上发送更多数据。连接级流量控制的工作方式与流级流量控制相同，但传递的字节数和接收到的最高偏移量是所有流的。</p>
+<h3 id="拥塞控制（Congestion-Control）"><a href="#拥塞控制（Congestion-Control）" class="headerlink" title="拥塞控制（Congestion Control）"></a>拥塞控制（Congestion Control）</h3><p>QUIC支持的拥塞控制算法有：<br>Reno（TCP用的）、基于Pacing的拥塞控制算法（PBCCA）、TCP CUBIC等。</p>
+<h3 id="连接迁移"><a href="#连接迁移" class="headerlink" title="连接迁移"></a>连接迁移</h3><p>QUIC连接使用随机生成的64bit的cid唯一确定。cid允许客户机在网络之间漫游，而不受网络或传输层参数变化的影响。</p>
+<p>cid使得客户端能够独立于网络地址转换（network address translation, NAT）之外。cid 在路由中起着重要作用，特别是用于连接标识的目的。此外，使用 cids 可以通过探测连接的新路径实现多路径。</p>
+<p>在连接迁移期间，端点假设对等方愿意在其当前地址接受数据包。因此，端点可以迁移到新的 IP 地址，而无需首先验证对等方的 IP 地址。新的路由路径可能不支持端点的当前发送速率。在这种情况下，端点需要重新构建它的拥塞控制器。另一方面，从一个新的对等地址接收非探测包 ，确认对等地址已迁移到新的 IP 地址。</p>
+<h2 id="QUIC-协议的安全风险分析"><a href="#QUIC-协议的安全风险分析" class="headerlink" title="QUIC 协议的安全风险分析"></a>QUIC 协议的安全风险分析</h2><h3 id="1-重放攻击"><a href="#1-重放攻击" class="headerlink" title="1. 重放攻击"></a>1. 重放攻击</h3><p>QUIC 协议中的 0-RTT 握手机制虽然显著减少了连接建立的延迟，但也带来了重放攻击的风险。在 0-RTT 握手中，客户端可以在首次发送数据包时就包含应用数据，这使得攻击者可以通过重发这些数据包来完成攻击。</p>
+<p><strong>应对措施</strong>：</p>
+<ul>
+<li><strong>幂等性</strong>：QUIC 对帧的处理是幂等的，无论是重放、重排序、包丢失，都不会导致无效的连接状态。</li>
+<li><strong>校验机制</strong>：0-RTT 握手时，QUIC 要求客户端传输 TLS 会话 ticket 和地址验证 token，使得连接状态高效地检查和恢复。</li>
+<li><strong>关闭 0-RTT</strong>：关闭 0-RTT 是对抗重放攻击最有效的手段。如果要使用 0-RTT，QUIC 要求应用程序做进一步的安全校验。</li>
+</ul>
+<h3 id="2-连接迁移中的安全风险"><a href="#2-连接迁移中的安全风险" class="headerlink" title="2. 连接迁移中的安全风险"></a>2. 连接迁移中的安全风险</h3><p>QUIC 支持连接迁移，允许客户端在不同网络之间无缝切换。然而，这一特性也可能被攻击者利用，例如通过篡改连接 ID 或源地址 token 来发起攻击。</p>
+<p><strong>应对措施</strong>：</p>
+<ul>
+<li><strong>IP 地址验证</strong>：QUIC 使用特殊的机制来验证新的客户端地址，例如服务器发送一个特殊的探测包到新地址，客户端必须正确响应这个探测才能完成迁移。</li>
+<li><strong>限制连接迁移</strong>：在某些高安全需求的场景中，可以限制连接迁移的使用，或者对迁移后的连接进行额外的安全检查。</li>
+</ul>
+<h3 id="3-反射放大攻击"><a href="#3-反射放大攻击" class="headerlink" title="3. 反射放大攻击"></a>3. 反射放大攻击</h3><p>QUIC 协议在设计之初就考虑了防止反射放大攻击的安全风险，但实际应用中仍存在被利用的可能性。攻击者可以利用 QUIC 服务器作为反射放大器，发送大量恶意的 Initial 请求，消耗服务器资源和带宽，甚至导致拒绝服务。</p>
+<p><strong>应对措施</strong>：</p>
+<ul>
+<li><strong>流量监测与过滤</strong>：对 QUIC 流量进行实时监测，识别并过滤异常流量，特别是那些具有反射放大特征的流量。</li>
+<li><strong>限制请求来源</strong>：通过限制请求来源的 IP 地址范围或域名，减少反射放大攻击的可能性。</li>
+<li><strong>使用专业的 DDoS 防护服务</strong>：在面对大规模反射放大攻击时，建议寻求专业的 DDoS 防护团队协助。</li>
+</ul>
+<h3 id="4-前向安全性"><a href="#4-前向安全性" class="headerlink" title="4. 前向安全性"></a>4. 前向安全性</h3><p>QUIC 协议支持前向安全性，即使长期密钥被泄露，过去的通信仍然是安全的。这一特性通过定期更新加密密钥来实现。</p>
+<p><strong>潜在风险</strong>：</p>
+<ul>
+<li><strong>密钥更新机制的实现问题</strong>：如果密钥更新机制没有正确实现，可能会导致前向安全性受损。</li>
+</ul>
+<p><strong>应对措施</strong>：</p>
+<ul>
+<li><strong>严格遵循协议规范</strong>：确保 QUIC 实现严格遵循协议规范，正确实现密钥更新机制。</li>
+<li><strong>定期审计与测试</strong>：对 QUIC 实现进行定期的安全审计和测试，确保前向安全性机制的有效性。</li>
+</ul>
+<h3 id="5-其他安全风险"><a href="#5-其他安全风险" class="headerlink" title="5. 其他安全风险"></a>5. 其他安全风险</h3><ul>
+<li><strong>源地址 token 操作攻击</strong>：攻击者可以篡改源地址 token，导致客户端和服务器生成不同的密钥，从而无法完成正常的信息交流。</li>
+<li><strong>加密流偏移攻击</strong>：攻击者可以通过反转字节流数据，破坏字节流，导致连接建立失败。</li>
+</ul>
+<p><strong>应对措施</strong>：</p>
+<ul>
+<li><strong>增强加密机制</strong>：使用更强大的加密算法和密钥管理机制，减少此类攻击的风险。</li>
+<li><strong>应用层防护</strong>：在应用层实现额外的安全校验机制，确保数据的完整性和一致性。</li>
+</ul>
+<h2 id="QUIC-实施难点与应对策略"><a href="#QUIC-实施难点与应对策略" class="headerlink" title="QUIC 实施难点与应对策略"></a>QUIC 实施难点与应对策略</h2><h3 id="中间设备兼容性"><a href="#中间设备兼容性" class="headerlink" title="中间设备兼容性"></a>中间设备兼容性</h3><p>许多现有的防火墙和 NAT 设备可能不理解或不支持 QUIC 协议，可能会错误地阻止 QUIC 流量。此外，传统的基于 TCP 的负载均衡器可能无法正确处理 QUIC 流量。</p>
+<h4 id="应对策略："><a href="#应对策略：" class="headerlink" title="应对策略："></a><strong>应对策略</strong>：</h4><ul>
+<li>升级防火墙、NAT 设备和负载均衡器，以支持 QUIC 协议。</li>
+<li>使用支持 QUIC 的网络监控工具，以确保网络的可管理性和安全性。</li>
+</ul>
+<h3 id="CPU-使用率"><a href="#CPU-使用率" class="headerlink" title="CPU 使用率"></a>CPU 使用率</h3><p>QUIC 默认对所有数据进行加密，这增加了 CPU 的计算负担。在高吞吐量场景下，这可能导致服务器和客户端的 CPU 使用率显著增加。</p>
+<h4 id="应对策略：-1"><a href="#应对策略：-1" class="headerlink" title="应对策略："></a><strong>应对策略</strong>：</h4><ul>
+<li>使用更高效的加密算法，减少加密开销。</li>
+<li>利用硬件加速技术（如 GPU 或专用加密芯片）来处理加密和包处理任务。</li>
+</ul>
+<h3 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h3><p>由于 QUIC 流量是加密的，传统的网络分析工具可能无法提供详细的可见性。这增加了识别和解决网络问题的难度。</p>
+<h4 id="应对策略：-2"><a href="#应对策略：-2" class="headerlink" title="应对策略："></a><strong>应对策略</strong>：</h4><ul>
+<li>使用支持 QUIC 协议的调试工具，如 Wireshark。</li>
+<li>在应用程序和服务中实现详细的日志记录功能，以便在出现问题时能够快速定位和解决。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">ZengCP</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/07/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/QUIC%20%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D/">http://example.com/2024/07/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/QUIC%20%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">ZengCP's BLOGS</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></div><div class="post_share"><div class="social-share" data-image="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/07/16/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/IO%20%E6%A6%82%E8%BF%B0/" title="IO 概述"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">IO 概述</div></div></a></div><div class="next-post pull-right"><a href="/2024/07/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP1%20HTTP2%20HTTP3%20%20%E6%BC%94%E5%8C%96%E4%B8%8E%E5%85%B3%E9%94%AE%E7%89%B9%E6%80%A7%E5%88%86%E6%9E%90/" title="HTTP/1、HTTP/2 和 HTTP/3 对比"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">HTTP/1、HTTP/2 和 HTTP/3 对比</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/07/09/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP1%20HTTP2%20HTTP3%20%20%E6%BC%94%E5%8C%96%E4%B8%8E%E5%85%B3%E9%94%AE%E7%89%B9%E6%80%A7%E5%88%86%E6%9E%90/" title="HTTP&#x2F;1、HTTP&#x2F;2 和 HTTP&#x2F;3 对比"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-09</div><div class="title">HTTP&#x2F;1、HTTP&#x2F;2 和 HTTP&#x2F;3 对比</div></div></a></div><div><a href="/2024/07/07/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E5%BA%94%E7%94%A8%E5%B1%82/" title="计算机网络 —— 应用层"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-07</div><div class="title">计算机网络 —— 应用层</div></div></a></div><div><a href="/2024/07/02/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E4%BC%A0%E8%BE%93%E5%B1%82/" title="计算机网络 —— 传输层"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-02</div><div class="title">计算机网络 —— 传输层</div></div></a></div><div><a href="/2024/06/19/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%20%E7%8A%B6%E6%80%81%E8%AF%A6%E8%A7%A3/" title="TCP 状态详解"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-19</div><div class="title">TCP 状态详解</div></div></a></div><div><a href="/2024/07/07/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%E7%AE%97%E6%B3%95/" title="拥塞控制算法"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-07</div><div class="title">拥塞控制算法</div></div></a></div><div><a href="/2024/06/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E7%89%A9%E7%90%86%E5%B1%82/" title="计算机网络 —— 物理层"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-06-30</div><div class="title">计算机网络 —— 物理层</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZengCP</div><div class="author-info__description">记录心得，见证成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">48</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">24</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#QUIC-%E5%8D%8F%E8%AE%AE%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">QUIC 协议介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF"><span class="toc-number">1.2.</span> <span class="toc-text">优势</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E9%80%9F%E5%BB%BA%E8%81%94"><span class="toc-number">1.2.1.</span> <span class="toc-text">快速建联</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-RTT"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">1-RTT</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0-RTT"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">0-RTT</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E6%9C%BA%E5%88%B6"><span class="toc-number">1.2.1.3.</span> <span class="toc-text">多路复用机制</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A2%E5%8C%85%E9%87%8D%E4%BC%A0"><span class="toc-number">1.2.2.</span> <span class="toc-text">丢包重传</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6-Flow-Control"><span class="toc-number">1.2.3.</span> <span class="toc-text">流量控制(Flow Control)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%EF%BC%88Congestion-Control%EF%BC%89"><span class="toc-number">1.2.4.</span> <span class="toc-text">拥塞控制（Congestion Control）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E8%BF%81%E7%A7%BB"><span class="toc-number">1.2.5.</span> <span class="toc-text">连接迁移</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#QUIC-%E5%8D%8F%E8%AE%AE%E7%9A%84%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9%E5%88%86%E6%9E%90"><span class="toc-number">1.3.</span> <span class="toc-text">QUIC 协议的安全风险分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%87%8D%E6%94%BE%E6%94%BB%E5%87%BB"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. 重放攻击</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%BF%9E%E6%8E%A5%E8%BF%81%E7%A7%BB%E4%B8%AD%E7%9A%84%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 连接迁移中的安全风险</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%8F%8D%E5%B0%84%E6%94%BE%E5%A4%A7%E6%94%BB%E5%87%BB"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. 反射放大攻击</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%89%8D%E5%90%91%E5%AE%89%E5%85%A8%E6%80%A7"><span class="toc-number">1.3.4.</span> <span class="toc-text">4. 前向安全性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%85%B6%E4%BB%96%E5%AE%89%E5%85%A8%E9%A3%8E%E9%99%A9"><span class="toc-number">1.3.5.</span> <span class="toc-text">5. 其他安全风险</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#QUIC-%E5%AE%9E%E6%96%BD%E9%9A%BE%E7%82%B9%E4%B8%8E%E5%BA%94%E5%AF%B9%E7%AD%96%E7%95%A5"><span class="toc-number">1.4.</span> <span class="toc-text">QUIC 实施难点与应对策略</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E9%97%B4%E8%AE%BE%E5%A4%87%E5%85%BC%E5%AE%B9%E6%80%A7"><span class="toc-number">1.4.1.</span> <span class="toc-text">中间设备兼容性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BA%94%E5%AF%B9%E7%AD%96%E7%95%A5%EF%BC%9A"><span class="toc-number">1.4.1.1.</span> <span class="toc-text">应对策略：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CPU-%E4%BD%BF%E7%94%A8%E7%8E%87"><span class="toc-number">1.4.2.</span> <span class="toc-text">CPU 使用率</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BA%94%E5%AF%B9%E7%AD%96%E7%95%A5%EF%BC%9A-1"><span class="toc-number">1.4.2.1.</span> <span class="toc-text">应对策略：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E8%AF%95"><span class="toc-number">1.4.3.</span> <span class="toc-text">调试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BA%94%E5%AF%B9%E7%AD%96%E7%95%A5%EF%BC%9A-2"><span class="toc-number">1.4.3.1.</span> <span class="toc-text">应对策略：</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/09/%E6%9E%B6%E6%9E%84/DDD%20%E6%A6%82%E8%BF%B0/" title="无题">无题</a><time datetime="2025-02-08T17:13:05.234Z" title="发表于 2025-02-09 01:13:05">2025-02-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0/" title="无题">无题</a><time datetime="2025-02-06T17:51:02.144Z" title="发表于 2025-02-07 01:51:02">2025-02-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/24/%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B/" title="架构演进">架构演进</a><time datetime="2024-10-24T15:26:41.000Z" title="发表于 2024-10-24 23:26:41">2024-10-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/20/%E9%9A%8F%E6%83%B3/20241020__%E5%87%86%E5%A4%87%E9%9D%A2%E8%AF%95/" title="无题">无题</a><time datetime="2024-10-20T08:27:05.448Z" title="发表于 2024-10-20 16:27:05">2024-10-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/09/08/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E7%AE%80%E4%BB%8B/" title="服务治理概述">服务治理概述</a><time datetime="2024-09-08T06:53:38.000Z" title="发表于 2024-09-08 14:53:38">2024-09-08</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By ZengCP</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

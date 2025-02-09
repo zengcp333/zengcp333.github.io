@@ -53,7 +53,7 @@
   isHome: true,
   isHighlightShrink: false,
   isToc: false,
-  postUpdate: '2024-06-20 00:29:02'
+  postUpdate: '2025-02-09 22:02:44'
 }</script><script>(win=>{
       win.saveToLocal = {
         set: (key, value, ttl) => {
@@ -150,160 +150,147 @@
         }
       }
       detectApple()
-    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">17</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url('https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/longmao_wallpaper_1.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="ZengCP's BLOGS"><span class="site-name">ZengCP's BLOGS</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">ZengCP's BLOGS</h1></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/06/19/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%20%E7%8A%B6%E6%80%81%E8%AF%A6%E8%A7%A3/" title="TCP 状态详解">TCP 状态详解</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-06-19T14:49:45.000Z" title="发表于 2024-06-19 22:49:45">2024-06-19</time></span></div><div class="content">TCP 状态详解TCP 状态机
-TCP 状态梳理
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">48</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">24</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url('https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/longmao_wallpaper_1.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="ZengCP's BLOGS"><span class="site-name">ZengCP's BLOGS</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">ZengCP's BLOGS</h1></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/09/%E6%9E%B6%E6%9E%84/DDD%20%E6%A6%82%E8%BF%B0/" title="无题">无题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-02-08T17:13:05.234Z" title="发表于 2025-02-09 01:13:05">2025-02-09</time></span></div><div class="content">领域驱动设计（DDD）深度解析：从战略设计到战术落地
+一、为什么需要DDD？在传统软件开发中，业务逻辑与技术实现的高度耦合常导致系统难以维护。MVC架构容易退化为”贫血模型”，业务规则散落在Service层，领域知识逐渐丢失。而DDD通过以领域为中心的设计哲学，提供了一套应对复杂业务系统的完整方法论。
+
+二、DDD核心思想
+领域为王一切设计围绕业务领域展开，技术实现为领域服务
+
+统一语言开发团队与业务专家使用一致的术语表（Ubiquitous Language）
+
+分治策略通过限界上下文（Bounded Context）划分复杂系统
 
 
-状态
-描述
+
+三、战略设计：划分战场
+子域划分
+
+核心域：业务核心竞争力（如电商的订单系统）
+支撑域：辅助核心业务（如物流跟踪）
+通用域：通用解决方案（如支付模块）
+
+
+限界上下文
+1234[订单上下文]           [库存上下文]- 订单聚合根          - 库存条目- 订单项值对象        - 仓库实体- 订单状态机          - 库存锁定服务
+
+上下文映射
+
+合作关系（Partnership）
+客户&#x2F;供应商（Custo ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2025/02/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0/" title="无题">无题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2025-02-06T17:51:02.144Z" title="发表于 2025-02-07 01:51:02">2025-02-07</time></span></div><div class="content"></div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/10/24/%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B/" title="架构演进">架构演进</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-10-24T15:26:41.000Z" title="发表于 2024-10-24 23:26:41">2024-10-24</time></span></div><div class="content">架构演进原始分布式时代出现原因
+硬件限制：在20世纪70年代末期到80年代初，计算机科学经历了从大型机向微型机的转变。当时的微型计算机系统通常具有16位寻址能力、不足5MHz时钟频率的处理器和128KB左右的内存地址空间。这样的硬件限制直接妨碍了单台计算机上信息系统软件的最大规模，因此需要多台计算机共同协作来支撑同一套软件系统的运行。
+突破算力限制：为了突破硬件算力的限制，各个高校、研究机构、软硬件厂商开始探索使用多台计算机共同协作来支撑同一套软件系统运行的可行性。
+计算机应用的扩展：计算机逐渐从科研设备转变为商业企业的生产设备，甚至是面向家庭、个人用户的娱乐设备，这要求计算机能够处理更大规模的信息系统软件
+
+主要贡献
+网络运算架构（NCA）：惠普公司提出的网络运算架构是未来远程服务调用的雏形 （RPC）。
+分布式文件系统（AFS）：卡内基·梅隆大学提出的AFS文件系统是日后分布式文件系统的最早实现。
+Kerberos协议：麻省理工学院提出的Kerberos协议是服务认证和访问控制的基础性协议，是分布式服务安全性的重要支撑，目前仍被用于实现包括Windows和MacOS在内众多操作系统 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/10/20/%E9%9A%8F%E6%83%B3/20241020__%E5%87%86%E5%A4%87%E9%9D%A2%E8%AF%95/" title="无题">无题</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-10-20T08:27:05.448Z" title="发表于 2024-10-20 16:27:05">2024-10-20</time></span></div><div class="content"></div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/09/08/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E7%AE%80%E4%BB%8B/" title="服务治理概述">服务治理概述</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-09-08T06:53:38.000Z" title="发表于 2024-09-08 14:53:38">2024-09-08</time></span></div><div class="content">服务治理是微服务架构中的核心概念，旨在确保分布式系统中各个服务的稳定性、可靠性和可维护性。它涵盖了从服务发现到故障恢复的多个方面。以下是服务治理的主要方面：
+
+1. 服务发现与注册
+定义：服务实例启动时向注册中心注册自己的信息（如IP、端口、服务名），其他服务通过注册中心发现目标服务。
+常见工具：
+Consul：支持服务发现、健康检查、KV存储。
+Eureka：Netflix开源的注册中心，适合Spring Cloud生态。
+Zookeeper：分布式协调服务，支持服务注册与发现。
+Nacos：阿里巴巴开源的注册中心，支持服务发现和配置管理。
+
+
+关键点：
+服务动态上下线。
+服务信息的实时更新。
 
 
 
-LISTEN
-等待来自远程TCP应用程序的请求
+
+2. 负载均衡
+定义：将请求均匀分发到多个服务实例，以提高系统的吞吐量和可用性。
+负载均衡策略：
+轮询（Round Robin）。
+加权轮询（Weighted Round Robin）。
+最小连接数（Least Connections）。
+一致性哈希（Consistent Hashing）。
 
 
-SYN_SENT
-发送连接请求后等待来自远程端点的确认。TCP第一次握手后客户端所处的状态
+实现方式：
+客户端负载均衡（如Ribbon）。
+服务端负载均衡（如Nginx、HAProx ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/09/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" title="负载均衡概述">负载均衡概述</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-09-07T14:47:15.000Z" title="发表于 2024-09-07 22:47:15">2024-09-07</time></span></div><div class="content">负载均衡常见面试题解析一、基础概念1. 什么是负载均衡？为什么需要它？答案：负载均衡是一种将网络请求或计算任务动态分配到多个服务器（或资源）的技术，目标是：
+
+提高系统吞吐量：避免单个服务器过载。
+增强可用性：通过故障转移（Failover）避免单点故障。
+优化资源利用率：合理分配请求，减少资源浪费。
+
+2. 四层负载均衡 vs. 七层负载均衡的区别？答案：  
+
+四层（L4）：基于内核态的TCP&#x2F;IP协议栈，通过修改IP&#x2F;TCP头信息实现转发（如DNAT）。性能高（可达到百万级QPS），但无法理解HTTP报文。典型工具：LVS（Linux Virtual Server）。
+七层（L7）：工作在用户态，解析HTTP&#x2F;HTTPS头部，支持按URL、Cookie等路由。性能较低（通常十万级QPS），但灵活性极强。典型工具：Nginx、Envoy。性能优化：LVS使用IPVS内核模块避免数据拷贝；Nginx通过epoll多路复用和非阻塞I&#x2F;O提升并发能力。关键区别：L7能识别应用协议，支持更复杂的路由策略（如按URL分发），但延迟略高。
+
+3. 负载均 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/09/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/HaProxy%20%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/" title="HaProxy 配置详解">HaProxy 配置详解</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-09-07T13:56:29.000Z" title="发表于 2024-09-07 21:56:29">2024-09-07</time></span></div><div class="content">HAProxy 配置详解与综合示例一、配置文件结构解析HAProxy配置文件由5个主要部分组成，优先级从高到低：
+
+global：全局系统参数
+defaults：默认参数模板
+frontend：客户端连接入口
+backend：服务端集群配置
+listen：frontend+backend组合声明
+
+二、核心配置指令详解2.1 全局配置（Global）123456789global    log 127.0.0.1 local0 info    # 日志服务器配置    maxconn 100000               # 最大并发连接数    user haproxy                 # 运行用户    group haproxy                # 运行组    nbthread 4                   # 工作线程数（建议等于CPU核心）    stats socket /var/run/haproxy.sock mode 660 level admin # 管理接口    ssl-default-bind-ciphers EC ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/09/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/HaProxy%20%E8%AF%A6%E8%A7%A3/" title="HaProxy 概述">HaProxy 概述</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-09-07T12:43:47.000Z" title="发表于 2024-09-07 20:43:47">2024-09-07</time></span></div><div class="content">HAProxy深度指南：从配置实战到架构选型一、核心概念解析1.1 四层 vs 七层代理HAProxy同时支持L4(TCP)和L7(HTTP)代理，架构差异如下：
 
 
-SYN-RECEIVED
-该端点已经接收到连接请求并发送确认。 该端点正在等待最终确认。TCP第二次握手后服务端所处的状态
+
+特性
+L4代理
+L7代理
 
 
-ESTABLISHED
-代表连接已经建立起来了。这是连接数据传输阶段的正常状态
+
+协议感知
+无
+有（HTTP解析）
 
 
-FIN_WAIT_1
-等待来自远程TCP的终止连接请求或终止请求的确认
+会话保持
+基于源IP
+基于Cookie&#x2F;Header
 
 
-FIN_WAIT_2
-在此端点发送终止连接请求后，等待来自远程TCP的连接终止请求
+健康检查
+TCP端口检测
+HTTP状态码验证
 
 
-CLOSE_WAIT
-该端点已经收到来自远程端点的关闭请求，此TCP正在等待本地应用程序的连接终止请求
+典型场景
+数据库负载均衡
+Web应用路由
 
 
-CLOSING
-等待来自远程TCP的连接终止请求确认
+1.2 核心组件123456789101112131415frontend web-in           # 流量入口    bind *:80    acl is_api path_beg /api    use_backend api_cluster if is_api    default_backend web_serversbackend web_servers       # 服务集群    balance roundrobin    server web1 10.0.1.1:80 check    server web2 10.0.1.2:80 checklisten s ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/09/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/K8S%20%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0%E4%B8%8E%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E8%A7%A3%E6%9E%90/" title="K8S 服务注册、发现 与 负载均衡 原理解析">K8S 服务注册、发现 与 负载均衡 原理解析</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-09-07T05:57:48.000Z" title="发表于 2024-09-07 13:57:48">2024-09-07</time></span></div><div class="content">K8S 服务注册、发现 与 负载均衡 原理解析在 Kubernetes（K8S）集群中，服务注册、发现与负载均衡是确保微服务架构高效运行的核心机制。这些机制共同解决了分布式系统中服务实例动态变化、流量分配以及高可用性等问题。本文将系统、专业地解析这些机制的原理，并提供详细的配置示例，帮助读者深入理解 K8S 的工作方式。
+一、服务注册原理1.1 服务注册的概念服务注册是指将服务实例的相关信息（如 IP 地址、端口号等）记录到一个中心化的注册中心，以便其他服务能够发现并调用这些服务。在 K8S 中，服务注册主要通过 API Server 和 etcd 来实现。
+1.2 服务注册的流程
+Pod 创建时注册：当一个新的 Pod 创建时，Kubelet 会将该 Pod 的信息（包括 IP 地址、端口号等）注册到 API Server。
+API Server 存储信息：API Server 接收到 Pod 信息后，将其存储到 etcd 中。
+Service 关联 Pod：Service 通过标签选择器（Label Selector）与 Pod 进行关联。当 Service 创建时，API Ser ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/09/06/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/NGINX%20%E8%BF%9B%E9%98%B6/" title="NGINX 进阶">NGINX 进阶</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-09-06T15:17:41.000Z" title="发表于 2024-09-06 23:17:41">2024-09-06</time></span></div><div class="content">NGINX 进阶一、NGINX架构设计核心1.1 多进程模型NGINX采用经典的主从多进程架构，包含1个Master进程和N个Worker进程（N通常等于CPU核心数），其中：
+
+Master 进程主要用来管理 Worker 进程，包含：
+
+接收来自外界的信号，向各 Worker 进程发送信号，
+监控 Worker 进程的运行状态，当 Worker 进程异常退出后，会自动重新启动新的 Worker 进程。
 
 
-LAST_ACK
-等待先前发送到远程TCP的连接终止请求的确认
+Worker 进程则负责处理基本的网络事件。
+
+多个 Worker 进程之间是对等的，他们同等竞争来自客户端的请求，各进程互相之间是独立的。
+一个请求，只可能在一个 Worker 进程中处理，一个 Worker 进程，不可能处理其它进程的请求。
 
 
-TIME_WAIT
-等待足够的时间来确保远程TCP接收到其连接终止请求的确认
+
+这种设计实现了：
+
+热部署与零停机更新：通过execve()系统调用原子替换二进制文件
+异常隔离机制：Worker进程崩溃不会影响整体服务
+特权分离设计：Master进程以root身份运行，Worker以降权身份执行
+
+Nginx 的进程模型，可以由下图来表示：
 
 
-牢记： TCP 到处都是坑， 现在就开始找坑
-SYN_SENT
-归属： 客户端独有
+1.1.1 热升级技术实现零宕机升级流程：
 
-原 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/HDFS%20%E6%A6%82%E8%BF%B0/" title="HDFS 详解">HDFS 详解</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-06-15T15:40:43.000Z" title="发表于 2024-06-15 23:40:43">2024-06-15</time></span></div><div class="content">HDFS BASIC  当需要存储的数据集的大小超过了一台独立的物理计算机的存储能力时，就需要对数据进行分区并存储到若干台计算机上去。管理网络中跨多台计算机存储的文件系统统称为分布式文件系统（distributed fileSystem）。
-  分布式文件系统由于其跨计算机的特性，所以依赖于网络的传输，势必会比普通的本地文件系统更加复杂，比如：如何使得文件系统能够容忍节点的故障并且保证不丢失数据，这就是一个很大的挑战
-HDFS简介及其基本概念  HDFS（Hadoop Distributed File System）是hadoop生态系统的一个重要组成部分，是hadoop中的的存储组件，在整个Hadoop中的地位非同一般，是最基础的一部分，因为它涉及到数据存储，MapReduce等计算模型都要依赖于存储在HDFS中的数据。HDFS是一个分布式文件系统，以流式数据访问模式存储超大文件，将数据分块存储到一个商业硬件集群内的不同机器上。
-  这里重点介绍其中涉及到的几个概念：
-（1）超大文件。目前的hadoop集群能够存储几百TB甚至PB级的数据。
-（2）流式数据访问。HDFS的访问模式是： ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/HDFS%20%E9%85%8D%E7%BD%AE%E4%B8%8E%E9%83%A8%E7%BD%B2/" title="hadoop 概述">hadoop 概述</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-06-15T15:07:12.000Z" title="发表于 2024-06-15 23:07:12">2024-06-15</time></span></div><div class="content">部署HDFSHDFS的基本操作可以分为集群管理和文件系统操作两种类型：
-
-集群管理：包括Namenodede 的格式化、集群的启动和停止、集群信息查看等。
-文件系统：包括对目录、文件和权限等内容的操作。
-
-HDFS中的命令主要在sbin和bin目录下[一般要进行环境变量的设置]：
-
-sbin:集群控制脚本(.sh)。
-bin:hadoop的文件系统命令和其他管理维护工具。
-
-hadoop安装和维护的方式主要有2种方式：
-
-一是从开源软件的官网网站直接下载软件包。
-二是利用集成化软件对Hadoop集群进行部署和维护。[集成化工具：amabri、cloudera manager、华为的FusionInsight]
-
-第一种方式缺点：
-
-配置优化难度
-组件整合难度
-
-部署HDFS的核心步骤和部署原则集群规划
-hadoop系统的规模
-
-组件和角色规划
-
-A.确定需要安装哪些组件：比如要实现Namenode的高可用性，就需要额外安装ZK组件。
-B.确定组件中的不同角色分别安装在哪些节点上：比如需要几个Datanode，分别安装在哪些服务器上，Namenode是安装在独立服务器上，还是和某个Dat ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/hadoop%20%E6%A6%82%E8%BF%B0/" title="hadoop 概述">hadoop 概述</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-06-15T15:07:12.000Z" title="发表于 2024-06-15 23:07:12">2024-06-15</time></span></div><div class="content">引言在学习Hadoop之前，先了解一下典型的大数据平台架构图：
-
-可以看到Hadoop在大数据平台里处于一个技术核心的地位
-概述Hadoop定义Hadoop 是一个开源的分布式计算框架，由 Apache Software Foundation 开发和维护。它主要用于处理和分析大数据。Hadoop 的核心设计理念是将计算任务分布到多个节点上，以实现高度可扩展性和容错性。
-Hadoop组成Hadoop 大数据技术生态，具体包含组件如下：
-
-
-Hadoop HDFS（核心）：Hadoop 分布式存储系统；
-Yarn（核心）：Hadoop 2.x版本开始才有的资源管理系统；
-MapReduce（核心）：并行处理框架；
-HBase：基于HDFS的列式存储数据库，它是一种 NoSQL 数据库，非常适用于存储海量的稀疏的数据集；
-Hive：Apache Hive是一个数据仓库基础工具，它适用于处理结构化数据。它提供了简单的 sql 查询功能，可以将sql语句转换为 MapReduce任务进行运行；
-Pig：它是一种高级脚本语言。利用它不需要开发Java代码就可以写出复杂的数据处理程序；
-Flume： ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/YARN%20%E6%A6%82%E8%BF%B0/" title="YARN 概述">YARN 概述</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-06-15T15:07:12.000Z" title="发表于 2024-06-15 23:07:12">2024-06-15</time></span></div><div class="content">YARN简介Apache Hadoop YARN （Yet Another Resource Negotiator，另一种资源协调者）是一种新的 Hadoop 资源管理器，它是一个通用资源管理系统，可为上层应用提供统一的资源管理和调度，它的引入为集群在利用率、资源统一管理和数据共享等方面带来了巨大好处。
-YARN的由来在YARN出来之前，其实在Hadoop体系里面，负责资源管理和作业控制的是MRv1（Hadoop 1.0）体系中的JobTracker在承担，但是MRv1体系其实有其缺点，如下：
-
-可靠性差 &#x2F; 单点故障
-
-JobTracker 既做资源管理，又做任务调度，任务太重，易产生单点故障
-
-
-资源利用率低
-
-MRv1 资源描述模型过于简单，仅把 Task 数量作为资源分配依据，没有考虑任务本身的性能消耗差异
-强制把资源分成 Map Task Slot 和 Reduce Task Slot，且不允许它们之 间共享，常常会导致一种槽位资源紧张而另外一种闲置(比如一个作业刚刚提交时， 只会运行 Map Task，此时 Reduce Slot 闲置)。
-
-
-扩展性差 ： 在M ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%9F%BA%E7%A1%80/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%AE%80%E4%BB%8B/" title="大数据基础">大数据基础</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-06-15T14:21:38.000Z" title="发表于 2024-06-15 22:21:38">2024-06-15</time></span></div><div class="content">数据通用操作
-采集
-处理
-存储
-分析
-
-最后通过数据分析结果，进行预测、调优等等
-什么是大数据大数据（Big Data）是指在传统数据处理方法难以处理的情况下，需要新的处理模式来具有更强的决策力、洞察发现力和过程优化能力的海量、高增长率和多样化的信息资产。大数据的特征通常被概括为“4V”，即：
-
-Volume（容量）：大数据的规模非常庞大，通常以 TB（太字节）、PB（拍字节）或 EB（艾字节）为单位，甚至更高。例如，2020 年全球互联网用户产生的数据量达到了 59ZB（泽字节），相当于每天产生 160 亿 GB 的数据。
-Velocity（速度）：大数据的产生和处理速度非常快，需要实时或近实时的响应。例如，社交媒体、电子商务、物联网等领域的数据流动非常快，需要快速分析和处理。
-Variety（多样性）：大数据的来源和类型非常多样，包括结构化的数据（如数据库表）、半结构化的数据（如 XML、JSON 等）和非结构化的数据（如文本、图像、音频、视频等）。例如，互联网上的用户行为数据、传感器数据、地理位置数据、社交网络数据等都属于大数据的范畴。
-Value（价值）：大数据的价值密度相对较 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/05/12/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B/IPC--%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/" title="IPC --- 共享内存">IPC --- 共享内存</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-05-12T13:33:26.000Z" title="发表于 2024-05-12 21:33:26">2024-05-12</time></span></div><div class="content">共享内存基本概念共享内存，顾名思义就是允许两个不相关的进程访问同一个逻辑内存，共享内存是两个正在运行的进程之间共享和传递数据的一种非常有效的方式。
-不同进程之间共享的内存通常为同一段物理内存。进程可以将同一段物理内存连接到他们自己的地址空间中，所有的进程都可以访问共享内存中的地址。如果某个进程向共享内存写入数据，所做的改动将立即影响到可以访问同一段共享内存的任何其他进程。
-共享内存并未提供锁机制，也就是说，在某一个进程对共享内存的进行读写的时候，不会阻止其它的进程对它的读写。如果要对共享内存的互斥访问，可以使用信号量。
-共享内存实现方式共享内存通常是各种 IPC 之中效率最高的方式。Linux 之中实现共享内存的方式通常有如下几类：
-
-mmap 内存共享映射 （通常用于父子进程之间的内存共享，存在一定局限性，且用到更多的原因是其 零拷贝IO 的特性）
-**System V **的共享内存
-POSIX 共享内存
-
-平时讨论主要的共享内存是后面两者，但是 System V 和 POSIX 的共享内存，底层都是基于内存文件系统 tmpfs 实现的，二者的主要区别是在接口设计上，
-System ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/05/12/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B/IPC--%E7%AE%A1%E9%81%93/" title="IPC --- 管道">IPC --- 管道</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-05-12T13:33:26.000Z" title="发表于 2024-05-12 21:33:26">2024-05-12</time></span></div><div class="content">匿名管道 IPC管道创建123#include &lt;unistd.h&gt;int pipe (int fd[2]); // 返回:成功返回0，出错返回-1
-
-fd 为 文件描述符数组，是函数的核心返回值， fd[0] 指向管道 读端 ， fd[1]指向管道写端，也即 fd[1] 是 fd[0] 的输入
-管道实现进程间通信（1）父进程创建管道，得到两个⽂件描述符指向管道的两端
-（2）父进程 fork 出子进程，⼦进程也有两个⽂件描述符指向同⼀管道。 
-（3）父进程关闭fd[0],子进程关闭fd[1]，即⽗进程关闭管道读端,⼦进程关闭管道写端（因为管道只支持单向通信）。⽗进程可以往管道⾥写,⼦进程可以从管道⾥读,管道是⽤环形队列实现的,数据从写端流⼊从读端流出,这样就实现了进程间通信。
-实例
-123456789101112131415161718192021222324252627282930313233343536373839404142434445464748#include &lt;unistd.h&gt;#include &lt;sys/types.h&gt;#include ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/05/12/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B/IPC--%E4%BF%A1%E5%8F%B7%20%E4%B8%8E%20%E4%BF%A1%E5%8F%B7%E9%87%8F/" title="IPC --- 信号量">IPC --- 信号量</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-05-12T11:28:14.000Z" title="发表于 2024-05-12 19:28:14">2024-05-12</time></span></div><div class="content">信号量概述什么是信号量信号量（信号灯）本质上是一个计数器，用于协调多个进程（包括但不限于父子进程）对共享数据对象的读&#x2F;写。它不以传送数据为目的，主要是用来保护共享资源（信号量、消息队列、socket连接等），保证共享资源在一个时刻只有一个进程独享。
-信号量是一个特殊的变量，只允许进程对它进行等待信号和发送信号操作。最简单的信号量是取值 0 和 1 的二元信号量，这是信号量最常见的形式。
-通用信号量（可以取多个正整数值）和信号量集方面的知识比较复杂，应用场景也比较少，本文只介绍二元信号量。
-信号量的工作原理由于信号量只能进行两种操作等待和发送信号，即 P(sv)和V(sv),他们的行为是这样的：
-**P(sv)**：如果 sv 的值大于零，就给它减 1；如果它的值为零，就挂起该进程的执行
-**V(sv)**：如果有其他进程因等待 sv 而被挂起，就让它恢复运行，如果没有进程因等待 sv 而挂起，就给它加 1.
-举个例子，就是两个进程共享信号量sv，一旦其中一个进程执行了P(sv)操作，它将得到信号量，并可以进入临界区，使sv减1。而第二个进程将被阻止进入临界区，因为当它试图执行 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/05/11/Java%20%E5%9F%BA%E7%A1%80/Java%20%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" title="Java 并发编程">Java 并发编程</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-05-11T11:46:31.000Z" title="发表于 2024-05-11 19:46:31">2024-05-11</time></span></div><div class="content">JMM
-JVM 线程对主存中的共享变量进行修改时，必须先将共享变量读到自身工作内存中（实际就是CPU Cache），并在工作内存中进行修改，最后再刷回主存。
-（CPU Cache： 缓解 内存 和 CPU 速度相差过大问题， 但 Cache 引入势必造成一致性问题）
-内存交互操作（保证原子性）
-read： 作用于主内存的变量，它把一个变量的值从主内存传输到线程的工作内存中，以便随后的 load 动作使用。
-load： 把 read 操作从主内存中得到的变量值放入工作内存的变量的副本中。
-use： 把工作内存中的一个变量的值传给执行引擎，每当虚拟机遇到一个使用到变量的指令时都会使用该指令。
-assign： 作用于工作内存的变量，它把一个从执行引擎接收到的值赋给工作内存的变量，每当虚拟机遇到一个给变量赋值的字节码指令时执行这个操作
-store： 作用于工作内存的变量，它把工作内存中一个变量的值传送到主内存中，以便随后的 write 操作使用。
-write： 作用于主内存中的变量，它把store操作从工作内存中得到的变量的值放入主内存的变量中
-lock： 作用于主内存的变量，把一个变量标识为 ...</div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/#content-inner">2</a><a class="extend next" rel="next" href="/page/2/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZengCP</div><div class="author-info__description">记录心得，见证成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">17</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">12</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/19/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/TCP%20%E7%8A%B6%E6%80%81%E8%AF%A6%E8%A7%A3/" title="TCP 状态详解">TCP 状态详解</a><time datetime="2024-06-19T14:49:45.000Z" title="发表于 2024-06-19 22:49:45">2024-06-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/HDFS%20%E6%A6%82%E8%BF%B0/" title="HDFS 详解">HDFS 详解</a><time datetime="2024-06-15T15:40:43.000Z" title="发表于 2024-06-15 23:40:43">2024-06-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/HDFS%20%E9%85%8D%E7%BD%AE%E4%B8%8E%E9%83%A8%E7%BD%B2/" title="hadoop 概述">hadoop 概述</a><time datetime="2024-06-15T15:07:12.000Z" title="发表于 2024-06-15 23:07:12">2024-06-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/hadoop%20%E6%A6%82%E8%BF%B0/" title="hadoop 概述">hadoop 概述</a><time datetime="2024-06-15T15:07:12.000Z" title="发表于 2024-06-15 23:07:12">2024-06-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/YARN%20%E6%A6%82%E8%BF%B0/" title="YARN 概述">YARN 概述</a><time datetime="2024-06-15T15:07:12.000Z" title="发表于 2024-06-15 23:07:12">2024-06-15</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/TCP/" style="font-size: 1.1em; color: #999">TCP</a> <a href="/tags/hdfs/" style="font-size: 1.2em; color: #999da3">hdfs</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 1.1em; color: #999">计算机网络</a> <a href="/tags/yarn/" style="font-size: 1.1em; color: #999">yarn</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 1.3em; color: #99a1ac">并发</a> <a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" style="font-size: 1.4em; color: #99a5b6">并发编程</a> <a href="/tags/Linux/" style="font-size: 1.3em; color: #99a1ac">Linux</a> <a href="/tags/Java/" style="font-size: 1.5em; color: #99a9bf">Java</a> <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" style="font-size: 1.4em; color: #99a5b6">大数据</a> <a href="/tags/hadoop/" style="font-size: 1.3em; color: #99a1ac">hadoop</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 1.4em; color: #99a5b6">操作系统</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 1.1em; color: #999">数据结构</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/06/"><span class="card-archive-list-date">六月 2024</span><span class="card-archive-list-count">6</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/05/"><span class="card-archive-list-date">五月 2024</span><span class="card-archive-list-count">11</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">17</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2024-06-19T16:29:02.393Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By ZengCP</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
+旧Master收到U ...</div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/#content-inner">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/#content-inner">5</a><a class="extend next" rel="next" href="/page/2/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZengCP</div><div class="author-info__description">记录心得，见证成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">48</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">24</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/09/%E6%9E%B6%E6%9E%84/DDD%20%E6%A6%82%E8%BF%B0/" title="无题">无题</a><time datetime="2025-02-08T17:13:05.234Z" title="发表于 2025-02-09 01:13:05">2025-02-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0/" title="无题">无题</a><time datetime="2025-02-06T17:51:02.144Z" title="发表于 2025-02-07 01:51:02">2025-02-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/24/%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B/" title="架构演进">架构演进</a><time datetime="2024-10-24T15:26:41.000Z" title="发表于 2024-10-24 23:26:41">2024-10-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/20/%E9%9A%8F%E6%83%B3/20241020__%E5%87%86%E5%A4%87%E9%9D%A2%E8%AF%95/" title="无题">无题</a><time datetime="2024-10-20T08:27:05.448Z" title="发表于 2024-10-20 16:27:05">2024-10-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/09/08/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E7%AE%80%E4%BB%8B/" title="服务治理概述">服务治理概述</a><time datetime="2024-09-08T06:53:38.000Z" title="发表于 2024-09-08 14:53:38">2024-09-08</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91/" style="font-size: 1.37em; color: #99a4b2">高并发</a> <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/" style="font-size: 1.1em; color: #999">云原生</a> <a href="/tags/http-https/" style="font-size: 1.1em; color: #999">http/https</a> <a href="/tags/Netty/" style="font-size: 1.3em; color: #99a1ac">Netty</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="font-size: 1.1em; color: #999">网络安全</a> <a href="/tags/IO/" style="font-size: 1.17em; color: #999c9f">IO</a> <a href="/tags/Linux/" style="font-size: 1.3em; color: #99a1ac">Linux</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 1.1em; color: #999">数据结构</a> <a href="/tags/%E9%80%9A%E4%BF%A1%E5%9F%BA%E7%A1%80/" style="font-size: 1.1em; color: #999">通信基础</a> <a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" style="font-size: 1.37em; color: #99a4b2">并发编程</a> <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" style="font-size: 1.37em; color: #99a4b2">大数据</a> <a href="/tags/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/" style="font-size: 1.43em; color: #99a6b9">服务治理</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 1.3em; color: #99a1ac">并发</a> <a href="/tags/yarn/" style="font-size: 1.1em; color: #999">yarn</a> <a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 1.1em; color: #999">架构</a> <a href="/tags/Java/" style="font-size: 1.43em; color: #99a6b9">Java</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 1.23em; color: #999ea6">设计模式</a> <a href="/tags/hadoop/" style="font-size: 1.3em; color: #99a1ac">hadoop</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 1.37em; color: #99a4b2">操作系统</a> <a href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" style="font-size: 1.37em; color: #99a4b2">负载均衡</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 1.5em; color: #99a9bf">计算机网络</a> <a href="/tags/hdfs/" style="font-size: 1.17em; color: #999c9f">hdfs</a> <a href="/tags/TCP/" style="font-size: 1.1em; color: #999">TCP</a> <a href="/tags/K8S/" style="font-size: 1.1em; color: #999">K8S</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2025/02/"><span class="card-archive-list-date">二月 2025</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/10/"><span class="card-archive-list-date">十月 2024</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/09/"><span class="card-archive-list-date">九月 2024</span><span class="card-archive-list-count">7</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/08/"><span class="card-archive-list-date">八月 2024</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/07/"><span class="card-archive-list-date">七月 2024</span><span class="card-archive-list-count">11</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/06/"><span class="card-archive-list-date">六月 2024</span><span class="card-archive-list-count">10</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/05/"><span class="card-archive-list-date">五月 2024</span><span class="card-archive-list-count">11</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/04/"><span class="card-archive-list-date">四月 2024</span><span class="card-archive-list-count">3</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">48</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-02-09T14:02:44.468Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By ZengCP</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

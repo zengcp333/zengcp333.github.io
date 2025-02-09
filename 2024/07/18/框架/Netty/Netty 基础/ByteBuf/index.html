@@ -1,0 +1,320 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ByteBuf | ZengCP's BLOGS</title><meta name="author" content="ZengCP"><meta name="copyright" content="ZengCP"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="ByteBuf从 ByteBuffer 说起Java NIO 有一个原生的 ByteBuffer，但由于 Java NIO 的 ByteBuffer 有一些设计上的缺陷和痛点，Netty 重新造了一个轮子  Java NIO 的 ByteBuffer 有四个属性  capacity：容量，表示当前 ByteBuffer 最大可写的数据量。 limit：ByteBuffer 中有效的数据长度大小，具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ByteBuf">
+<meta property="og:url" content="http://example.com/2024/07/18/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/ByteBuf/index.html">
+<meta property="og:site_name" content="ZengCP&#39;s BLOGS">
+<meta property="og:description" content="ByteBuf从 ByteBuffer 说起Java NIO 有一个原生的 ByteBuffer，但由于 Java NIO 的 ByteBuffer 有一些设计上的缺陷和痛点，Netty 重新造了一个轮子  Java NIO 的 ByteBuffer 有四个属性  capacity：容量，表示当前 ByteBuffer 最大可写的数据量。 limit：ByteBuffer 中有效的数据长度大小，具">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png">
+<meta property="article:published_time" content="2024-07-18T13:47:51.000Z">
+<meta property="article:modified_time" content="2024-08-11T16:32:33.366Z">
+<meta property="article:author" content="ZengCP">
+<meta property="article:tag" content="Netty">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png"><link rel="shortcut icon" href="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/longmao.png"><link rel="canonical" href="http://example.com/2024/07/18/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/ByteBuf/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ByteBuf',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-08-12 00:32:33'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">48</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">24</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="ZengCP's BLOGS"><span class="site-name">ZengCP's BLOGS</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">ByteBuf</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-07-18T13:47:51.000Z" title="发表于 2024-07-18 21:47:51">2024-07-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-08-11T16:32:33.366Z" title="更新于 2024-08-12 00:32:33">2024-08-12</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="ByteBuf"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="ByteBuf"><a href="#ByteBuf" class="headerlink" title="ByteBuf"></a>ByteBuf</h1><h2 id="从-ByteBuffer-说起"><a href="#从-ByteBuffer-说起" class="headerlink" title="从 ByteBuffer 说起"></a>从 ByteBuffer 说起</h2><p>Java NIO 有一个原生的 ByteBuffer，但由于 Java NIO 的 ByteBuffer 有一些设计上的缺陷和痛点，Netty 重新造了一个轮子</p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/202206281000001.jpg" alt="img"></p>
+<p>Java NIO 的 ByteBuffer 有四个属性</p>
+<ul>
+<li><strong>capacity</strong>：容量，表示当前 ByteBuffer 最大可写的数据量。</li>
+<li><strong>limit</strong>：ByteBuffer 中有效的数据长度大小，具体含义与当前 ByteBuffer 处于哪种模式有关<ul>
+<li>写模式：limit 是指能够往 Buffer 中写入多少数据，其值等于 capacity。</li>
+<li>读模式：limit 表示能够从 Buffer 中最多能够读取多少数据出来。当从写模式切换到读模式时，limit 的写模式的 position。</li>
+</ul>
+</li>
+<li><strong>position</strong>：当前位置，与 limit 一样，具体含义与当前 ByteBuffer 处于哪种模式有关<ul>
+<li>写模式：当前写的位置，初始值为 0 ，最大值为 capacity - 1，当往 ByteBuffer 中写入一个数据时，position 就会向前移动到下一个待写入的位置。</li>
+<li>读模式：当前读的位置，读一个数据，position 就往前移一位。</li>
+</ul>
+</li>
+<li><strong>mark</strong>：标志位，一般都是用这个属性来标识某个特殊的位置，方便我们到时候回退到该位置。</li>
+</ul>
+<p>基于 ByteBuffer 的属性特点可以看出它有如下几个缺陷：</p>
+<ol>
+<li>只有一个标识位置的指针 position，在我们使用过程中需要频繁调用 <code>flip()</code>、<code>rewind()</code> 来进行读写模式的切换，我们需要非常清晰地知道这些 API 具体的含义，知道他们的使用场景，否则就会导致程序出错。</li>
+<li>长度固定。我们在申请一个 ByteBuffer 的时候就已经固定了它的容量了，它无法扩容，然后在实际开发过程中，我们是无法来衡量一个具体的容量的，所以很难控制需要分配的容量。分配太多，容易造成内存浪费；分配太少，则会引发索引越界异常 BufferOverflowException。</li>
+<li>提供的 API 不够丰富，一些高级和实用的特性它不支持，需要我们自己动手实现。</li>
+</ol>
+<p>而作为 Netty 的数据传输的载体，ByteBuffer 显然无法满足 Netty 的需求，所以 Netty 就另起炉灶实现了一个性能更高，灵活性更强的 ByteBuf。作为 ByteBuffer 的替代者，ByteBuf 具有如下几个优点：</p>
+<ol>
+<li>容量可以动态扩容</li>
+<li>读写索引分开，读写模式可以随意切换，不需要调用 <code>flip()</code> 方法</li>
+<li>支持引用计数</li>
+<li>支持池化</li>
+<li>通过内置的复合缓冲区类型实现透明的零拷贝</li>
+<li>支持方法的链式调用</li>
+</ol>
+<h2 id="ByteBuf-原理"><a href="#ByteBuf-原理" class="headerlink" title="ByteBuf 原理"></a>ByteBuf 原理</h2><h3 id="ByteBuf-的内部结构"><a href="#ByteBuf-的内部结构" class="headerlink" title="ByteBuf 的内部结构"></a>ByteBuf 的内部结构</h3><p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/202206293000001.jpg" alt="img"></p>
+<h3 id="ByteBuf-的三个指针"><a href="#ByteBuf-的三个指针" class="headerlink" title="ByteBuf 的三个指针"></a>ByteBuf 的三个指针</h3><ul>
+<li>readerIndex：读指针</li>
+<li>writerIndex：写指针</li>
+<li>maxCapacity：最大容量</li>
+</ul>
+<h3 id="ByteBuf-的四个部分"><a href="#ByteBuf-的四个部分" class="headerlink" title="ByteBuf 的四个部分"></a>ByteBuf 的四个部分</h3><p>三个指针将整个 ByteBuf 分为四个部分：</p>
+<ol>
+<li><strong>废弃字节</strong>：表示已经丢弃的无效字节，我们可以调用 <code>discardReadBytes()</code> 释放这部分空间。</li>
+<li><strong>可读字节</strong>：表示可以从 ByteBuf 中读取到的数据，这部分内容等于 writerIndex - readerIndex。readerIndex 随着我们读取 ByteBuf 中的数据而递增，当从 ByteBuf 中读取 N 个字节， readerIndex 就会自增 N，直到 readerIndex &#x3D; writerIndex 时，就表示 ByteBuf 不可读。</li>
+<li><strong>可写字节</strong>：表示可以向 ByteBuf 可写入的字节。writerIndex 也是随着我们向 ByteBuf 中写入数据而自增，当想 ByteBuf 中写入 N 个字节，writerIndex 就会自增 N，当 writerIndex 超过 capacity 时，就需要扩容了。</li>
+<li><strong>可扩容字节</strong>：表示 ByteBuf 最多可扩容多少字节 。当向 ByteBuf 写入的数据超过了 capacity 时，就会触发扩容，但是最多可扩容到 maxCapacity ，超过时就会报错。</li>
+</ol>
+<p>netty 为 读写操作分别设计指针，很好地解决了 NIO ByteBuffer 的不可扩容及读写模式切换的问题，使得 ByteBu 能够更加高效、更加灵活地处理数据</p>
+<h2 id="ByteBuf-分类"><a href="#ByteBuf-分类" class="headerlink" title="ByteBuf 分类"></a>ByteBuf 分类</h2><p>Netty 提供的 ByteBuf 有多种实现类，每种都有不同的特性和使用场景，主要分为三种类型：</p>
+<ol>
+<li>Pooled 和 Unpooled：池化和非池化；</li>
+<li>Heap 和 Direct：堆内存和直接内存；</li>
+<li>Safe 和 Unsafe：安全和非安全。</li>
+</ol>
+<ul>
+<li><strong>Pooled 和 Unpooled</strong></li>
+</ul>
+<p>Pooled 就是从预先分配好的内存中取出来，使用完成后又放回 ByteBuf 内存中，等待下一次分配。而 Unpooled 是直接调用系统 API 来申请内存的，使用完成后需要立刻销毁的。</p>
+<p>从性能上来说，Pooled 要比 Unpooled 性能好，因为它可以重复利用，不需要每次都创建</p>
+<ul>
+<li><strong>Heap 和 Direct</strong></li>
+</ul>
+<p>Heap 就是在 JVM 堆内分配的，其生命周期受 JVM 管理，我们不需要主动回收他们。而 Direct 则由操作系统管理，使用完成后需要主动释放这部分内存，否则容易造成内存溢出。</p>
+<ul>
+<li><strong>Safe 和 Unsafe</strong></li>
+</ul>
+<p>主要是 Java 底层操作数据的一种安全和非安全的方式。Unsafe 表示每次调用 JDK 的 Unsafe 对象操作物理内存的，而 Safe 则不需要依赖 JDK 的 Unsafe 对象，直接通过数组下标的方式来操作。</p>
+<p>经排列组合，可知 ByteBuf 共有 2^3 &#x3D;8 种实现</p>
+<ol>
+<li>池化 + 堆内存：PooledHeapByteBuf</li>
+<li>池化 + 直接内存：PooledDirectByteBuf</li>
+<li>池化 + 堆内存 + 不安全：PooledUnsafeHeapByteBuf</li>
+<li>池化 + 直接内存 + 不安全：PooledUnsafeDirectByteBuf</li>
+<li>非池化 + 堆内存：UnpooledHeapByteBuf</li>
+<li>非池化 + 直接内存：UnpooledDirectByteBuf</li>
+<li>非池化 + 堆内存 + 不安全：UnpooledUnsafeHeapByteBuf</li>
+<li>非池化 + 直接内存 + 不安全：UnpooledUnsafeDirectByteBuf</li>
+</ol>
+<h2 id="ByteBuf-核心-API"><a href="#ByteBuf-核心-API" class="headerlink" title="ByteBuf 核心 API"></a>ByteBuf 核心 API</h2><p>ByteBuf 的核心 API 分为四类：</p>
+<ol>
+<li>容量相关 API</li>
+<li>指针操作相关 API</li>
+<li>数据读写相关 API</li>
+<li>内存管理相关 API</li>
+</ol>
+<p>下面我们依次来了解这些 API。</p>
+<h3 id="容量相关-API"><a href="#容量相关-API" class="headerlink" title="容量相关 API"></a>容量相关 API</h3><p>容量相关的 API 主要用来获取 ByteBuf 的容量的。</p>
+<ul>
+<li><strong>capacity()</strong></li>
+</ul>
+<p>表示 ByteBuf 占用了多少字节的内存，它包括已放弃 + 可读 + 可写。</p>
+<ul>
+<li><strong>maxCapacity()</strong></li>
+</ul>
+<p>表示 ByteBuf 最大能占用多少字节的内存。当不断向 ByteBuf 中写入数据的时候，如果发现容量不足时（writerIndex 超过 capacity）就会触发扩容，最大可扩容到 maxCapacity，如果超过 maxCapacity 时就会抛出异常。</p>
+<h3 id="指针操作相关-API"><a href="#指针操作相关-API" class="headerlink" title="指针操作相关 API"></a>指针操作相关 API</h3><p>指针操作相关 API 就是操作读写指针的。</p>
+<ul>
+<li><strong>readerIndex() &amp; readerIndex(int)</strong></li>
+</ul>
+<p>前置返回读指针 readerIndex 的位置，而后者是设置读指针 readerIndex 的位置。</p>
+<ul>
+<li><strong>writerIndex() &amp; writerIndex(int)</strong></li>
+</ul>
+<p>前者返回写指针 writerIndex 的位置，而后者是设置写指针 writerIndex 的位置。</p>
+<ul>
+<li><strong>markReaderIndex() &amp; resetReaderIndex()</strong></li>
+</ul>
+<p><code>markReaderIndex()</code>用于标注当前 readerIndex 的位置，即把当前 readerIndex 保存起来。而 <code>resetReaderIndex()</code> 则是将当前的 readerIndex 指针恢复到之前保存的位置。</p>
+<ul>
+<li><strong>markWriterIndex() &amp; resetWriterIndex()</strong></li>
+</ul>
+<p>与 readerIndex 的一致。</p>
+<h3 id="数据读写相关-API"><a href="#数据读写相关-API" class="headerlink" title="数据读写相关 API"></a>数据读写相关 API</h3><ul>
+<li><strong>readableBytes() &amp; isReadable()</strong></li>
+</ul>
+<p><code>readableBytes()</code> 表示 ByteBuf 中有多少字节可以读，它的值等于 writerIndex - readerIndex。<code>isReadable()</code> 用于判断 ByteBuf 是否可读，若 <code>readableBytes()</code> 返回的值大于 0 ，则 <code>isReadable()</code> 则为 true。</p>
+<ul>
+<li><strong>readByte() &amp; writeByte(byte b)</strong></li>
+</ul>
+<p><code>readByte()</code> 是从 ByteBuf 中读取一个字节，则 readerIndex + 1。同理 <code>writeByte(byte b)</code> 是向 ByteBuf 中写入一个字节，相应的 writerIndex + 1。</p>
+<p>在 Netty 中，它提供了 8 种基础数据类型的读取和写入 API，如 <code>readInt()</code>，<code>readLong()</code>，<code>readShort()</code> 等等，这里就不一一阐述了。</p>
+<ul>
+<li><strong>readBytes(byte[] dst) &amp; writeBytes(byte[] src)</strong></li>
+</ul>
+<p><code>readBytes(byte[] dst)</code> 是将 ByteBuf 里面的数据全部读取到 dst 中，这里 dst 数据的大小通常等于 <code>readableBytes()</code>。</p>
+<p><code>writeBytes(byte[] src)</code> 则是将 src 数组里面的内容全部写到 ByteBuf 中。</p>
+<ul>
+<li><strong>getByte(int) &amp; setByte(int,int)</strong></li>
+</ul>
+<p>这两个方法与 <code>readByte()</code> &amp; <code>writeByte(byte b)</code> 方法类似，两者区别在于 <code>readByte()</code> 会改变 readerIndex 的位置，而 <code>getByte(int)</code> 则不会改变 readerIndex 的位置。</p>
+<h3 id="内存管理相关-API"><a href="#内存管理相关-API" class="headerlink" title="内存管理相关 API"></a>内存管理相关 API</h3><ul>
+<li><strong>retain() &amp; release()</strong></li>
+</ul>
+<p>ByteBuf 是基于引用计数设计的，它实现了 ReferenceCounted 接口。在默认情况下，我们创建一个 ByteBuf 时，它的计数为 1。</p>
+<p>当计数大于 0 ，就说该 ByteBuf 还在被使用，当计数等于 0 的时候，说明该 ByteBuf 不再被其他对象所引用。</p>
+<p>我们每调用一个 <code>retain()</code> ，计数就 + 1，每调用一次 <code>release()</code> 计数就 - 1，当计数减到 0 的时候，就会被回收。</p>
+<ul>
+<li><strong>slice() &amp; duplicate() &amp; copy()</strong></li>
+</ul>
+<p><code>slice()</code>从 ByteBuf 中截取一段从 readerIndex 到 writerIndex 之间的数据，该新的 ByteBuf 的最大容量为原始 ByteBuf 的 <code>readableBytes()</code>。新的 ByteBuf 其底层分配的内存、引用计数与原始的 ByteBuf 共享，这样就会有一个问题：如果我们调用新的 ByteBuf 的 write 系列方法，就会影响到原始的 ByteBuf 的底层数据。</p>
+<p><code>duplicate()</code> 也是从 ByteBuf 中截取一段数据，返回一个新的 ByteBuf，但是它截取的是整个原始的 ByteBuf，与 <code>slice()</code> 一样，<code>duplicate()</code> 返回新的 ByteBuf 其底层分配的内存、引用计数与原始 ByteBuf 共享。</p>
+<p><code>copy()</code> 从原始 ByteBuf 中拷贝所有信息，包括读写指针、底层分配的内存、引用计数等等所有的信息，所以新的 ByteBuf 是一个独立的个体，它与原始的 ByteBuf 不再共享。</p>
+<p>在使用这三个方法的时候一定要切记如下点：</p>
+<ul>
+<li><code>slice()</code> 和 <code>duplicate()</code> 新的 ByteBuf 与原始的 ByteBuf 内存共享、引用计数共享、读写指针不共享</li>
+<li><code>copy()</code> 新的 ByteBuf 与原始 ByteBuf 底层内存、引用计数、读写指针都不共享</li>
+</ul>
+<h2 id="ByteBuf-实现零拷贝"><a href="#ByteBuf-实现零拷贝" class="headerlink" title="ByteBuf 实现零拷贝"></a>ByteBuf 实现零拷贝</h2><ul>
+<li>byte数组转换为ByteBuf对象。Unpooled.wrappedBuffer方法来将bytes 包装成为一个UnpooledHeapByteBuf对象, 而在包装的过程中, 是不会有拷贝操作的。最后我们生成的生成的ByteBuf对象是和bytes数组共用了同一个存储空间, 对bytes的修改也会反映到ByteBuf对象中.</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 传统做法，这样的方式也是有一个额外的拷贝操作的</span></span><br><span class="line"><span class="type">byte</span>[] bytes = ...</span><br><span class="line"><span class="type">ByteBuf</span> <span class="variable">byteBuf</span> <span class="operator">=</span> Unpooled.buffer();</span><br><span class="line">byteBuf.writeBytes(bytes);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 无额外copy方式</span></span><br><span class="line"><span class="type">byte</span>[] bytes = ...</span><br><span class="line"><span class="type">ByteBuf</span> <span class="variable">byteBuf</span> <span class="operator">=</span> Unpooled.wrappedBuffer(bytes);</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>Unpooled工具类还提供了很多重载的wrappedBuffer方法:这些方法可以将一个或多个buffer包装为一个ByteBuf对象, 从而避免了拷贝操作。</p>
+</li>
+<li><p>通过slice操作实现零拷贝: slice操作和wrap操作刚好相反, Unpooled.wrappedBuffer可以将多个ByteBuf合并为一个, 而slice操作可以将一个ByteBuf切片 为多个共享一个存储区域的ByteBuf对象。</p>
+<ul>
+<li>ByteBuf 提供了两个 slice 操作方法:</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> ByteBuf <span class="title function_">slice</span><span class="params">()</span>;</span><br><span class="line"><span class="keyword">public</span> ByteBuf <span class="title function_">slice</span><span class="params">(<span class="type">int</span> index, <span class="type">int</span> length)</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>不带参数的slice方法等同于buf.slice(buf.readerIndex(), buf.readableBytes())调用, 即返回buf中可读部分的切片. 而 slice(int index, int length) 方法相对就比较灵活了, 我们可以设置不同的参数来获取到 buf的不同区域的切片.</li>
+<li>用slice方法产生header和body的过程是没有拷贝操作的,header和 body对象在内部其实是共享了byteBuf存储空间的不同部分而已</li>
+</ul>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">ZengCP</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/07/18/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/ByteBuf/">http://example.com/2024/07/18/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/ByteBuf/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">ZengCP's BLOGS</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Netty/">Netty</a></div><div class="post_share"><div class="social-share" data-image="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/07/20/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/Channel/" title="Channel"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Channel</div></div></a></div><div class="next-post pull-right"><a href="/2024/07/17/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/Bootstrap/" title="Bootstrap"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Bootstrap</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/07/17/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/Bootstrap/" title="Bootstrap"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-17</div><div class="title">Bootstrap</div></div></a></div><div><a href="/2024/07/20/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/Channel/" title="Channel"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-20</div><div class="title">Channel</div></div></a></div><div><a href="/2024/07/16/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/Netty%20%E6%A6%82%E8%BF%B0/" title="Netty 概述"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-16</div><div class="title">Netty 概述</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZengCP</div><div class="author-info__description">记录心得，见证成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">48</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">24</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ByteBuf"><span class="toc-number">1.</span> <span class="toc-text">ByteBuf</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E-ByteBuffer-%E8%AF%B4%E8%B5%B7"><span class="toc-number">1.1.</span> <span class="toc-text">从 ByteBuffer 说起</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ByteBuf-%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text">ByteBuf 原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ByteBuf-%E7%9A%84%E5%86%85%E9%83%A8%E7%BB%93%E6%9E%84"><span class="toc-number">1.2.1.</span> <span class="toc-text">ByteBuf 的内部结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ByteBuf-%E7%9A%84%E4%B8%89%E4%B8%AA%E6%8C%87%E9%92%88"><span class="toc-number">1.2.2.</span> <span class="toc-text">ByteBuf 的三个指针</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ByteBuf-%E7%9A%84%E5%9B%9B%E4%B8%AA%E9%83%A8%E5%88%86"><span class="toc-number">1.2.3.</span> <span class="toc-text">ByteBuf 的四个部分</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ByteBuf-%E5%88%86%E7%B1%BB"><span class="toc-number">1.3.</span> <span class="toc-text">ByteBuf 分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ByteBuf-%E6%A0%B8%E5%BF%83-API"><span class="toc-number">1.4.</span> <span class="toc-text">ByteBuf 核心 API</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%B9%E9%87%8F%E7%9B%B8%E5%85%B3-API"><span class="toc-number">1.4.1.</span> <span class="toc-text">容量相关 API</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E9%92%88%E6%93%8D%E4%BD%9C%E7%9B%B8%E5%85%B3-API"><span class="toc-number">1.4.2.</span> <span class="toc-text">指针操作相关 API</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%86%99%E7%9B%B8%E5%85%B3-API"><span class="toc-number">1.4.3.</span> <span class="toc-text">数据读写相关 API</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E7%9B%B8%E5%85%B3-API"><span class="toc-number">1.4.4.</span> <span class="toc-text">内存管理相关 API</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ByteBuf-%E5%AE%9E%E7%8E%B0%E9%9B%B6%E6%8B%B7%E8%B4%9D"><span class="toc-number">1.5.</span> <span class="toc-text">ByteBuf 实现零拷贝</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/09/%E6%9E%B6%E6%9E%84/DDD%20%E6%A6%82%E8%BF%B0/" title="无题">无题</a><time datetime="2025-02-08T17:13:05.234Z" title="发表于 2025-02-09 01:13:05">2025-02-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0/" title="无题">无题</a><time datetime="2025-02-06T17:51:02.144Z" title="发表于 2025-02-07 01:51:02">2025-02-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/24/%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B/" title="架构演进">架构演进</a><time datetime="2024-10-24T15:26:41.000Z" title="发表于 2024-10-24 23:26:41">2024-10-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/20/%E9%9A%8F%E6%83%B3/20241020__%E5%87%86%E5%A4%87%E9%9D%A2%E8%AF%95/" title="无题">无题</a><time datetime="2024-10-20T08:27:05.448Z" title="发表于 2024-10-20 16:27:05">2024-10-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/09/08/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E7%AE%80%E4%BB%8B/" title="服务治理概述">服务治理概述</a><time datetime="2024-09-08T06:53:38.000Z" title="发表于 2024-09-08 14:53:38">2024-09-08</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By ZengCP</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

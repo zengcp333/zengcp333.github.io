@@ -1,0 +1,396 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>HaProxy 概述 | ZengCP's BLOGS</title><meta name="author" content="ZengCP"><meta name="copyright" content="ZengCP"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="HAProxy深度指南：从配置实战到架构选型一、核心概念解析1.1 四层 vs 七层代理HAProxy同时支持L4(TCP)和L7(HTTP)代理，架构差异如下：    特性 L4代理 L7代理    协议感知 无 有（HTTP解析）   会话保持 基于源IP 基于Cookie&#x2F;Header   健康检查 TCP端口检测 HTTP状态码验证   典型场景 数据库负载均衡 Web应用路由">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HaProxy 概述">
+<meta property="og:url" content="http://example.com/2024/09/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/HaProxy%20%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="ZengCP&#39;s BLOGS">
+<meta property="og:description" content="HAProxy深度指南：从配置实战到架构选型一、核心概念解析1.1 四层 vs 七层代理HAProxy同时支持L4(TCP)和L7(HTTP)代理，架构差异如下：    特性 L4代理 L7代理    协议感知 无 有（HTTP解析）   会话保持 基于源IP 基于Cookie&#x2F;Header   健康检查 TCP端口检测 HTTP状态码验证   典型场景 数据库负载均衡 Web应用路由">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png">
+<meta property="article:published_time" content="2024-09-07T12:43:47.000Z">
+<meta property="article:modified_time" content="2025-02-09T13:51:20.531Z">
+<meta property="article:author" content="ZengCP">
+<meta property="article:tag" content="负载均衡">
+<meta property="article:tag" content="服务治理">
+<meta property="article:tag" content="高并发">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png"><link rel="shortcut icon" href="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/longmao.png"><link rel="canonical" href="http://example.com/2024/09/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/HaProxy%20%E8%AF%A6%E8%A7%A3/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'HaProxy 概述',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-02-09 21:51:20'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">48</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">24</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="ZengCP's BLOGS"><span class="site-name">ZengCP's BLOGS</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">HaProxy 概述</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-09-07T12:43:47.000Z" title="发表于 2024-09-07 20:43:47">2024-09-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-02-09T13:51:20.531Z" title="更新于 2025-02-09 21:51:20">2025-02-09</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="HaProxy 概述"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="HAProxy深度指南：从配置实战到架构选型"><a href="#HAProxy深度指南：从配置实战到架构选型" class="headerlink" title="HAProxy深度指南：从配置实战到架构选型"></a>HAProxy深度指南：从配置实战到架构选型</h1><h2 id="一、核心概念解析"><a href="#一、核心概念解析" class="headerlink" title="一、核心概念解析"></a>一、核心概念解析</h2><h3 id="1-1-四层-vs-七层代理"><a href="#1-1-四层-vs-七层代理" class="headerlink" title="1.1 四层 vs 七层代理"></a>1.1 四层 vs 七层代理</h3><p>HAProxy同时支持L4(TCP)和L7(HTTP)代理，架构差异如下：</p>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>L4代理</th>
+<th>L7代理</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>协议感知</td>
+<td>无</td>
+<td>有（HTTP解析）</td>
+</tr>
+<tr>
+<td>会话保持</td>
+<td>基于源IP</td>
+<td>基于Cookie&#x2F;Header</td>
+</tr>
+<tr>
+<td>健康检查</td>
+<td>TCP端口检测</td>
+<td>HTTP状态码验证</td>
+</tr>
+<tr>
+<td>典型场景</td>
+<td>数据库负载均衡</td>
+<td>Web应用路由</td>
+</tr>
+</tbody></table>
+<h3 id="1-2-核心组件"><a href="#1-2-核心组件" class="headerlink" title="1.2 核心组件"></a>1.2 核心组件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">frontend web-in           # 流量入口</span><br><span class="line">    bind *:80</span><br><span class="line">    acl is_api path_beg /api</span><br><span class="line">    use_backend api_cluster if is_api</span><br><span class="line">    default_backend web_servers</span><br><span class="line"></span><br><span class="line">backend web_servers       # 服务集群</span><br><span class="line">    balance roundrobin</span><br><span class="line">    server web1 10.0.1.1:80 check</span><br><span class="line">    server web2 10.0.1.2:80 check</span><br><span class="line"></span><br><span class="line">listen stats              # 监控界面</span><br><span class="line">    bind *:1936</span><br><span class="line">    stats enable</span><br><span class="line">    stats uri /haproxy?stats</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、配置引擎深度剖析"><a href="#二、配置引擎深度剖析" class="headerlink" title="二、配置引擎深度剖析"></a>二、配置引擎深度剖析</h2><h3 id="2-1-智能ACL系统"><a href="#2-1-智能ACL系统" class="headerlink" title="2.1 智能ACL系统"></a>2.1 智能ACL系统</h3><p>HAProxy的ACL（Access Control List）支持复杂条件组合：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">acl valid_src src 192.168.0.0/24   # 源IP匹配</span><br><span class="line">acl is_post method POST             # HTTP方法</span><br><span class="line">acl json_content hdr_val(Content-Type) -i application/json</span><br><span class="line">acl high_load conn_rate gt 200      # 连接速率</span><br><span class="line"></span><br><span class="line"># 组合条件</span><br><span class="line">use_backend premium if valid_src is_post json_content !high_load</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-负载均衡算法"><a href="#2-2-负载均衡算法" class="headerlink" title="2.2 负载均衡算法"></a>2.2 负载均衡算法</h3><p>HAProxy支持10+种算法，常用算法对比：</p>
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>适用场景</th>
+<th>实现复杂度</th>
+<th>会话保持</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>roundrobin</td>
+<td>通用场景</td>
+<td>O(1)</td>
+<td>无</td>
+</tr>
+<tr>
+<td>leastconn</td>
+<td>长连接服务</td>
+<td>O(n)</td>
+<td>无</td>
+</tr>
+<tr>
+<td>source</td>
+<td>IP哈希</td>
+<td>O(1)</td>
+<td>强</td>
+</tr>
+<tr>
+<td>uri</td>
+<td>静态资源缓存</td>
+<td>O(1)</td>
+<td>强</td>
+</tr>
+<tr>
+<td>hdr</td>
+<td>定制头部路由</td>
+<td>O(1)</td>
+<td>强</td>
+</tr>
+</tbody></table>
+<p>动态权重调整示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">server web1 10.0.1.1:80 weight 100 check</span><br><span class="line">server web2 10.0.1.2:80 weight 50 check</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、高性能实现原理"><a href="#三、高性能实现原理" class="headerlink" title="三、高性能实现原理"></a>三、高性能实现原理</h2><h3 id="3-1-事件驱动架构"><a href="#3-1-事件驱动架构" class="headerlink" title="3.1 事件驱动架构"></a>3.1 事件驱动架构</h3><p>HAProxy采用单进程事件驱动模型：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">run_poll_loop</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="comment">// 获取活跃事件</span></span><br><span class="line">        <span class="type">int</span> n = poll(events, MAX_EVENTS, timeout);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            <span class="comment">// 处理I/O事件</span></span><br><span class="line">            <span class="keyword">if</span> (events[i].revents &amp; POLLIN)</span><br><span class="line">                process_read_event(events[i].fd);</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (events[i].revents &amp; POLLOUT)</span><br><span class="line">                process_write_event(events[i].fd);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 处理定时任务</span></span><br><span class="line">        process_expired_tasks();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-零拷贝优化"><a href="#3-2-零拷贝优化" class="headerlink" title="3.2 零拷贝优化"></a>3.2 零拷贝优化</h3><p>HAProxy通过<code>sendfile()</code>系统调用实现零拷贝数据传输：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">send_data</span><span class="params">(<span class="type">int</span> fd, <span class="keyword">struct</span> buffer *buf)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (buf-&gt;file) &#123;</span><br><span class="line">        sendfile(fd, buf-&gt;file_fd, &amp;buf-&gt;file_offset, buf-&gt;file_len);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        write(fd, buf-&gt;data, buf-&gt;len);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、企业级功能特性"><a href="#四、企业级功能特性" class="headerlink" title="四、企业级功能特性"></a>四、企业级功能特性</h2><h3 id="4-1-健康检查机制"><a href="#4-1-健康检查机制" class="headerlink" title="4.1 健康检查机制"></a>4.1 健康检查机制</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">backend db_cluster</span><br><span class="line">    option httpchk GET /health</span><br><span class="line">    http-check expect status 200</span><br><span class="line">    server db1 10.0.2.1:3306 check inter 5s rise 2 fall 3</span><br><span class="line">    server db2 10.0.2.2:3306 check backup</span><br></pre></td></tr></table></figure>
+
+<p>健康检查类型对比：</p>
+<table>
+<thead>
+<tr>
+<th>检查类型</th>
+<th>协议层</th>
+<th>开销</th>
+<th>检测精度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TCP Connect</td>
+<td>L4</td>
+<td>低</td>
+<td>中</td>
+</tr>
+<tr>
+<td>HTTP Expect</td>
+<td>L7</td>
+<td>中</td>
+<td>高</td>
+</tr>
+<tr>
+<td>SSL Hello</td>
+<td>L4</td>
+<td>低</td>
+<td>低</td>
+</tr>
+<tr>
+<td>MySQL Ping</td>
+<td>L7</td>
+<td>高</td>
+<td>极高</td>
+</tr>
+</tbody></table>
+<h3 id="4-2-动态配置"><a href="#4-2-动态配置" class="headerlink" title="4.2 动态配置"></a>4.2 动态配置</h3><p>通过Runtime API实现热更新：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 禁用节点</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;disable server web_servers/web1&quot;</span> | socat stdio /var/run/haproxy.sock</span><br><span class="line"></span><br><span class="line"><span class="comment"># 流量统计</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;show stat&quot;</span> | socat stdio /var/run/haproxy.sock | column -t -s,</span><br></pre></td></tr></table></figure>
+
+<h2 id="五、横向技术对比"><a href="#五、横向技术对比" class="headerlink" title="五、横向技术对比"></a>五、横向技术对比</h2><h3 id="5-1-负载均衡器选型矩阵"><a href="#5-1-负载均衡器选型矩阵" class="headerlink" title="5.1 负载均衡器选型矩阵"></a>5.1 负载均衡器选型矩阵</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>HAProxy</th>
+<th>Nginx</th>
+<th>LVS</th>
+<th>Traefik</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>协议支持</td>
+<td>L4&#x2F;L7</td>
+<td>L4&#x2F;L7</td>
+<td>L4</td>
+<td>L4&#x2F;L7</td>
+</tr>
+<tr>
+<td>最大并发连接</td>
+<td>100万+</td>
+<td>50万+</td>
+<td>100万+</td>
+<td>10万+</td>
+</tr>
+<tr>
+<td>配置复杂度</td>
+<td>中</td>
+<td>低</td>
+<td>高</td>
+<td>低</td>
+</tr>
+<tr>
+<td>动态配置</td>
+<td>API支持</td>
+<td>需Reload</td>
+<td>不支持</td>
+<td>自动发现</td>
+</tr>
+<tr>
+<td>服务发现集成</td>
+<td>有限</td>
+<td>有限</td>
+<td>无</td>
+<td>原生支持</td>
+</tr>
+<tr>
+<td>SSL Offloading</td>
+<td>支持</td>
+<td>支持</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>典型延迟</td>
+<td>0.2ms</td>
+<td>0.5ms</td>
+<td>0.1ms</td>
+<td>1.2ms</td>
+</tr>
+</tbody></table>
+<h3 id="5-2-性能基准测试"><a href="#5-2-性能基准测试" class="headerlink" title="5.2 性能基准测试"></a>5.2 性能基准测试</h3><p>测试环境：4核CPU&#x2F;8GB RAM，1000并发连接</p>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>请求速率 (req&#x2F;s)</th>
+<th>内存占用</th>
+<th>长连接支持</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HAProxy 2.8</td>
+<td>98,000</td>
+<td>120MB</td>
+<td>优秀</td>
+</tr>
+<tr>
+<td>Nginx 1.25</td>
+<td>75,000</td>
+<td>220MB</td>
+<td>良好</td>
+</tr>
+<tr>
+<td>Envoy 1.28</td>
+<td>82,000</td>
+<td>350MB</td>
+<td>优秀</td>
+</tr>
+<tr>
+<td>Traefik 2.10</td>
+<td>45,000</td>
+<td>280MB</td>
+<td>一般</td>
+</tr>
+</tbody></table>
+<h2 id="六、安全加固实践"><a href="#六、安全加固实践" class="headerlink" title="六、安全加固实践"></a>六、安全加固实践</h2><h3 id="6-1-DDoS防护配置"><a href="#6-1-DDoS防护配置" class="headerlink" title="6.1 DDoS防护配置"></a>6.1 DDoS防护配置</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">frontend http-in</span><br><span class="line">    # 连接速率限制</span><br><span class="line">    stick-table type ip size 1m expire 10s store conn_rate(3s)</span><br><span class="line">    tcp-request connection track-sc0 src</span><br><span class="line">    tcp-request connection reject if &#123; sc0_conn_rate gt 50 &#125;</span><br><span class="line">    </span><br><span class="line">    # 请求频率限制</span><br><span class="line">    acl abuse_requests req.rate ge 100</span><br><span class="line">    http-request deny if abuse_requests</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-2-SSL最佳实践"><a href="#6-2-SSL最佳实践" class="headerlink" title="6.2 SSL最佳实践"></a>6.2 SSL最佳实践</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">bind *:443 ssl crt /etc/ssl/certs/example.com.pem alpn h2,http/1.1</span><br><span class="line">    </span><br><span class="line"># 启用TLS 1.3</span><br><span class="line">ssl-default-server-options no-sslv3 no-tlsv10 no-tlsv11 no-tlsv12</span><br><span class="line">ssl-server-options prefer-client-ciphers</span><br><span class="line">ssl-server-options no-tls-tickets</span><br></pre></td></tr></table></figure>
+
+<h2 id="七、云原生集成"><a href="#七、云原生集成" class="headerlink" title="七、云原生集成"></a>七、云原生集成</h2><h3 id="7-1-Kubernetes-Ingress配置"><a href="#7-1-Kubernetes-Ingress配置" class="headerlink" title="7.1 Kubernetes Ingress配置"></a>7.1 Kubernetes Ingress配置</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Ingress</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">  <span class="attr">annotations:</span></span><br><span class="line">    <span class="attr">haproxy.org/ssl-redirect:</span> <span class="string">&quot;true&quot;</span></span><br><span class="line">    <span class="attr">haproxy.org/backend-config-snippet:</span> <span class="string">|</span></span><br><span class="line"><span class="string">      balance leastconn</span></span><br><span class="line"><span class="string">      timeout server 30s</span></span><br><span class="line"><span class="string"></span><span class="attr">spec:</span></span><br><span class="line">  <span class="attr">ingressClassName:</span> <span class="string">haproxy</span></span><br><span class="line">  <span class="attr">rules:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">host:</span> <span class="string">app.example.com</span></span><br><span class="line">    <span class="attr">http:</span></span><br><span class="line">      <span class="attr">paths:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="attr">path:</span> <span class="string">/</span></span><br><span class="line">        <span class="attr">pathType:</span> <span class="string">Prefix</span></span><br><span class="line">        <span class="attr">backend:</span></span><br><span class="line">          <span class="attr">service:</span></span><br><span class="line">            <span class="attr">name:</span> <span class="string">web-service</span></span><br><span class="line">            <span class="attr">port:</span> </span><br><span class="line">              <span class="attr">number:</span> <span class="number">80</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="7-2-Prometheus监控集成"><a href="#7-2-Prometheus监控集成" class="headerlink" title="7.2 Prometheus监控集成"></a>7.2 Prometheus监控集成</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">listen stats</span><br><span class="line">    bind *:9101</span><br><span class="line">    stats enable</span><br><span class="line">    stats uri /metrics</span><br><span class="line">    stats show-legends</span><br><span class="line">    stats prometheus</span><br></pre></td></tr></table></figure>
+
+<h2 id="八、调试与优化"><a href="#八、调试与优化" class="headerlink" title="八、调试与优化"></a>八、调试与优化</h2><h3 id="8-1-实时调试技巧"><a href="#8-1-实时调试技巧" class="headerlink" title="8.1 实时调试技巧"></a>8.1 实时调试技巧</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 抓取流量日志</span></span><br><span class="line">tcpdump -i eth0 -s 0 -w haproxy.pcap port 80</span><br><span class="line"></span><br><span class="line"><span class="comment"># 动态日志级别调整</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;show info&quot;</span> | socat stdio /var/run/haproxy.sock | grep Debug</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;debug 2&quot;</span> | socat stdio /var/run/haproxy.sock</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-2-内核参数调优"><a href="#8-2-内核参数调优" class="headerlink" title="8.2 内核参数调优"></a>8.2 内核参数调优</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 提升端口复用</span></span><br><span class="line">sysctl -w net.ipv4.tcp_tw_reuse=1</span><br><span class="line">sysctl -w net.ipv4.tcp_max_tw_buckets=2000000</span><br><span class="line"></span><br><span class="line"><span class="comment"># 增加文件描述符限制</span></span><br><span class="line">sysctl -w fs.file-max=1000000</span><br><span class="line"><span class="built_in">ulimit</span> -n 1000000</span><br></pre></td></tr></table></figure>
+
+<h2 id="九、架构演进趋势"><a href="#九、架构演进趋势" class="headerlink" title="九、架构演进趋势"></a>九、架构演进趋势</h2><h3 id="9-1-eBPF加速"><a href="#9-1-eBPF加速" class="headerlink" title="9.1 eBPF加速"></a>9.1 eBPF加速</h3><p>HAProxy 2.8+支持eBPF实现高性能路由：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">bpf_insn</span> <span class="title">prog</span>[] =</span> &#123;</span><br><span class="line">    BPF_LDX_MEM(BPF_W, BPF_REG_6, BPF_REG_1, offsetof(<span class="keyword">struct</span> __sk_buff, data)),</span><br><span class="line">    BPF_LDX_MEM(BPF_W, BPF_REG_7, BPF_REG_1, offsetof(<span class="keyword">struct</span> __sk_buff, data_end)),</span><br><span class="line">    <span class="comment">// 包解析逻辑</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="9-2-QUIC-HTTP3支持"><a href="#9-2-QUIC-HTTP3支持" class="headerlink" title="9.2 QUIC&#x2F;HTTP3支持"></a>9.2 QUIC&#x2F;HTTP3支持</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">frontend quic-in</span><br><span class="line">    bind :443 quic4</span><br><span class="line">    default_backend web_servers</span><br><span class="line"></span><br><span class="line">    # 启用HTTP/3</span><br><span class="line">    quic-force-retry on</span><br><span class="line">    quic-socket-owner listener</span><br></pre></td></tr></table></figure>
+
+<h2 id="结语：负载均衡器的技术演进"><a href="#结语：负载均衡器的技术演进" class="headerlink" title="结语：负载均衡器的技术演进"></a>结语：负载均衡器的技术演进</h2><p>HAProxy凭借其卓越的性能、灵活的配置能力和企业级功能特性，在云原生时代持续保持技术竞争力。通过深入理解其架构原理和最佳实践，开发者可以构建出既具备高可用性，又能应对复杂业务场景的现代负载均衡体系。随着eBPF、QUIC等新技术的不断集成，HAProxy正在向更智能、更高效的下一代代理架构演进。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">ZengCP</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/09/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/HaProxy%20%E8%AF%A6%E8%A7%A3/">http://example.com/2024/09/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/HaProxy%20%E8%AF%A6%E8%A7%A3/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">ZengCP's BLOGS</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">负载均衡</a><a class="post-meta__tags" href="/tags/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/">服务治理</a><a class="post-meta__tags" href="/tags/%E9%AB%98%E5%B9%B6%E5%8F%91/">高并发</a></div><div class="post_share"><div class="social-share" data-image="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/09/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/HaProxy%20%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/" title="HaProxy 配置详解"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">HaProxy 配置详解</div></div></a></div><div class="next-post pull-right"><a href="/2024/09/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/K8S%20%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0%E4%B8%8E%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E8%A7%A3%E6%9E%90/" title="K8S 服务注册、发现 与 负载均衡 原理解析"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">K8S 服务注册、发现 与 负载均衡 原理解析</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/09/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/HaProxy%20%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/" title="HaProxy 配置详解"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-07</div><div class="title">HaProxy 配置详解</div></div></a></div><div><a href="/2024/09/06/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/NGINX%20%E7%AE%80%E4%BB%8B/" title="NGINX 概述"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-06</div><div class="title">NGINX 概述</div></div></a></div><div><a href="/2024/09/06/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/NGINX%20%E8%BF%9B%E9%98%B6/" title="NGINX 进阶"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-06</div><div class="title">NGINX 进阶</div></div></a></div><div><a href="/2024/09/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" title="负载均衡概述"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-07</div><div class="title">负载均衡概述</div></div></a></div><div><a href="/2024/09/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/K8S%20%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0%E4%B8%8E%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E8%A7%A3%E6%9E%90/" title="K8S 服务注册、发现 与 负载均衡 原理解析"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-07</div><div class="title">K8S 服务注册、发现 与 负载均衡 原理解析</div></div></a></div><div><a href="/2024/09/08/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E7%AE%80%E4%BB%8B/" title="服务治理概述"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-08</div><div class="title">服务治理概述</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZengCP</div><div class="author-info__description">记录心得，见证成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">48</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">24</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#HAProxy%E6%B7%B1%E5%BA%A6%E6%8C%87%E5%8D%97%EF%BC%9A%E4%BB%8E%E9%85%8D%E7%BD%AE%E5%AE%9E%E6%88%98%E5%88%B0%E6%9E%B6%E6%9E%84%E9%80%89%E5%9E%8B"><span class="toc-number">1.</span> <span class="toc-text">HAProxy深度指南：从配置实战到架构选型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E8%A7%A3%E6%9E%90"><span class="toc-number">1.1.</span> <span class="toc-text">一、核心概念解析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E5%9B%9B%E5%B1%82-vs-%E4%B8%83%E5%B1%82%E4%BB%A3%E7%90%86"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1 四层 vs 七层代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.2 核心组件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E9%85%8D%E7%BD%AE%E5%BC%95%E6%93%8E%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90"><span class="toc-number">1.2.</span> <span class="toc-text">二、配置引擎深度剖析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E6%99%BA%E8%83%BDACL%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1 智能ACL系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AE%97%E6%B3%95"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.2 负载均衡算法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E9%AB%98%E6%80%A7%E8%83%BD%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-number">1.3.</span> <span class="toc-text">三、高性能实现原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8%E6%9E%B6%E6%9E%84"><span class="toc-number">1.3.1.</span> <span class="toc-text">3.1 事件驱动架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E9%9B%B6%E6%8B%B7%E8%B4%9D%E4%BC%98%E5%8C%96"><span class="toc-number">1.3.2.</span> <span class="toc-text">3.2 零拷贝优化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%8A%9F%E8%83%BD%E7%89%B9%E6%80%A7"><span class="toc-number">1.4.</span> <span class="toc-text">四、企业级功能特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5%E6%9C%BA%E5%88%B6"><span class="toc-number">1.4.1.</span> <span class="toc-text">4.1 健康检查机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E5%8A%A8%E6%80%81%E9%85%8D%E7%BD%AE"><span class="toc-number">1.4.2.</span> <span class="toc-text">4.2 动态配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%A8%AA%E5%90%91%E6%8A%80%E6%9C%AF%E5%AF%B9%E6%AF%94"><span class="toc-number">1.5.</span> <span class="toc-text">五、横向技术对比</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E5%99%A8%E9%80%89%E5%9E%8B%E7%9F%A9%E9%98%B5"><span class="toc-number">1.5.1.</span> <span class="toc-text">5.1 负载均衡器选型矩阵</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E6%80%A7%E8%83%BD%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95"><span class="toc-number">1.5.2.</span> <span class="toc-text">5.2 性能基准测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA%E5%AE%9E%E8%B7%B5"><span class="toc-number">1.6.</span> <span class="toc-text">六、安全加固实践</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-DDoS%E9%98%B2%E6%8A%A4%E9%85%8D%E7%BD%AE"><span class="toc-number">1.6.1.</span> <span class="toc-text">6.1 DDoS防护配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-SSL%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="toc-number">1.6.2.</span> <span class="toc-text">6.2 SSL最佳实践</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E4%BA%91%E5%8E%9F%E7%94%9F%E9%9B%86%E6%88%90"><span class="toc-number">1.7.</span> <span class="toc-text">七、云原生集成</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-Kubernetes-Ingress%E9%85%8D%E7%BD%AE"><span class="toc-number">1.7.1.</span> <span class="toc-text">7.1 Kubernetes Ingress配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-Prometheus%E7%9B%91%E6%8E%A7%E9%9B%86%E6%88%90"><span class="toc-number">1.7.2.</span> <span class="toc-text">7.2 Prometheus监控集成</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E8%B0%83%E8%AF%95%E4%B8%8E%E4%BC%98%E5%8C%96"><span class="toc-number">1.8.</span> <span class="toc-text">八、调试与优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-%E5%AE%9E%E6%97%B6%E8%B0%83%E8%AF%95%E6%8A%80%E5%B7%A7"><span class="toc-number">1.8.1.</span> <span class="toc-text">8.1 实时调试技巧</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-%E5%86%85%E6%A0%B8%E5%8F%82%E6%95%B0%E8%B0%83%E4%BC%98"><span class="toc-number">1.8.2.</span> <span class="toc-text">8.2 内核参数调优</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B%E8%B6%8B%E5%8A%BF"><span class="toc-number">1.9.</span> <span class="toc-text">九、架构演进趋势</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-1-eBPF%E5%8A%A0%E9%80%9F"><span class="toc-number">1.9.1.</span> <span class="toc-text">9.1 eBPF加速</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-2-QUIC-HTTP3%E6%94%AF%E6%8C%81"><span class="toc-number">1.9.2.</span> <span class="toc-text">9.2 QUIC&#x2F;HTTP3支持</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD%EF%BC%9A%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E5%99%A8%E7%9A%84%E6%8A%80%E6%9C%AF%E6%BC%94%E8%BF%9B"><span class="toc-number">1.10.</span> <span class="toc-text">结语：负载均衡器的技术演进</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/09/%E6%9E%B6%E6%9E%84/DDD%20%E6%A6%82%E8%BF%B0/" title="无题">无题</a><time datetime="2025-02-08T17:13:05.234Z" title="发表于 2025-02-09 01:13:05">2025-02-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0/" title="无题">无题</a><time datetime="2025-02-06T17:51:02.144Z" title="发表于 2025-02-07 01:51:02">2025-02-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/24/%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B/" title="架构演进">架构演进</a><time datetime="2024-10-24T15:26:41.000Z" title="发表于 2024-10-24 23:26:41">2024-10-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/20/%E9%9A%8F%E6%83%B3/20241020__%E5%87%86%E5%A4%87%E9%9D%A2%E8%AF%95/" title="无题">无题</a><time datetime="2024-10-20T08:27:05.448Z" title="发表于 2024-10-20 16:27:05">2024-10-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/09/08/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E7%AE%80%E4%BB%8B/" title="服务治理概述">服务治理概述</a><time datetime="2024-09-08T06:53:38.000Z" title="发表于 2024-09-08 14:53:38">2024-09-08</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By ZengCP</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

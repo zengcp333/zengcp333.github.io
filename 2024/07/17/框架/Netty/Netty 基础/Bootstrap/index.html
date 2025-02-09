@@ -1,0 +1,230 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Bootstrap | ZengCP's BLOGS</title><meta name="author" content="ZengCP"><meta name="copyright" content="ZengCP"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="BootstrapBootstrap 充当了 Netty 服务端或客户端应用程序的启动者，为 netty 应用开发提供了一种简洁且流畅的 API 来配置和启动网络服务。 在 Netty 中有两个主要的 Bootstrap 类型：  ServerBootstrap：用于启动服务端应用。 Bootstrap：用于启动客户端应用。    Bootstrap 的使用步骤 创建 Bootstrap 实例：创">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Bootstrap">
+<meta property="og:url" content="http://example.com/2024/07/17/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/Bootstrap/index.html">
+<meta property="og:site_name" content="ZengCP&#39;s BLOGS">
+<meta property="og:description" content="BootstrapBootstrap 充当了 Netty 服务端或客户端应用程序的启动者，为 netty 应用开发提供了一种简洁且流畅的 API 来配置和启动网络服务。 在 Netty 中有两个主要的 Bootstrap 类型：  ServerBootstrap：用于启动服务端应用。 Bootstrap：用于启动客户端应用。    Bootstrap 的使用步骤 创建 Bootstrap 实例：创">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png">
+<meta property="article:published_time" content="2024-07-17T12:07:18.000Z">
+<meta property="article:modified_time" content="2024-08-08T16:08:15.660Z">
+<meta property="article:author" content="ZengCP">
+<meta property="article:tag" content="Netty">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png"><link rel="shortcut icon" href="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/longmao.png"><link rel="canonical" href="http://example.com/2024/07/17/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/Bootstrap/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Bootstrap',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-08-09 00:08:15'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">48</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">24</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="ZengCP's BLOGS"><span class="site-name">ZengCP's BLOGS</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Bootstrap</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-07-17T12:07:18.000Z" title="发表于 2024-07-17 20:07:18">2024-07-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-08-08T16:08:15.660Z" title="更新于 2024-08-09 00:08:15">2024-08-09</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Bootstrap"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Bootstrap"><a href="#Bootstrap" class="headerlink" title="Bootstrap"></a>Bootstrap</h1><p>Bootstrap 充当了 Netty 服务端或客户端应用程序的启动者，为 netty 应用开发提供了一种简洁且流畅的 API 来配置和启动网络服务。</p>
+<p>在 Netty 中有两个主要的 Bootstrap 类型：</p>
+<ul>
+<li>ServerBootstrap：用于启动服务端应用。</li>
+<li>Bootstrap：用于启动客户端应用。</li>
+</ul>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20240724223711483.png" alt="image-20240724223711483" style="zoom: 67%;" />
+
+<h2 id="Bootstrap-的使用步骤"><a href="#Bootstrap-的使用步骤" class="headerlink" title="Bootstrap 的使用步骤"></a>Bootstrap 的使用步骤</h2><ol>
+<li><strong>创建 Bootstrap 实例</strong>：创建 Bootstrap 或 ServerBootstrap 实例。</li>
+<li><strong>设置 EventLoopGroup</strong>：EventLoopGroup 是处理 I&#x2F;O 操作的线程组。通常，客户端会设置一个 EventLoopGroup，而服务端会设置两个（一个用于接收连接，另一个用于处理连接）。</li>
+<li><strong>选择 Channel 类型</strong>：指定要使用的 Channel 类型，例如 NioSocketChannel 或 EpollSocketChannel。</li>
+<li><strong>添加 ChannelInitializer</strong>：通过 handler() 方法添加 ChannelInitializer，它会在每个新 Channel 创建后被调用，用于添加 ChannelHandler 到 ChannelPipeline。</li>
+<li><strong>配置 Channel 选项</strong>：可以设置各种 ChannelOption，比如 TCP_NODELAY 和 SO_KEEPALIVE。</li>
+<li><strong>连接或绑定</strong>：<ul>
+<li>客户端调用 connect() 方法尝试连接到远程服务器。</li>
+<li>服务端调用 bind() 方法绑定到本地端口并开始监听连接。</li>
+</ul>
+</li>
+</ol>
+<p>(ServerBootStrap 调用周期)</p>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/202205221000003.jpg" alt="img" style="zoom: 30%;" />
+
+<h3 id="设置-EventLoopGroup-线程组"><a href="#设置-EventLoopGroup-线程组" class="headerlink" title="设置 EventLoopGroup 线程组"></a>设置 EventLoopGroup 线程组</h3><p>调用 <code>group()</code> 可以设置 EventLoopGroup 的线程组，该线程组其实就是 Reactor 的线程组</p>
+<p>对于Server 端而言 ，Reactor 模式线程组有两个：</p>
+<ul>
+<li>BossGroup：服务器连接监听线程组，该线程组专门用来处理客户端的连接请求</li>
+<li>WorkGroup：工作线程组，即业务处理线程组，用来处理每一条连接的数据收发的线程组。</li>
+</ul>
+<p>ServerBootstrap 提供了两个 <code>group()</code> 方法用来设置线程组：</p>
+<ul>
+<li><code>group(EventLoopGroup parentGroup, EventLoopGroup childGroup)</code>：设置 BossGroup 和 WorkGroup。</li>
+<li><code>group(EventLoopGroup group)</code>：这里只配置了一个线程组，也就是 BossGroup 和 WorkGroup 共用一个线程组。</li>
+</ul>
+<h3 id="设置-Channel-类型"><a href="#设置-Channel-类型" class="headerlink" title="设置 Channel 类型"></a>设置 Channel 类型</h3><p>在 NIO 中 Channel 是通信的根本，我们收发数据都是基于 Channel 来实现的，对于 Netty 来说 Channel 也是它通信的通道，不过 Netty 不仅仅只支持 NIO 模式，还有 OIO 。</p>
+<p>调用 <code>channel()</code> 方法即可设置通道的 IO 类型。</p>
+<p>Netty 支持的 IO 类型有如下几种：</p>
+<ul>
+<li><code>NioSocketChannel</code>：异步的客户端 TCP Socket 连接.</li>
+<li><code>NioServerSocketChannel</code>：异步的服务器端 TCP Socket 连接.</li>
+<li><code>NioDatagramChannel</code>：异步的 UDP 连接</li>
+<li><code>NioSctpChannel</code>：异步的客户端 Sctp 连接.</li>
+<li><code>NioSctpServerChannel</code>：异步的 Sctp 服务器端连接.</li>
+<li><code>OioSocketChannel</code>：同步的客户端 TCP Socket 连接.</li>
+<li><code>OioServerSocketChannel</code>：同步的服务器端 TCP Socket 连接.</li>
+<li><code>OioDatagramChanne</code>：同步的 UDP 连接</li>
+<li><code>OioSctpChanne</code>：同步的 Sctp 服务器端连接.</li>
+<li><code>OioSctpServerChannel</code>：同步的客户端 TCP Socket 连接.</li>
+</ul>
+<p>从上面可以看出，Netty 不仅仅只支持 TCP 协议，还支持 UDP 、STCP 协议，同时每种协议都有 NIO 和 OIO 模式，从 Netty 支持的通道类型就可以看出，Netty 功能有多么强大了。</p>
+<h3 id="配置-Option-参数"><a href="#配置-Option-参数" class="headerlink" title="配置 Option 参数"></a>配置 Option 参数</h3><p>调用 <code>option()</code> 可以设置 Channel 相关的参数，其实 ServerBootstrap 还有一个 <code>childOption()</code> 方法。两个方法的区别是：</p>
+<ul>
+<li><code>option()</code> ：是给 parent Channel 设置参数的</li>
+<li><code>childOption()</code> ：是给 child Channel 设置参数的。</li>
+</ul>
+<p>为什么这里会有一个 parent Channel 和 child Channel 呢？首先我们需要明确一点，Channel 是 Socket 连接的一个抽象，我们可以理解它对 Socket 做了一些封装。当 Netty 建立一个连接后，它会为该连接 new 一个 Channel 实例。同时，它也有了父子的概念了，服务端监听的 Channel 叫做 parent Channel，对应每一个 Socket 连接的 Channel 叫做 child Channel。其实我们从设置 EventLoopGroup 的时候就可以看出，<code>group(EventLoopGroup parentGroup, EventLoopGroup childGroup)</code>。</p>
+<p>可以设置的参数比较多，之类列几个常见的：</p>
+<ul>
+<li>ChannelOption.CONNECT_TIMEOUT_MILLIS：客户端建立连接时，如果超过指定的时间仍未连接，则抛出 timeout 异常。</li>
+<li>ChannelOption.SO_KEEPALIVE：是否开启 TCP 底层心跳机制，true 表示开启。</li>
+<li>ChannelOption.TCP_NODELAY：是否启用 Nagle 算法，true 表示开启。开启可能会对消息的实时性有影响，因为为了提升效率， Nagle 算法会将一些较小的数据包收集后再进行发送，这样就会造成我们的消息有延迟。所以如果实时性要求高的话，一般不建议开启。</li>
+<li>ChannelOption.SO_RCVBUF：设置接收缓冲区的大小  </li>
+<li>ChannelOption.SO_SNDBUF：设置发送缓冲区的大小，一般 SO_RCVBUF 和 SO_SNDBUF 不建议手动设置，因为操作系统会根据当前占用，进行自动的调整。</li>
+</ul>
+<p>其他参数，大明哥就不一一介绍了，有兴趣的小伙伴可以自行研究，大明哥在后面的 Netty 调优部分会对这些字段进行详细讲解的。</p>
+<h3 id="设置-pipeline"><a href="#设置-pipeline" class="headerlink" title="设置 pipeline"></a>设置 pipeline</h3><p>设值 pipeline 其实就是配置处理的 Handler，ChannelPipeline 负责协调这些 Handler，它是 Netty 处理请求的责任链，该链上每个节点都是 ChannelHandler，而这些 ChannelHandler 就是用来处理这些请求的。</p>
+<p>ServerBoostrap 提供了 <code>childHandler()</code> 方法用来装配这些 ChannelHandler ，用来组装成一个处理请求的流水线。我们传递一个 ChannelInitializer 实例，ChannelInitializer 是一个特殊的 ChannelHandler，它主要是为我们提供了一个简单的工具，用于在某个 Channel 注册到 EventLoop 后，对这个 Channel 执行一些初始化操作。</p>
+<p>ChannelInitializer 是一个抽象类，我们需要实现它的 <code>initChannel()</code>，在该方法中我们通过 ChannelPipeline 来完成流水线的装配。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ch.pipeline().addLast(<span class="keyword">new</span> <span class="title class_">StringDecoder</span>());</span><br><span class="line">ch.pipeline().addLast(<span class="keyword">new</span> <span class="title class_">ChannelInboundHandlerAdapter</span>()&#123;<span class="comment">//&#125;);</span></span><br></pre></td></tr></table></figure>
+
+<p>ChannelHandler 有两种，分别是 ChannelInboundHandler 和 ChannelOutboundHandler，一个是处理进站，一个处理出站，通俗理解就是，ChannelInboundHandler 处理读入 IO 请求，ChannelOutboundHandler 处理写出 IO 请求。</p>
+<p>我们调用 <code>ch.pipeline().addLast()</code> 方法可以装配一个 ChannelHandler 链，结构如下：</p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/202205221000004.jpg" alt="img"></p>
+<p>当读请求进来时，传播链从 head 出发，依次经过 InboundHandlerA，InboundHandlerB，InboundHandlerC，InboundHandlerD，最后在 Tail 终止。而写出 IO 请求则相反，它是从 Tail 出发，依次经过 OutboundHandlerB，OutboundHandlerA，最后在 Head 终止。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">ZengCP</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/07/17/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/Bootstrap/">http://example.com/2024/07/17/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/Bootstrap/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">ZengCP's BLOGS</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Netty/">Netty</a></div><div class="post_share"><div class="social-share" data-image="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/07/18/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/ByteBuf/" title="ByteBuf"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">ByteBuf</div></div></a></div><div class="next-post pull-right"><a href="/2024/07/16/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/Java%20%20NIO/" title="Java NIO 概述"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Java NIO 概述</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/07/20/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/Channel/" title="Channel"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-20</div><div class="title">Channel</div></div></a></div><div><a href="/2024/07/18/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/ByteBuf/" title="ByteBuf"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-18</div><div class="title">ByteBuf</div></div></a></div><div><a href="/2024/07/16/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/Netty%20%E6%A6%82%E8%BF%B0/" title="Netty 概述"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-16</div><div class="title">Netty 概述</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZengCP</div><div class="author-info__description">记录心得，见证成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">48</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">24</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Bootstrap"><span class="toc-number">1.</span> <span class="toc-text">Bootstrap</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Bootstrap-%E7%9A%84%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4"><span class="toc-number">1.1.</span> <span class="toc-text">Bootstrap 的使用步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE-EventLoopGroup-%E7%BA%BF%E7%A8%8B%E7%BB%84"><span class="toc-number">1.1.1.</span> <span class="toc-text">设置 EventLoopGroup 线程组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE-Channel-%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.1.2.</span> <span class="toc-text">设置 Channel 类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE-Option-%E5%8F%82%E6%95%B0"><span class="toc-number">1.1.3.</span> <span class="toc-text">配置 Option 参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE-pipeline"><span class="toc-number">1.1.4.</span> <span class="toc-text">设置 pipeline</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/09/%E6%9E%B6%E6%9E%84/DDD%20%E6%A6%82%E8%BF%B0/" title="无题">无题</a><time datetime="2025-02-08T17:13:05.234Z" title="发表于 2025-02-09 01:13:05">2025-02-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0/" title="无题">无题</a><time datetime="2025-02-06T17:51:02.144Z" title="发表于 2025-02-07 01:51:02">2025-02-07</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/24/%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B/" title="架构演进">架构演进</a><time datetime="2024-10-24T15:26:41.000Z" title="发表于 2024-10-24 23:26:41">2024-10-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/20/%E9%9A%8F%E6%83%B3/20241020__%E5%87%86%E5%A4%87%E9%9D%A2%E8%AF%95/" title="无题">无题</a><time datetime="2024-10-20T08:27:05.448Z" title="发表于 2024-10-20 16:27:05">2024-10-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/09/08/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86%E7%AE%80%E4%BB%8B/" title="服务治理概述">服务治理概述</a><time datetime="2024-09-08T06:53:38.000Z" title="发表于 2024-09-08 14:53:38">2024-09-08</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By ZengCP</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
