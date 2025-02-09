@@ -5,10 +5,10 @@
     
     <entry>
       <title></title>
-      <link href="/2025/02/09/%E6%9E%B6%E6%9E%84/DDD%20%E6%A6%82%E8%BF%B0/"/>
-      <url>/2025/02/09/%E6%9E%B6%E6%9E%84/DDD%20%E6%A6%82%E8%BF%B0/</url>
+      <link href="/2025/02/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0/"/>
+      <url>/2025/02/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0/</url>
       
-        <content type="html"><![CDATA[<h3 id="领域驱动设计（DDD）深度解析：从战略设计到战术落地"><a href="#领域驱动设计（DDD）深度解析：从战略设计到战术落地" class="headerlink" title="领域驱动设计（DDD）深度解析：从战略设计到战术落地"></a>领域驱动设计（DDD）深度解析：从战略设计到战术落地</h3><hr><h4 id="一、为什么需要DDD？"><a href="#一、为什么需要DDD？" class="headerlink" title="一、为什么需要DDD？"></a>一、为什么需要DDD？</h4><p>在传统软件开发中，<strong>业务逻辑与技术实现的高度耦合</strong>常导致系统难以维护。MVC架构容易退化为”贫血模型”，业务规则散落在Service层，领域知识逐渐丢失。而DDD通过<strong>以领域为中心的设计哲学</strong>，提供了一套应对复杂业务系统的完整方法论。</p><hr><h4 id="二、DDD核心思想"><a href="#二、DDD核心思想" class="headerlink" title="二、DDD核心思想"></a>二、DDD核心思想</h4><ol><li><p><strong>领域为王</strong><br>一切设计围绕业务领域展开，技术实现为领域服务</p></li><li><p><strong>统一语言</strong><br>开发团队与业务专家使用一致的术语表（Ubiquitous Language）</p></li><li><p><strong>分治策略</strong><br>通过限界上下文（Bounded Context）划分复杂系统</p></li></ol><hr><h3 id="三、战略设计：划分战场"><a href="#三、战略设计：划分战场" class="headerlink" title="三、战略设计：划分战场"></a>三、战略设计：划分战场</h3><ol><li><p><strong>子域划分</strong></p><ul><li><strong>核心域</strong>：业务核心竞争力（如电商的订单系统）</li><li><strong>支撑域</strong>：辅助核心业务（如物流跟踪）</li><li><strong>通用域</strong>：通用解决方案（如支付模块）</li></ul></li><li><p><strong>限界上下文</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[订单上下文]           [库存上下文]</span><br><span class="line">- 订单聚合根          - 库存条目</span><br><span class="line">- 订单项值对象        - 仓库实体</span><br><span class="line">- 订单状态机          - 库存锁定服务</span><br></pre></td></tr></table></figure></li><li><p><strong>上下文映射</strong></p><ul><li>合作关系（Partnership）</li><li>客户&#x2F;供应商（Customer&#x2F;Supplier）</li><li>防腐层（Anticorruption Layer）</li></ul></li></ol><hr><h3 id="四、战术设计：构建领域模型"><a href="#四、战术设计：构建领域模型" class="headerlink" title="四、战术设计：构建领域模型"></a>四、战术设计：构建领域模型</h3><table><thead><tr><th>构建块</th><th>核心特征</th><th>示例</th></tr></thead><tbody><tr><td><strong>实体</strong></td><td>唯一标识+生命周期</td><td>User(userId)</td></tr><tr><td><strong>值对象</strong></td><td>不可变+无标识</td><td>Money(amount,currency)</td></tr><tr><td><strong>聚合根</strong></td><td>一致性边界</td><td>Order(orderId)</td></tr><tr><td><strong>领域服务</strong></td><td>无状态操作</td><td>TransferService</td></tr><tr><td><strong>领域事件</strong></td><td>记录领域状态变化</td><td>OrderShippedEvent</td></tr></tbody></table><p><strong>聚合设计原则</strong>：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Order</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> OrderId id;</span><br><span class="line">    <span class="keyword">private</span> List&lt;OrderItem&gt; items; </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addItem</span><span class="params">(Product product, <span class="type">int</span> quantity)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(items.size() &gt;= <span class="number">10</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">BusinessRuleException</span>(<span class="string">&quot;Max items exceeded&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        items.add(<span class="keyword">new</span> <span class="title class_">OrderItem</span>(product, quantity));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><hr><h3 id="五、架构实现模式"><a href="#五、架构实现模式" class="headerlink" title="五、架构实现模式"></a>五、架构实现模式</h3><ol><li><p><strong>分层架构</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────┐</span><br><span class="line">│  User Interface │</span><br><span class="line">├─────────────┤</span><br><span class="line">│ Application  │</span><br><span class="line">│   Service    │</span><br><span class="line">├─────────────┤</span><br><span class="line">│   Domain     │</span><br><span class="line">├─────────────┤</span><br><span class="line">│ Infrastructure │</span><br><span class="line">└─────────────┘</span><br></pre></td></tr></table></figure></li><li><p><strong>CQRS模式</strong></p><ul><li>命令端：领域模型处理业务逻辑</li><li>查询端：优化后的读模型直接返回DTO</li></ul></li><li><p><strong>事件溯源</strong></p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Account</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, events</span>):</span><br><span class="line">        self.balance = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> event <span class="keyword">in</span> events:</span><br><span class="line">            self.apply(event)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">deposit</span>(<span class="params">self, amount</span>):</span><br><span class="line">        self.apply(DepositEvent(amount))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">apply</span>(<span class="params">self, event</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(event, DepositEvent):</span><br><span class="line">            self.balance += event.amount</span><br></pre></td></tr></table></figure></li></ol><hr><h4 id="六、实践建议"><a href="#六、实践建议" class="headerlink" title="六、实践建议"></a>六、实践建议</h4><ol><li><p><strong>实施步骤</strong></p><ul><li>事件风暴工作坊 → 领域模型 → 限界上下文 → 微服务划分</li></ul></li><li><p><strong>技术选型</strong></p><ul><li>框架：Axon Framework, DDDLib</li><li>存储：EventStoreDB, MongoDB</li></ul></li><li><p><strong>常见陷阱</strong></p><ul><li>过度设计聚合边界</li><li>忽略领域事件的消息可靠性</li><li>将DDD与微服务强制绑定</li></ul></li></ol><hr><h4 id="七、何时使用DDD？"><a href="#七、何时使用DDD？" class="headerlink" title="七、何时使用DDD？"></a>七、何时使用DDD？</h4><ul><li>✅ 业务规则复杂多变的系统（保险、金融）</li><li>✅ 需要长期演进的战略级项目</li><li>❌ 简单CRUD管理系统</li><li>❌ 交付周期极短的MVP项目</li></ul><hr><p>通过DDD，我们不仅是在构建软件，更是在构建对业务领域的深刻认知。这种设计思想需要持续的精益实践，但当复杂业务遇上DDD，就像给迷宫装上了导航系统——虽然不能消除所有曲折，却能始终指引正确的方向。</p>]]></content>
+        <content type="html"><![CDATA[]]></content>
       
       
       
@@ -17,13 +17,19 @@
     
     
     <entry>
-      <title></title>
-      <link href="/2025/02/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0/"/>
-      <url>/2025/02/07/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0/</url>
+      <title>DDD 简介</title>
+      <link href="/2024/10/27/%E6%9E%B6%E6%9E%84/DDD%20%E6%A6%82%E8%BF%B0/"/>
+      <url>/2024/10/27/%E6%9E%B6%E6%9E%84/DDD%20%E6%A6%82%E8%BF%B0/</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[<h3 id="领域驱动设计（DDD）深度解析：从战略设计到战术落地"><a href="#领域驱动设计（DDD）深度解析：从战略设计到战术落地" class="headerlink" title="领域驱动设计（DDD）深度解析：从战略设计到战术落地"></a>领域驱动设计（DDD）深度解析：从战略设计到战术落地</h3><hr><h4 id="一、为什么需要DDD？"><a href="#一、为什么需要DDD？" class="headerlink" title="一、为什么需要DDD？"></a>一、为什么需要DDD？</h4><p>在传统软件开发中，<strong>业务逻辑与技术实现的高度耦合</strong>常导致系统难以维护。MVC架构容易退化为”贫血模型”，业务规则散落在Service层，领域知识逐渐丢失。而DDD通过<strong>以领域为中心的设计哲学</strong>，提供了一套应对复杂业务系统的完整方法论。</p><hr><h4 id="二、DDD核心思想"><a href="#二、DDD核心思想" class="headerlink" title="二、DDD核心思想"></a>二、DDD核心思想</h4><ol><li><p><strong>领域为王</strong><br>一切设计围绕业务领域展开，技术实现为领域服务</p></li><li><p><strong>统一语言</strong><br>开发团队与业务专家使用一致的术语表（Ubiquitous Language）</p></li><li><p><strong>分治策略</strong><br>通过限界上下文（Bounded Context）划分复杂系统</p></li></ol><hr><h3 id="三、战略设计：划分战场"><a href="#三、战略设计：划分战场" class="headerlink" title="三、战略设计：划分战场"></a>三、战略设计：划分战场</h3><ol><li><p><strong>子域划分</strong></p><ul><li><strong>核心域</strong>：业务核心竞争力（如电商的订单系统）</li><li><strong>支撑域</strong>：辅助核心业务（如物流跟踪）</li><li><strong>通用域</strong>：通用解决方案（如支付模块）</li></ul></li><li><p><strong>限界上下文</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[订单上下文]           [库存上下文]</span><br><span class="line">- 订单聚合根          - 库存条目</span><br><span class="line">- 订单项值对象        - 仓库实体</span><br><span class="line">- 订单状态机          - 库存锁定服务</span><br></pre></td></tr></table></figure></li><li><p><strong>上下文映射</strong></p><ul><li>合作关系（Partnership）</li><li>客户&#x2F;供应商（Customer&#x2F;Supplier）</li><li>防腐层（Anticorruption Layer）</li></ul></li></ol><hr><h3 id="四、战术设计：构建领域模型"><a href="#四、战术设计：构建领域模型" class="headerlink" title="四、战术设计：构建领域模型"></a>四、战术设计：构建领域模型</h3><table><thead><tr><th>构建块</th><th>核心特征</th><th>示例</th></tr></thead><tbody><tr><td><strong>实体</strong></td><td>唯一标识+生命周期</td><td>User(userId)</td></tr><tr><td><strong>值对象</strong></td><td>不可变+无标识</td><td>Money(amount,currency)</td></tr><tr><td><strong>聚合根</strong></td><td>一致性边界</td><td>Order(orderId)</td></tr><tr><td><strong>领域服务</strong></td><td>无状态操作</td><td>TransferService</td></tr><tr><td><strong>领域事件</strong></td><td>记录领域状态变化</td><td>OrderShippedEvent</td></tr></tbody></table><p><strong>聚合设计原则</strong>：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Order</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> OrderId id;</span><br><span class="line">    <span class="keyword">private</span> List&lt;OrderItem&gt; items; </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">addItem</span><span class="params">(Product product, <span class="type">int</span> quantity)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(items.size() &gt;= <span class="number">10</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">BusinessRuleException</span>(<span class="string">&quot;Max items exceeded&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        items.add(<span class="keyword">new</span> <span class="title class_">OrderItem</span>(product, quantity));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><hr><h3 id="五、架构实现模式"><a href="#五、架构实现模式" class="headerlink" title="五、架构实现模式"></a>五、架构实现模式</h3><ol><li><p><strong>分层架构</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────┐</span><br><span class="line">│  User Interface │</span><br><span class="line">├─────────────┤</span><br><span class="line">│ Application  │</span><br><span class="line">│   Service    │</span><br><span class="line">├─────────────┤</span><br><span class="line">│   Domain     │</span><br><span class="line">├─────────────┤</span><br><span class="line">│ Infrastructure │</span><br><span class="line">└─────────────┘</span><br></pre></td></tr></table></figure></li><li><p><strong>CQRS模式</strong></p><ul><li>命令端：领域模型处理业务逻辑</li><li>查询端：优化后的读模型直接返回DTO</li></ul></li><li><p><strong>事件溯源</strong></p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Account</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, events</span>):</span><br><span class="line">        self.balance = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> event <span class="keyword">in</span> events:</span><br><span class="line">            self.apply(event)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">deposit</span>(<span class="params">self, amount</span>):</span><br><span class="line">        self.apply(DepositEvent(amount))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">apply</span>(<span class="params">self, event</span>):</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(event, DepositEvent):</span><br><span class="line">            self.balance += event.amount</span><br></pre></td></tr></table></figure></li></ol><hr><h4 id="六、实践建议"><a href="#六、实践建议" class="headerlink" title="六、实践建议"></a>六、实践建议</h4><ol><li><p><strong>实施步骤</strong></p><ul><li>事件风暴工作坊 → 领域模型 → 限界上下文 → 微服务划分</li></ul></li><li><p><strong>技术选型</strong></p><ul><li>框架：Axon Framework, DDDLib</li><li>存储：EventStoreDB, MongoDB</li></ul></li><li><p><strong>常见陷阱</strong></p><ul><li>过度设计聚合边界</li><li>忽略领域事件的消息可靠性</li><li>将DDD与微服务强制绑定</li></ul></li></ol><hr><h4 id="七、何时使用DDD？"><a href="#七、何时使用DDD？" class="headerlink" title="七、何时使用DDD？"></a>七、何时使用DDD？</h4><ul><li>✅ 业务规则复杂多变的系统（保险、金融）</li><li>✅ 需要长期演进的战略级项目</li><li>❌ 简单CRUD管理系统</li><li>❌ 交付周期极短的MVP项目</li></ul><hr><p>通过DDD，我们不仅是在构建软件，更是在构建对业务领域的深刻认知。这种设计思想需要持续的精益实践，但当复杂业务遇上DDD，就像给迷宫装上了导航系统——虽然不能消除所有曲折，却能始终指引正确的方向。</p>]]></content>
       
       
+      
+        <tags>
+            
+            <tag> 架构 </tag>
+            
+        </tags>
       
     </entry>
     
@@ -43,19 +49,6 @@
             <tag> 架构 </tag>
             
         </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title></title>
-      <link href="/2024/10/20/%E9%9A%8F%E6%83%B3/20241020__%E5%87%86%E5%A4%87%E9%9D%A2%E8%AF%95/"/>
-      <url>/2024/10/20/%E9%9A%8F%E6%83%B3/20241020__%E5%87%86%E5%A4%87%E9%9D%A2%E8%AF%95/</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
       
     </entry>
     
@@ -217,33 +210,45 @@
     
     
     <entry>
-      <title></title>
-      <link href="/2024/08/09/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/EventLoop/"/>
-      <url>/2024/08/09/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/EventLoop/</url>
+      <title>Netty Pipeline</title>
+      <link href="/2024/07/21/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/Pipeline/"/>
+      <url>/2024/07/21/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/Pipeline/</url>
       
         <content type="html"><![CDATA[]]></content>
       
       
+      
+        <tags>
+            
+            <tag> Netty </tag>
+            
+        </tags>
       
     </entry>
     
     
     
     <entry>
-      <title></title>
-      <link href="/2024/08/09/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/Pipeline/"/>
-      <url>/2024/08/09/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/Pipeline/</url>
+      <title>Netty EventLoop</title>
+      <link href="/2024/07/20/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/EventLoop/"/>
+      <url>/2024/07/20/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/EventLoop/</url>
       
         <content type="html"><![CDATA[]]></content>
       
       
+      
+        <tags>
+            
+            <tag> Netty </tag>
+            
+        </tags>
       
     </entry>
     
     
     
     <entry>
-      <title>Channel</title>
+      <title>Netty Channel</title>
       <link href="/2024/07/20/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/Channel/"/>
       <url>/2024/07/20/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/Channel/</url>
       
@@ -262,7 +267,7 @@
     
     
     <entry>
-      <title>ByteBuf</title>
+      <title>Netty ByteBuf</title>
       <link href="/2024/07/18/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/ByteBuf/"/>
       <url>/2024/07/18/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/ByteBuf/</url>
       
@@ -281,7 +286,7 @@
     
     
     <entry>
-      <title>Bootstrap</title>
+      <title>Netty Bootstrap</title>
       <link href="/2024/07/17/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/Bootstrap/"/>
       <url>/2024/07/17/%E6%A1%86%E6%9E%B6/Netty/Netty%20%E5%9F%BA%E7%A1%80/Bootstrap/</url>
       
