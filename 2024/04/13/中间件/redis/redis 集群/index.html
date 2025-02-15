@@ -1,0 +1,283 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>redis 三大集群模式 | ZengCP's BLOGS</title><meta name="author" content="ZengCP"><meta name="copyright" content="ZengCP"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="详解Redis三大集群模式 1. Redis集群简介1.1 什么是Redis集群Redis集群是一种通过将多个Redis节点连接在一起以实现高可用性、数据分片和负载均衡的技术。它允许Redis在不同节点上同时提供服务，提高整体性能和可靠性。根据搭建的方式和集群的特性，Redis集群主要有三种模式：主从复制模式（Master-Slave）、哨兵模式（Sentinel）和Cluster模式。 1.2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis 三大集群模式">
+<meta property="og:url" content="http://example.com/2024/04/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/redis%20%E9%9B%86%E7%BE%A4/index.html">
+<meta property="og:site_name" content="ZengCP&#39;s BLOGS">
+<meta property="og:description" content="详解Redis三大集群模式 1. Redis集群简介1.1 什么是Redis集群Redis集群是一种通过将多个Redis节点连接在一起以实现高可用性、数据分片和负载均衡的技术。它允许Redis在不同节点上同时提供服务，提高整体性能和可靠性。根据搭建的方式和集群的特性，Redis集群主要有三种模式：主从复制模式（Master-Slave）、哨兵模式（Sentinel）和Cluster模式。 1.2">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png">
+<meta property="article:published_time" content="2024-04-13T07:42:38.000Z">
+<meta property="article:modified_time" content="2025-02-15T12:49:53.310Z">
+<meta property="article:author" content="ZengCP">
+<meta property="article:tag" content="redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png"><link rel="shortcut icon" href="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/longmao.png"><link rel="canonical" href="http://example.com/2024/04/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/redis%20%E9%9B%86%E7%BE%A4/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'redis 三大集群模式',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-02-15 20:49:53'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">34</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="ZengCP's BLOGS"><span class="site-name">ZengCP's BLOGS</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">redis 三大集群模式</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-13T07:42:38.000Z" title="发表于 2024-04-13 15:42:38">2024-04-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-02-15T12:49:53.310Z" title="更新于 2025-02-15 20:49:53">2025-02-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/redis/">redis</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="redis 三大集群模式"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="详解Redis三大集群模式"><a href="#详解Redis三大集群模式" class="headerlink" title="详解Redis三大集群模式"></a>详解Redis三大集群模式</h1><p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/734446-20230423104553727-1171728881.png" alt="image"></p>
+<h2 id="1-Redis集群简介"><a href="#1-Redis集群简介" class="headerlink" title="1. Redis集群简介"></a><strong>1. Redis集群简介</strong></h2><h3 id="1-1-什么是Redis集群"><a href="#1-1-什么是Redis集群" class="headerlink" title="1.1 什么是Redis集群"></a><strong>1.1 什么是Redis集群</strong></h3><p>Redis集群是一种通过将多个Redis节点连接在一起以实现高可用性、数据分片和负载均衡的技术。它允许Redis在不同节点上同时提供服务，提高整体性能和可靠性。根据搭建的方式和集群的特性，Redis集群主要有三种模式：主从复制模式（Master-Slave）、哨兵模式（Sentinel）和Cluster模式。</p>
+<h3 id="1-2-Redis集群的作用和优势"><a href="#1-2-Redis集群的作用和优势" class="headerlink" title="1.2 Redis集群的作用和优势"></a><strong>1.2 Redis集群的作用和优势</strong></h3><ol>
+<li><strong>高可用性</strong>：Redis集群可以在某个节点发生故障时，自动进行故障转移，保证服务的持续可用。</li>
+<li><strong>负载均衡</strong>：Redis集群可以将客户端请求分发到不同的节点上，有效地分摊节点的压力，提高系统的整体性能。</li>
+<li><strong>容灾恢复</strong>：通过主从复制或哨兵模式，Redis集群可以在主节点出现故障时，快速切换到从节点，实现业务的无缝切换。</li>
+<li><strong>数据分片</strong>：在Cluster模式下，Redis集群可以将数据分散在不同的节点上，从而突破单节点内存限制，实现更大规模的数据存储。</li>
+<li><strong>易于扩展</strong>：Redis集群可以根据业务需求和系统负载，动态地添加或移除节点，实现水平扩展。</li>
+</ol>
+<p>通过了解Redis集群的概念和优势，接下来将详细介绍三大集群模式的原理、配置、优缺点以及应用场景。</p>
+<h2 id="2-主从复制模式（Master-Slave）"><a href="#2-主从复制模式（Master-Slave）" class="headerlink" title="2. 主从复制模式（Master-Slave）"></a><strong>2. 主从复制模式</strong>（Master-Slave）</h2><h3 id="2-1-主从复制原理"><a href="#2-1-主从复制原理" class="headerlink" title="2.1 主从复制原理"></a><strong>2.1 主从复制原理</strong></h3><p>主从复制是Redis的一种基本集群模式，它通过将一个Redis节点（主节点）的数据复制到一个或多个其他Redis节点（从节点）来实现数据的冗余和备份。</p>
+<p>主节点负责处理客户端的写操作，同时从节点会实时同步主节点的数据。客户端可以从从节点读取数据，实现读写分离，提高系统性能。</p>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/734446-20230423104604712-958561171.png" alt="image" style="zoom:67%;" />
+
+<h3 id="2-2-主从复制配置和实现"><a href="#2-2-主从复制配置和实现" class="headerlink" title="2.2 主从复制配置和实现"></a><strong>2.2 主从复制配置和实现</strong></h3><ol>
+<li><p><strong>配置主节点</strong>：在主节点的redis.conf配置文件中，无需进行特殊配置，主节点默认监听所有客户端请求。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 主节点默认端口号6379</span></span><br><span class="line">port 6379</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>配置从节点</strong>：在从节点的redis.conf配置文件中，添加如下配置，指定主节点的地址和端口：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从节点设置端口号6380</span></span><br><span class="line">port 6380</span><br><span class="line"></span><br><span class="line"><span class="comment"># replicaof 主节点IP 主节点端口</span></span><br><span class="line">replicaof 127.0.0.1 6379</span><br></pre></td></tr></table></figure>
+
+<p>或者，通过Redis命令行在从节点上执行如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis&gt; replicaof 127.0.0.1 6379</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>验证主从复制</strong>：在主节点上执行写操作，然后在从节点上进行读操作，检查数据是否一致。</p>
+</li>
+</ol>
+<h3 id="2-3-主从复制的优缺点"><a href="#2-3-主从复制的优缺点" class="headerlink" title="2.3 主从复制的优缺点"></a><strong>2.3 主从复制的优缺点</strong></h3><p><strong>优点</strong>：</p>
+<ol>
+<li>配置简单，易于实现。</li>
+<li>实现数据冗余，提高数据可靠性。</li>
+<li>读写分离，提高系统性能。</li>
+</ol>
+<p><strong>缺点</strong>：</p>
+<ol>
+<li>主节点故障时，需要手动切换到从节点，故障恢复时间较长。</li>
+<li>主节点承担所有写操作，可能成为性能瓶颈。</li>
+<li>无法实现数据分片，受单节点内存限制。</li>
+</ol>
+<h3 id="2-4-主从复制场景应用"><a href="#2-4-主从复制场景应用" class="headerlink" title="2.4 主从复制场景应用"></a><strong>2.4 主从复制场景应用</strong></h3><p>主从复制模式适用于以下场景：</p>
+<ol>
+<li>数据备份和容灾恢复：通过从节点备份主节点的数据，实现数据冗余。</li>
+<li>读写分离：将读操作分发到从节点，减轻主节点压力，提高系统性能。</li>
+<li>在线升级和扩展：在不影响主节点的情况下，通过增加从节点来扩展系统的读取能力。</li>
+</ol>
+<p>总结：主从复制模式适合数据备份、读写分离和在线升级等场景，但在主节点故障时需要手动切换，不能自动实现故障转移。如果对高可用性要求较高，可以考虑使用哨兵模式或Cluster模式。</p>
+<h2 id="3-哨兵模式（Sentinel）"><a href="#3-哨兵模式（Sentinel）" class="headerlink" title="3. 哨兵模式（Sentinel）"></a><strong>3. 哨兵模式</strong>（<strong>Sentinel）</strong></h2><h3 id="3-1-哨兵模式原理"><a href="#3-1-哨兵模式原理" class="headerlink" title="3.1 哨兵模式原理"></a><strong>3.1 哨兵模式原理</strong></h3><p>哨兵模式是在主从复制基础上加入了哨兵节点，实现了自动故障转移。哨兵节点是一种特殊的Redis节点，它会监控主节点和从节点的运行状态。当主节点发生故障时，哨兵节点会自动从从节点中选举出一个新的主节点，并通知其他从节点和客户端，实现故障转移。</p>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/734446-20230423104619091-219085123.png" alt="image" style="zoom:67%;" />
+
+<h3 id="3-2-哨兵模式配置和实现"><a href="#3-2-哨兵模式配置和实现" class="headerlink" title="3.2 哨兵模式配置和实现"></a><strong>3.2 哨兵模式配置和实现</strong></h3><ol>
+<li><p><strong>配置主从复制</strong>：首先按照主从复制模式的配置方法，搭建一个主从复制集群（上面已经讲过）。</p>
+</li>
+<li><p><strong>配置哨兵节点</strong>：在哨兵节点上创建一个新的哨兵配置文件（如：sentinel.conf），并添加如下配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sentinel节点端口号</span></span><br><span class="line">port 26379</span><br><span class="line"></span><br><span class="line"><span class="comment"># sentinel monitor 被监控主节点名称 主节点IP 主节点端口 quorum</span></span><br><span class="line">sentinel monitor mymaster 127.0.0.1 6379 2</span><br><span class="line"></span><br><span class="line"><span class="comment"># sentinel down-after-milliseconds 被监控主节点名称 毫秒数</span></span><br><span class="line">sentinel down-after-milliseconds mymaster 60000</span><br><span class="line"></span><br><span class="line"><span class="comment"># sentinel failover-timeout 被监控主节点名称 毫秒数</span></span><br><span class="line">sentinel failover-timeout mymaster 180000</span><br></pre></td></tr></table></figure>
+
+<p>其中，<code>quorum</code>是指触发故障转移所需的最小哨兵节点数。<code>down-after-milliseconds</code>表示主节点被判断为失效的时间。<code>failover-timeout</code>是故障转移超时时间。</p>
+<blockquote>
+<p>为什么只配置了sentinel监控主节点，没有配置监控从节点？<br>因为通过主节点，就可以找到从节点。</p>
+</blockquote>
+</li>
+<li><p><strong>启动哨兵节点</strong>：使用如下命令启动哨兵节点：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis&gt; redis-sentinel /path/to/sentinel.conf</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>验证哨兵模式</strong>：手动停止主节点，观察哨兵节点是否自动选举出新的主节点，并通知其他从节点和客户端。</p>
+</li>
+</ol>
+<h3 id="3-3-哨兵模式的优缺点"><a href="#3-3-哨兵模式的优缺点" class="headerlink" title="3.3 哨兵模式的优缺点"></a><strong>3.3 哨兵模式的优缺点</strong></h3><p><strong>优点</strong>：</p>
+<ol>
+<li>自动故障转移，提高系统的高可用性。</li>
+<li>具有主从复制模式的所有优点，如数据冗余和读写分离。</li>
+</ol>
+<p><strong>缺点</strong>：</p>
+<ol>
+<li>配置和管理相对复杂。</li>
+<li>依然无法实现数据分片，受单节点内存限制。</li>
+</ol>
+<h3 id="3-4-哨兵模式场景应用"><a href="#3-4-哨兵模式场景应用" class="headerlink" title="3.4 哨兵模式场景应用"></a><strong>3.4 哨兵模式场景应用</strong></h3><p>哨兵模式适用于以下场景：</p>
+<ol>
+<li>高可用性要求较高的场景：通过自动故障转移，确保服务的持续可用。</li>
+<li>数据备份和容灾恢复：在主从复制的基础上，提供自动故障转移功能。</li>
+</ol>
+<p>总结：哨兵模式在主从复制模式的基础上实现了自动故障转移，提高了系统的高可用性。然而，它仍然无法实现数据分片。如果需要实现数据分片和负载均衡，可以考虑使用Cluster模式。</p>
+<h2 id="4-Cluster模式"><a href="#4-Cluster模式" class="headerlink" title="4. Cluster模式"></a><strong>4. Cluster模式</strong></h2><h3 id="4-1-Cluster模式原理"><a href="#4-1-Cluster模式原理" class="headerlink" title="4.1 Cluster模式原理"></a><strong>4.1 Cluster模式原理</strong></h3><p>Cluster模式是Redis的一种高级集群模式，它通过数据分片和分布式存储实现了负载均衡和高可用性。在Cluster模式下，Redis将所有的键值对数据分散在多个节点上。每个节点负责一部分数据，称为槽位。通过对数据的分片，Cluster模式可以突破单节点的内存限制，实现更大规模的数据存储。</p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/734446-20230423104631153-1328078427.png" alt="image"></p>
+<h3 id="4-2-数据分片与槽位"><a href="#4-2-数据分片与槽位" class="headerlink" title="4.2 数据分片与槽位"></a><strong>4.2 数据分片与槽位</strong></h3><p>Redis Cluster将数据分为16384个槽位，每个节点负责管理一部分槽位。当客户端向Redis Cluster发送请求时，Cluster会根据键的哈希值将请求路由到相应的节点。具体来说，Redis Cluster使用CRC16算法计算键的哈希值，然后对16384取模，得到槽位编号。</p>
+<h3 id="4-3-Cluster模式配置和实现"><a href="#4-3-Cluster模式配置和实现" class="headerlink" title="4.3 Cluster模式配置和实现"></a><strong>4.3 Cluster模式配置和实现</strong></h3><ol>
+<li><p><strong>配置Redis节点</strong>：为每个节点创建一个redis.conf配置文件，并添加如下配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cluster节点端口号</span></span><br><span class="line">port 7001</span><br><span class="line"></span><br><span class="line"><span class="comment"># 开启集群模式</span></span><br><span class="line">cluster-enabled <span class="built_in">yes</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 节点超时时间</span></span><br><span class="line">cluster-node-timeout 15000</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>像这样的配置，一共需要创建6个，我们做一个三主三从的集群。</p>
+<ol>
+<li><p><strong>启动Redis节点</strong>：使用如下命令启动6个节点：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis&gt; redis-server redis_7001.conf</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>创建Redis Cluster</strong>：使用Redis命令行工具执行如下命令创建Cluster：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis&gt; redis-cli --cluster create 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005 127.0.0.1:7006 --cluster-replicas 1</span><br></pre></td></tr></table></figure>
+
+<p><strong>cluster-replicas</strong> 表示从节点的数量，1代表每个主节点都有一个从节点。</p>
+</li>
+<li><p><strong>验证Cluster模式</strong>：向Cluster发送请求，观察请求是否正确路由到相应的节点。</p>
+</li>
+</ol>
+<h3 id="4-4-Cluster模式的优缺点"><a href="#4-4-Cluster模式的优缺点" class="headerlink" title="4.4 Cluster模式的优缺点"></a><strong>4.4 Cluster模式的优缺点</strong></h3><p><strong>优点</strong>：</p>
+<ol>
+<li>数据分片，实现大规模数据存储。</li>
+<li>负载均衡，提高系统性能。</li>
+<li>自动故障转移，提高高可用性。</li>
+</ol>
+<p><strong>缺点</strong>：</p>
+<ol>
+<li>配置和管理较复杂。</li>
+<li>一些复杂的多键操作可能受到限制。</li>
+</ol>
+<h3 id="4-5-Cluster模式场景应用"><a href="#4-5-Cluster模式场景应用" class="headerlink" title="4.5 Cluster模式场景应用"></a><strong>4.5 Cluster模式场景应用</strong></h3><p>Cluster模式适用于以下场景：</p>
+<ol>
+<li>大规模数据存储：通过数据分片，突破单节点内存限制。</li>
+<li>高性能要求场景：通过负载均衡，提高系统性能。</li>
+<li>高可用性要求场景：通过自动故障转移，确保服务的持续可用。</li>
+</ol>
+<p>总结：Cluster模式在提供高可用性的同时，实现了数据分片和负载均衡，适用于大规模数据存储和高性能要求的场景。然而，它的配置和管理相对复杂，且某些复杂的多键操作可能受到限制。</p>
+<h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a><strong>5. 总结</strong></h2><p>本文详细介绍了Redis的三大集群模式：主从复制、哨兵模式和Cluster模式。每种模式都有其特点和应用场景，具体如下：</p>
+<ol>
+<li><strong>主从复制模式</strong>：适用于数据备份和读写分离场景，配置简单，但在主节点故障时需要手动切换。</li>
+<li><strong>哨兵模式</strong>：在主从复制的基础上实现自动故障转移，提高高可用性，适用于高可用性要求较高的场景。</li>
+<li><strong>Cluster模式</strong>：通过数据分片和负载均衡实现大规模数据存储和高性能，适用于大规模数据存储和高性能要求场景。</li>
+</ol>
+<p>在实际应用中，可以根据系统的需求和特点选择合适的Redis集群模式，以实现高可用性、高性能和大规模数据存储</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">ZengCP</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/04/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/redis%20%E9%9B%86%E7%BE%A4/">http://example.com/2024/04/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/redis%20%E9%9B%86%E7%BE%A4/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">ZengCP's BLOGS</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/redis/">redis</a></div><div class="post_share"><div class="social-share" data-image="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/05/04/Java%20%E5%9F%BA%E7%A1%80/Java%20%E5%9F%BA%E7%A1%80/" title="Java 基础"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Java 基础</div></div></a></div><div class="next-post pull-right"><a href="/2024/04/09/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%88%9B%E5%BB%BA%E5%9E%8B%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="创建型设计模式"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">创建型设计模式</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2025/02/04/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis%20%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/" title="redis 常见面试题"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-04</div><div class="title">redis 常见面试题</div></div></a></div><div><a href="/2025/02/04/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/redis%20%E7%BC%93%E5%AD%98%20%E4%B8%8E%20%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%80%E8%87%B4%E6%80%A7/" title="redis 缓存与数据库一致性分析"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-04</div><div class="title">redis 缓存与数据库一致性分析</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZengCP</div><div class="author-info__description">记录心得，见证成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">55</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">34</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">25</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%A6%E8%A7%A3Redis%E4%B8%89%E5%A4%A7%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">详解Redis三大集群模式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Redis%E9%9B%86%E7%BE%A4%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">1. Redis集群简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E4%BB%80%E4%B9%88%E6%98%AFRedis%E9%9B%86%E7%BE%A4"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1 什么是Redis集群</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-Redis%E9%9B%86%E7%BE%A4%E7%9A%84%E4%BD%9C%E7%94%A8%E5%92%8C%E4%BC%98%E5%8A%BF"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.2 Redis集群的作用和优势</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E6%A8%A1%E5%BC%8F%EF%BC%88Master-Slave%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">2. 主从复制模式（Master-Slave）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1 主从复制原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E9%85%8D%E7%BD%AE%E5%92%8C%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.2 主从复制配置和实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.2.3.</span> <span class="toc-text">2.3 主从复制的优缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%9C%BA%E6%99%AF%E5%BA%94%E7%94%A8"><span class="toc-number">1.2.4.</span> <span class="toc-text">2.4 主从复制场景应用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F%EF%BC%88Sentinel%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">3. 哨兵模式（Sentinel）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F%E5%8E%9F%E7%90%86"><span class="toc-number">1.3.1.</span> <span class="toc-text">3.1 哨兵模式原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F%E9%85%8D%E7%BD%AE%E5%92%8C%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.3.2.</span> <span class="toc-text">3.2 哨兵模式配置和实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.3.3.</span> <span class="toc-text">3.3 哨兵模式的优缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F%E5%9C%BA%E6%99%AF%E5%BA%94%E7%94%A8"><span class="toc-number">1.3.4.</span> <span class="toc-text">3.4 哨兵模式场景应用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Cluster%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.4.</span> <span class="toc-text">4. Cluster模式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-Cluster%E6%A8%A1%E5%BC%8F%E5%8E%9F%E7%90%86"><span class="toc-number">1.4.1.</span> <span class="toc-text">4.1 Cluster模式原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E6%95%B0%E6%8D%AE%E5%88%86%E7%89%87%E4%B8%8E%E6%A7%BD%E4%BD%8D"><span class="toc-number">1.4.2.</span> <span class="toc-text">4.2 数据分片与槽位</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-Cluster%E6%A8%A1%E5%BC%8F%E9%85%8D%E7%BD%AE%E5%92%8C%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.4.3.</span> <span class="toc-text">4.3 Cluster模式配置和实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-Cluster%E6%A8%A1%E5%BC%8F%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.4.4.</span> <span class="toc-text">4.4 Cluster模式的优缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-5-Cluster%E6%A8%A1%E5%BC%8F%E5%9C%BA%E6%99%AF%E5%BA%94%E7%94%A8"><span class="toc-number">1.4.5.</span> <span class="toc-text">4.5 Cluster模式场景应用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%80%BB%E7%BB%93"><span class="toc-number">1.5.</span> <span class="toc-text">5. 总结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/04/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/redis%20%E7%BC%93%E5%AD%98%20%E4%B8%8E%20%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%80%E8%87%B4%E6%80%A7/" title="redis 缓存与数据库一致性分析">redis 缓存与数据库一致性分析</a><time datetime="2025-02-04T15:09:38.000Z" title="发表于 2025-02-04 23:09:38">2025-02-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/04/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis%20%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98/" title="redis 常见面试题">redis 常见面试题</a><time datetime="2025-02-04T09:53:24.000Z" title="发表于 2025-02-04 17:53:24">2025-02-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/27/%E6%9E%B6%E6%9E%84/DDD%20%E6%A6%82%E8%BF%B0/" title="DDD 简介">DDD 简介</a><time datetime="2024-10-27T12:11:58.000Z" title="发表于 2024-10-27 20:11:58">2024-10-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/10/24/%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B/" title="架构演进">架构演进</a><time datetime="2024-10-24T15:26:41.000Z" title="发表于 2024-10-24 23:26:41">2024-10-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/09/08/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E7%86%94%E6%96%AD%E3%80%81%E9%99%90%E6%B5%81%20%E4%B8%8E%20%E9%99%8D%E7%BA%A7/" title="服务治理概述">服务治理概述</a><time datetime="2024-09-08T13:47:59.000Z" title="发表于 2024-09-08 21:47:59">2024-09-08</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By ZengCP</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
