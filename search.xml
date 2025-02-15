@@ -891,6 +891,35 @@
     
     
     <entry>
+      <title>hadoop 概述</title>
+      <link href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/hadoop%20%E6%A6%82%E8%BF%B0/"/>
+      <url>/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/hadoop%20%E6%A6%82%E8%BF%B0/</url>
+      
+        <content type="html"><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在学习<code>Hadoop</code>之前，先了解一下典型的大数据平台架构图：</p><p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/238353d9269d48509d9616d14c017af1.png" alt="img"></p><p>可以看到Hadoop在大数据平台里处于一个技术核心的地位</p><h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><h2 id="Hadoop定义"><a href="#Hadoop定义" class="headerlink" title="Hadoop定义"></a>Hadoop定义</h2><p>Hadoop 是一个开源的分布式计算框架，由 Apache Software Foundation 开发和维护。它主要用于处理和分析大数据。Hadoop 的核心设计理念是将计算任务分布到多个节点上，以实现高度可扩展性和容错性。</p><h2 id="Hadoop组成"><a href="#Hadoop组成" class="headerlink" title="Hadoop组成"></a>Hadoop组成</h2><p>Hadoop 大数据技术生态，具体包含组件如下：</p><p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dbcf67baa6664a94b32f226f19e5066a.png" alt="90e2e8544f5a44fa91d4f70d57b7c0a1.png"></p><ul><li><strong>Hadoop HDFS</strong>（核心）：Hadoop 分布式存储系统；</li><li><strong>Yarn</strong>（核心）：Hadoop 2.x版本开始才有的资源管理系统；</li><li><strong>MapReduce</strong>（核心）：并行处理框架；</li><li><strong>HBase</strong>：基于HDFS的列式存储数据库，它是一种 NoSQL 数据库，非常适用于存储海量的稀疏的数据集；</li><li><strong>Hive</strong>：Apache Hive是一个数据仓库基础工具，它适用于处理结构化数据。它提供了简单的 sql 查询功能，可以将sql语句转换为 MapReduce任务进行运行；</li><li><strong>Pig</strong>：它是一种高级脚本语言。利用它不需要开发Java代码就可以写出复杂的数据处理程序；</li><li><strong>Flume</strong>：它可以从不同数据源高效实时的收集海量日志数据；</li><li><strong>Sqoop</strong>：适用于在 Hadoop 和关系数据库之间抽取数据；</li><li><strong>Oozie</strong>：这是一种 Java Web 系统，用于Hadoop任务的调度，例如设置任务的执行时间和执行频率等；</li><li><strong>Zookeeper</strong>：用于管理配置信息，命名空间。提供分布式同步和组服务；</li><li><strong>Mahout</strong>：可扩展的机器学习算法库。</li></ul><p>其中：<strong>HDFS</strong>、<strong>MapReduce</strong>、<strong>YARN</strong> 是核心组件。</p><h2 id="Hadoop优势"><a href="#Hadoop优势" class="headerlink" title="Hadoop优势"></a>Hadoop优势</h2><p>Hadoop 是一个用于 分布式存储 和 处理大数据 的开源框架，它具有以下几个优势：</p><h4 id="可伸缩性"><a href="#可伸缩性" class="headerlink" title="可伸缩性"></a>可伸缩性</h4><p>Hadoop 可以在成百上千台机器之间分配和处理数据，具有很高的可伸缩性。</p><h4 id="高可用性"><a href="#高可用性" class="headerlink" title="高可用性"></a>高可用性</h4><p>Hadoop 在处理数据时具备自动故障恢复的能力。如果某一台机器出现问题，Hadoop 会自动将该节点上的数据复制到其他节点上，确保数据的可靠性和不中断性。</p><h4 id="成本效益"><a href="#成本效益" class="headerlink" title="成本效益"></a>成本效益</h4><p>与传统的大型关系数据库相比，Hadoop 成本更低，因为它运行在廉价的硬件上。</p><h4 id="处理多种类型的数据"><a href="#处理多种类型的数据" class="headerlink" title="处理多种类型的数据"></a>处理多种类型的数据</h4><p>Hadoop 可以处理不同类型的数据，包括 结构化数据 半结构化数据 （如JSON）和 非结构化 数据（例如文本、图片、视频和音频等。）</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 大数据 </category>
+          
+          <category> hadoop </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 大数据 </tag>
+            
+            <tag> hadoop </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>YARN 概述</title>
       <link href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/YARN%20%E6%A6%82%E8%BF%B0/"/>
       <url>/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/YARN%20%E6%A6%82%E8%BF%B0/</url>
@@ -914,35 +943,6 @@
             <tag> hadoop </tag>
             
             <tag> yarn </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>hadoop 概述</title>
-      <link href="/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/hadoop%20%E6%A6%82%E8%BF%B0/"/>
-      <url>/2024/06/15/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/hadoop%20%E6%A6%82%E8%BF%B0/</url>
-      
-        <content type="html"><![CDATA[<h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在学习<code>Hadoop</code>之前，先了解一下典型的大数据平台架构图：</p><p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/238353d9269d48509d9616d14c017af1.png" alt="img"></p><p>可以看到Hadoop在大数据平台里处于一个技术核心的地位</p><h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><h2 id="Hadoop定义"><a href="#Hadoop定义" class="headerlink" title="Hadoop定义"></a>Hadoop定义</h2><p>Hadoop 是一个开源的分布式计算框架，由 Apache Software Foundation 开发和维护。它主要用于处理和分析大数据。Hadoop 的核心设计理念是将计算任务分布到多个节点上，以实现高度可扩展性和容错性。</p><h2 id="Hadoop组成"><a href="#Hadoop组成" class="headerlink" title="Hadoop组成"></a>Hadoop组成</h2><p>Hadoop 大数据技术生态，具体包含组件如下：</p><p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dbcf67baa6664a94b32f226f19e5066a.png" alt="90e2e8544f5a44fa91d4f70d57b7c0a1.png"></p><ul><li><strong>Hadoop HDFS</strong>（核心）：Hadoop 分布式存储系统；</li><li><strong>Yarn</strong>（核心）：Hadoop 2.x版本开始才有的资源管理系统；</li><li><strong>MapReduce</strong>（核心）：并行处理框架；</li><li><strong>HBase</strong>：基于HDFS的列式存储数据库，它是一种 NoSQL 数据库，非常适用于存储海量的稀疏的数据集；</li><li><strong>Hive</strong>：Apache Hive是一个数据仓库基础工具，它适用于处理结构化数据。它提供了简单的 sql 查询功能，可以将sql语句转换为 MapReduce任务进行运行；</li><li><strong>Pig</strong>：它是一种高级脚本语言。利用它不需要开发Java代码就可以写出复杂的数据处理程序；</li><li><strong>Flume</strong>：它可以从不同数据源高效实时的收集海量日志数据；</li><li><strong>Sqoop</strong>：适用于在 Hadoop 和关系数据库之间抽取数据；</li><li><strong>Oozie</strong>：这是一种 Java Web 系统，用于Hadoop任务的调度，例如设置任务的执行时间和执行频率等；</li><li><strong>Zookeeper</strong>：用于管理配置信息，命名空间。提供分布式同步和组服务；</li><li><strong>Mahout</strong>：可扩展的机器学习算法库。</li></ul><p>其中：<strong>HDFS</strong>、<strong>MapReduce</strong>、<strong>YARN</strong> 是核心组件。</p><h2 id="Hadoop优势"><a href="#Hadoop优势" class="headerlink" title="Hadoop优势"></a>Hadoop优势</h2><p>Hadoop 是一个用于 分布式存储 和 处理大数据 的开源框架，它具有以下几个优势：</p><h4 id="可伸缩性"><a href="#可伸缩性" class="headerlink" title="可伸缩性"></a>可伸缩性</h4><p>Hadoop 可以在成百上千台机器之间分配和处理数据，具有很高的可伸缩性。</p><h4 id="高可用性"><a href="#高可用性" class="headerlink" title="高可用性"></a>高可用性</h4><p>Hadoop 在处理数据时具备自动故障恢复的能力。如果某一台机器出现问题，Hadoop 会自动将该节点上的数据复制到其他节点上，确保数据的可靠性和不中断性。</p><h4 id="成本效益"><a href="#成本效益" class="headerlink" title="成本效益"></a>成本效益</h4><p>与传统的大型关系数据库相比，Hadoop 成本更低，因为它运行在廉价的硬件上。</p><h4 id="处理多种类型的数据"><a href="#处理多种类型的数据" class="headerlink" title="处理多种类型的数据"></a>处理多种类型的数据</h4><p>Hadoop 可以处理不同类型的数据，包括 结构化数据 半结构化数据 （如JSON）和 非结构化 数据（例如文本、图片、视频和音频等。）</p>]]></content>
-      
-      
-      <categories>
-          
-          <category> 大数据 </category>
-          
-          <category> hadoop </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 大数据 </tag>
-            
-            <tag> hadoop </tag>
             
         </tags>
       
