@@ -1240,9 +1240,9 @@
             
             <tag> Java </tag>
             
-            <tag> JVM </tag>
-            
             <tag> 调优 </tag>
+            
+            <tag> JVM </tag>
             
         </tags>
       
@@ -1538,35 +1538,6 @@
     
     
     <entry>
-      <title>Java 线程</title>
-      <link href="/2024/05/05/Java%20%E5%9F%BA%E7%A1%80/Java%20%E7%BA%BF%E7%A8%8B/"/>
-      <url>/2024/05/05/Java%20%E5%9F%BA%E7%A1%80/Java%20%E7%BA%BF%E7%A8%8B/</url>
-      
-        <content type="html"><![CDATA[<h1 id="Java-线程"><a href="#Java-线程" class="headerlink" title="Java 线程"></a>Java 线程</h1><h2 id="线程创建方式"><a href="#线程创建方式" class="headerlink" title="线程创建方式"></a>线程创建方式</h2><ul><li>继承Thread 类</li><li>实现 Runable 接口</li><li>实现 callable 接口</li><li>使用线程池</li></ul><p>不过，这些方式其实并没有真正创建出线程。准确点来说，这些都属于是在 Java 代码中使用多线程的方法。</p><p>此外，严格来说，Java 其实只有一种方式可以创建线程，那就是通过<code>new Thread().start()</code>创建。不管是哪种方式，最终还是依赖于<code>new Thread().start()</code>。</p><h2 id="线程相关方法"><a href="#线程相关方法" class="headerlink" title="线程相关方法"></a>线程相关方法</h2><ul><li><p><strong>wait()</strong></p><ul><li>调用该方法的线程进入WAITING 状态，只有等待另外线程的通知或被中断才会返回，</li><li>会释放对象的锁</li></ul></li><li><p><strong>sleep()</strong></p><ul><li>sleep 导致当前线程休眠，sleep(long)会导致线程进入TIMED-WATING 状态</li><li>不会释放锁</li></ul></li><li><p><strong>yield()</strong></p><ul><li>yield 会使当前线程让出 CPU 执行时间片，与其他线程一起重新竞争CPU 时间片。</li><li>不释放锁</li></ul></li><li><p><strong>join()</strong></p><ul><li>中断一个线程，其本意是给这个线程一个通知信号，会影响这个线程内部的一个中断标识位，这个线程本身并不会因此而改变状态(如阻塞，终止等)。</li></ul></li><li><p><strong>interrupt()</strong></p><ul><li>将一个阻塞状态线程的中断标志位置位，并使其中断&#x2F;抛出异常，抛出异常后 清楚中断标记位</li><li></li></ul></li></ul><h2 id="线程生命周期"><a href="#线程生命周期" class="headerlink" title="线程生命周期"></a>线程生命周期</h2><p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/1383841-20190624155001636-644135935.jpg" alt="img"></p><h2 id="线程优先级"><a href="#线程优先级" class="headerlink" title="线程优先级"></a>线程优先级</h2><p>Java线程可以具有不同的优先级，用于告诉操作系统在竞争CPU时间片时应该优先考虑哪个线程。线程的优先级范围从1到10，默认优先级是5。您可以使用setPriority()方法设置线程的优先级，范围从1（最低优先级）到10（最高优先级）。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Thread</span> <span class="variable">thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>();</span><br><span class="line">thread.setPriority(<span class="number">10</span>);</span><br></pre></td></tr></table></figure><h1 id="Java-线程池"><a href="#Java-线程池" class="headerlink" title="Java 线程池"></a>Java 线程池</h1><h2 id="线程池作用"><a href="#线程池作用" class="headerlink" title="线程池作用"></a>线程池作用</h2><p><strong>池化思想</strong>： 频繁创建销毁的东西，尽量设计成一个可以预分配、使用后归还、且可重复使用的模式，并交由一个管理器进行统一管理，以负责可复用对象的初始化、申请和归还处理；</p><h3 id="使用线程池的好处"><a href="#使用线程池的好处" class="headerlink" title="使用线程池的好处"></a>使用线程池的好处</h3><p><strong>降低资源消耗</strong>。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。</p><p><strong>提高响应速度</strong>。当任务到达时，任务可以不需要等到线程创建就能立即执行。</p><p><strong>提高线程的可管理性</strong>。线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一的分配，调优和监控。</p><h2 id="如何创建线程池"><a href="#如何创建线程池" class="headerlink" title="如何创建线程池"></a>如何创建线程池</h2><h3 id="使用-Executors-工具"><a href="#使用-Executors-工具" class="headerlink" title="使用 Executors 工具"></a>使用 Executors 工具</h3><p>Executors.newFixedThreadPool</p><p>Executors.newSingleThreadExecutor</p><p>Executors.newCachedThreadPool</p><p>Executors.newScheduledThreadPool</p><p>Executors.newSingleThreadScheduledExecutor</p><h3 id="手动创建线程池"><a href="#手动创建线程池" class="headerlink" title="手动创建线程池"></a>手动创建线程池</h3><h4 id="通用线程池-——-ThreadPoolExecutor"><a href="#通用线程池-——-ThreadPoolExecutor" class="headerlink" title="通用线程池 —— ThreadPoolExecutor"></a>通用线程池 —— ThreadPoolExecutor</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">ThreadPoolExecutor</span><span class="params">(<span class="type">int</span> corePoolSize,</span></span><br><span class="line"><span class="params">                              <span class="type">int</span> maximumPoolSize,</span></span><br><span class="line"><span class="params">                              <span class="type">long</span> keepAliveTime,</span></span><br><span class="line"><span class="params">                              TimeUnit unit,</span></span><br><span class="line"><span class="params">                              BlockingQueue&lt;Runnable&gt; workQueue,</span></span><br><span class="line"><span class="params">                              ThreadFactory threadFactory,</span></span><br><span class="line"><span class="params">                              RejectedExecutionHandler handler)</span> &#123;</span><br></pre></td></tr></table></figure><h5 id="参数列表"><a href="#参数列表" class="headerlink" title="参数列表"></a><strong>参数列表</strong></h5><ul><li>corePoolSize: 核心线程数</li><li>maximumPoolSize： 最大线程数</li><li>keepAliveTime： 超出核心线程数的线程闲置后，最大存活时间</li><li>unit： 最大存活时间对应时间单位</li><li>workQueue： 任务队列</li><li>threadFactory： 线程工厂（可以配置线程命名、优先级等）</li><li>handler： 拒绝策略（可以集成 prometheus 实现埋点上报）<br><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20240607015733333.png" alt="image-20240607015733333"><ul><li>AbortPolicy —— 不执行，并抛出异常</li><li>CallerRunPolicy —— 调用者执行</li><li>DiscardPolicy —— 不执行，也不抛出异常</li><li>DiscardOldestPolicy —— 不抛出异常，换掉最旧的任务</li></ul></li></ul><h4 id="延时任务线程池-——-ScheduledThreadPoolExecutor"><a href="#延时任务线程池-——-ScheduledThreadPoolExecutor" class="headerlink" title="延时任务线程池 —— ScheduledThreadPoolExecutor"></a>延时任务线程池 —— ScheduledThreadPoolExecutor</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">ScheduledThreadPoolExecutor</span><span class="params">(<span class="type">int</span> corePoolSize,</span></span><br><span class="line"><span class="params">                                   ThreadFactory threadFactory,</span></span><br><span class="line"><span class="params">                                   RejectedExecutionHandler handler)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>(corePoolSize, Integer.MAX_VALUE, <span class="number">0</span>, NANOSECONDS, <span class="keyword">new</span> <span class="title class_">DelayedWorkQueue</span>(), threadFactory, handler);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ul><li>阻塞队列为无界队列</li></ul><h2 id="线程池参数设置"><a href="#线程池参数设置" class="headerlink" title="线程池参数设置"></a>线程池参数设置</h2><h3 id="核心线程数大小"><a href="#核心线程数大小" class="headerlink" title="核心线程数大小"></a>核心线程数大小</h3><ul><li>corePoolSize：<ul><li>CPU 密集型： CPU 核数 + 1</li><li>IO 密集型:  CPU 核数 * 2</li></ul></li></ul><h3 id="阻塞队列"><a href="#阻塞队列" class="headerlink" title="阻塞队列"></a>阻塞队列</h3><ul><li><p>无界队列</p><ul><li>LinkedBlockingQueue</li></ul></li><li><p>有界队列</p><ul><li>ArrayBlockingQueue</li><li>PriorityBlockingQueue</li></ul></li></ul>]]></content>
-      
-      
-      <categories>
-          
-          <category> 并发编程 </category>
-          
-          <category> Java </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Java </tag>
-            
-            <tag> 并发编程 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>Java 集合</title>
       <link href="/2024/05/05/Java%20%E5%9F%BA%E7%A1%80/Java%20%E9%9B%86%E5%90%88/"/>
       <url>/2024/05/05/Java%20%E5%9F%BA%E7%A1%80/Java%20%E9%9B%86%E5%90%88/</url>
@@ -1588,6 +1559,35 @@
             <tag> Java </tag>
             
             <tag> 数据结构 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Java 线程</title>
+      <link href="/2024/05/05/Java%20%E5%9F%BA%E7%A1%80/Java%20%E7%BA%BF%E7%A8%8B/"/>
+      <url>/2024/05/05/Java%20%E5%9F%BA%E7%A1%80/Java%20%E7%BA%BF%E7%A8%8B/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Java-线程"><a href="#Java-线程" class="headerlink" title="Java 线程"></a>Java 线程</h1><h2 id="线程创建方式"><a href="#线程创建方式" class="headerlink" title="线程创建方式"></a>线程创建方式</h2><ul><li>继承Thread 类</li><li>实现 Runable 接口</li><li>实现 callable 接口</li><li>使用线程池</li></ul><p>不过，这些方式其实并没有真正创建出线程。准确点来说，这些都属于是在 Java 代码中使用多线程的方法。</p><p>此外，严格来说，Java 其实只有一种方式可以创建线程，那就是通过<code>new Thread().start()</code>创建。不管是哪种方式，最终还是依赖于<code>new Thread().start()</code>。</p><h2 id="线程相关方法"><a href="#线程相关方法" class="headerlink" title="线程相关方法"></a>线程相关方法</h2><ul><li><p><strong>wait()</strong></p><ul><li>调用该方法的线程进入WAITING 状态，只有等待另外线程的通知或被中断才会返回，</li><li>会释放对象的锁</li></ul></li><li><p><strong>sleep()</strong></p><ul><li>sleep 导致当前线程休眠，sleep(long)会导致线程进入TIMED-WATING 状态</li><li>不会释放锁</li></ul></li><li><p><strong>yield()</strong></p><ul><li>yield 会使当前线程让出 CPU 执行时间片，与其他线程一起重新竞争CPU 时间片。</li><li>不释放锁</li></ul></li><li><p><strong>join()</strong></p><ul><li>中断一个线程，其本意是给这个线程一个通知信号，会影响这个线程内部的一个中断标识位，这个线程本身并不会因此而改变状态(如阻塞，终止等)。</li></ul></li><li><p><strong>interrupt()</strong></p><ul><li>将一个阻塞状态线程的中断标志位置位，并使其中断&#x2F;抛出异常，抛出异常后 清楚中断标记位</li><li></li></ul></li></ul><h2 id="线程生命周期"><a href="#线程生命周期" class="headerlink" title="线程生命周期"></a>线程生命周期</h2><p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/1383841-20190624155001636-644135935.jpg" alt="img"></p><h2 id="线程优先级"><a href="#线程优先级" class="headerlink" title="线程优先级"></a>线程优先级</h2><p>Java线程可以具有不同的优先级，用于告诉操作系统在竞争CPU时间片时应该优先考虑哪个线程。线程的优先级范围从1到10，默认优先级是5。您可以使用setPriority()方法设置线程的优先级，范围从1（最低优先级）到10（最高优先级）。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Thread</span> <span class="variable">thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>();</span><br><span class="line">thread.setPriority(<span class="number">10</span>);</span><br></pre></td></tr></table></figure><h1 id="Java-线程池"><a href="#Java-线程池" class="headerlink" title="Java 线程池"></a>Java 线程池</h1><h2 id="线程池作用"><a href="#线程池作用" class="headerlink" title="线程池作用"></a>线程池作用</h2><p><strong>池化思想</strong>： 频繁创建销毁的东西，尽量设计成一个可以预分配、使用后归还、且可重复使用的模式，并交由一个管理器进行统一管理，以负责可复用对象的初始化、申请和归还处理；</p><h3 id="使用线程池的好处"><a href="#使用线程池的好处" class="headerlink" title="使用线程池的好处"></a>使用线程池的好处</h3><p><strong>降低资源消耗</strong>。通过重复利用已创建的线程降低线程创建和销毁造成的消耗。</p><p><strong>提高响应速度</strong>。当任务到达时，任务可以不需要等到线程创建就能立即执行。</p><p><strong>提高线程的可管理性</strong>。线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一的分配，调优和监控。</p><h2 id="如何创建线程池"><a href="#如何创建线程池" class="headerlink" title="如何创建线程池"></a>如何创建线程池</h2><h3 id="使用-Executors-工具"><a href="#使用-Executors-工具" class="headerlink" title="使用 Executors 工具"></a>使用 Executors 工具</h3><p>Executors.newFixedThreadPool</p><p>Executors.newSingleThreadExecutor</p><p>Executors.newCachedThreadPool</p><p>Executors.newScheduledThreadPool</p><p>Executors.newSingleThreadScheduledExecutor</p><h3 id="手动创建线程池"><a href="#手动创建线程池" class="headerlink" title="手动创建线程池"></a>手动创建线程池</h3><h4 id="通用线程池-——-ThreadPoolExecutor"><a href="#通用线程池-——-ThreadPoolExecutor" class="headerlink" title="通用线程池 —— ThreadPoolExecutor"></a>通用线程池 —— ThreadPoolExecutor</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">ThreadPoolExecutor</span><span class="params">(<span class="type">int</span> corePoolSize,</span></span><br><span class="line"><span class="params">                              <span class="type">int</span> maximumPoolSize,</span></span><br><span class="line"><span class="params">                              <span class="type">long</span> keepAliveTime,</span></span><br><span class="line"><span class="params">                              TimeUnit unit,</span></span><br><span class="line"><span class="params">                              BlockingQueue&lt;Runnable&gt; workQueue,</span></span><br><span class="line"><span class="params">                              ThreadFactory threadFactory,</span></span><br><span class="line"><span class="params">                              RejectedExecutionHandler handler)</span> &#123;</span><br></pre></td></tr></table></figure><h5 id="参数列表"><a href="#参数列表" class="headerlink" title="参数列表"></a><strong>参数列表</strong></h5><ul><li>corePoolSize: 核心线程数</li><li>maximumPoolSize： 最大线程数</li><li>keepAliveTime： 超出核心线程数的线程闲置后，最大存活时间</li><li>unit： 最大存活时间对应时间单位</li><li>workQueue： 任务队列</li><li>threadFactory： 线程工厂（可以配置线程命名、优先级等）</li><li>handler： 拒绝策略（可以集成 prometheus 实现埋点上报）<br><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20240607015733333.png" alt="image-20240607015733333"><ul><li>AbortPolicy —— 不执行，并抛出异常</li><li>CallerRunPolicy —— 调用者执行</li><li>DiscardPolicy —— 不执行，也不抛出异常</li><li>DiscardOldestPolicy —— 不抛出异常，换掉最旧的任务</li></ul></li></ul><h4 id="延时任务线程池-——-ScheduledThreadPoolExecutor"><a href="#延时任务线程池-——-ScheduledThreadPoolExecutor" class="headerlink" title="延时任务线程池 —— ScheduledThreadPoolExecutor"></a>延时任务线程池 —— ScheduledThreadPoolExecutor</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">ScheduledThreadPoolExecutor</span><span class="params">(<span class="type">int</span> corePoolSize,</span></span><br><span class="line"><span class="params">                                   ThreadFactory threadFactory,</span></span><br><span class="line"><span class="params">                                   RejectedExecutionHandler handler)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>(corePoolSize, Integer.MAX_VALUE, <span class="number">0</span>, NANOSECONDS, <span class="keyword">new</span> <span class="title class_">DelayedWorkQueue</span>(), threadFactory, handler);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ul><li>阻塞队列为无界队列</li></ul><h2 id="线程池参数设置"><a href="#线程池参数设置" class="headerlink" title="线程池参数设置"></a>线程池参数设置</h2><h3 id="核心线程数大小"><a href="#核心线程数大小" class="headerlink" title="核心线程数大小"></a>核心线程数大小</h3><ul><li>corePoolSize：<ul><li>CPU 密集型： CPU 核数 + 1</li><li>IO 密集型:  CPU 核数 * 2</li></ul></li></ul><h3 id="阻塞队列"><a href="#阻塞队列" class="headerlink" title="阻塞队列"></a>阻塞队列</h3><ul><li><p>无界队列</p><ul><li>LinkedBlockingQueue</li></ul></li><li><p>有界队列</p><ul><li>ArrayBlockingQueue</li><li>PriorityBlockingQueue</li></ul></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 并发编程 </category>
+          
+          <category> Java </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Java </tag>
+            
+            <tag> 并发编程 </tag>
             
         </tags>
       
