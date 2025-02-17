@@ -1,0 +1,261 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Kafka 经典面试题 | ZengCP's BLOGS</title><meta name="author" content="ZengCP"><meta name="copyright" content="ZengCP"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Kafka 经典面试题 1. Kafka 如何保障或提升消息可靠性Kafka 提供了多种机制来保障消息的可靠性：  副本机制（Replication）：Kafka 将每个 Partition 的数据复制到多个 Broker 上。通过设置 replication.factor 参数，可以指定副本的数量。当 Leader 副本发生故障时，Follower 副本可以接管，从而保证数据的可用性。 ISR（">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka 经典面试题">
+<meta property="og:url" content="http://example.com/2024/12/06/%E4%B8%AD%E9%97%B4%E4%BB%B6/MQ/Kafka/Kafka%20%E7%BB%8F%E5%85%B8%E9%9D%A2%E8%AF%95%E9%A2%98/index.html">
+<meta property="og:site_name" content="ZengCP&#39;s BLOGS">
+<meta property="og:description" content="Kafka 经典面试题 1. Kafka 如何保障或提升消息可靠性Kafka 提供了多种机制来保障消息的可靠性：  副本机制（Replication）：Kafka 将每个 Partition 的数据复制到多个 Broker 上。通过设置 replication.factor 参数，可以指定副本的数量。当 Leader 副本发生故障时，Follower 副本可以接管，从而保证数据的可用性。 ISR（">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png">
+<meta property="article:published_time" content="2024-12-06T12:45:18.000Z">
+<meta property="article:modified_time" content="2025-02-17T17:39:56.955Z">
+<meta property="article:author" content="ZengCP">
+<meta property="article:tag" content="面试题">
+<meta property="article:tag" content="MQ">
+<meta property="article:tag" content="Kafka">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png"><link rel="shortcut icon" href="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/longmao.png"><link rel="canonical" href="http://example.com/2024/12/06/%E4%B8%AD%E9%97%B4%E4%BB%B6/MQ/Kafka/Kafka%20%E7%BB%8F%E5%85%B8%E9%9D%A2%E8%AF%95%E9%A2%98/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Kafka 经典面试题',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-02-18 01:39:56'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">66</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">37</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">27</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="ZengCP's BLOGS"><span class="site-name">ZengCP's BLOGS</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Kafka 经典面试题</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-12-06T12:45:18.000Z" title="发表于 2024-12-06 20:45:18">2024-12-06</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-02-17T17:39:56.955Z" title="更新于 2025-02-18 01:39:56">2025-02-18</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/MQ/">MQ</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/MQ/Kafka/">Kafka</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Kafka 经典面试题"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Kafka-经典面试题"><a href="#Kafka-经典面试题" class="headerlink" title="Kafka 经典面试题"></a>Kafka 经典面试题</h1><hr>
+<h3 id="1-Kafka-如何保障或提升消息可靠性"><a href="#1-Kafka-如何保障或提升消息可靠性" class="headerlink" title="1. Kafka 如何保障或提升消息可靠性"></a>1. Kafka 如何保障或提升消息可靠性</h3><p>Kafka 提供了多种机制来保障消息的可靠性：</p>
+<ul>
+<li><strong>副本机制（Replication）</strong>：Kafka 将每个 Partition 的数据复制到多个 Broker 上。通过设置 <code>replication.factor</code> 参数，可以指定副本的数量。当 Leader 副本发生故障时，Follower 副本可以接管，从而保证数据的可用性。</li>
+<li><strong>ISR（In-Sync Replicas）机制</strong>：Kafka 维护一个同步副本集，只有当消息被 ISR 中的副本确认后，才会向生产者返回确认消息。通过设置 <code>acks</code> 参数（如 <code>acks=all</code>），可以确保消息被所有同步副本接收，从而提高可靠性。</li>
+<li><strong>日志持久化</strong>：Kafka 将消息持久化到磁盘，通过设置 <code>log.flush.interval.messages</code> 和 <code>log.flush.interval.ms</code> 参数，可以控制消息的持久化频率，减少数据丢失的风险。</li>
+<li><strong>消息重试机制</strong>：生产者在发送消息失败时，可以根据配置进行重试，通过设置 <code>retries</code> 和 <code>retry.backoff.ms</code> 参数，可以调整重试策略。</li>
+</ul>
+<hr>
+<h3 id="2-Kafka-如何开启消息的幂等性"><a href="#2-Kafka-如何开启消息的幂等性" class="headerlink" title="2. Kafka 如何开启消息的幂等性"></a>2. Kafka 如何开启消息的幂等性</h3><p>Kafka 的幂等性是指生产者可以多次发送相同的消息，而不会导致重复消息被写入。幂等性可以通过以下方式开启：</p>
+<ul>
+<li>在生产者客户端配置中，设置 <code>enable.idempotence=true</code>。</li>
+<li>Kafka 会为每个生产者分配一个唯一的 PID（Producer ID），并为每个 Partition 维护一个序列号。当生产者发送消息时，Kafka 会根据 PID 和序列号检查消息是否重复，从而保证幂等性。</li>
+<li>注意：幂等性需要与 <code>acks=all</code> 配合使用，以确保消息的可靠性。</li>
+</ul>
+<hr>
+<h3 id="3-如何避免重复消费，如何保障精准一次性消费"><a href="#3-如何避免重复消费，如何保障精准一次性消费" class="headerlink" title="3. 如何避免重复消费，如何保障精准一次性消费"></a>3. 如何避免重复消费，如何保障精准一次性消费</h3><p>Kafka 默认支持“最多一次”（At-Most-Once）和“至少一次”（At-Least-Once）语义，但不直接支持“精准一次”（Exactly-Once）。要实现精准一次消费，可以结合幂等性和事务：</p>
+<ul>
+<li><strong>幂等性</strong>：通过设置 <code>enable.idempotence=true</code>，确保生产者不会重复发送消息。</li>
+<li><strong>事务</strong>：Kafka 提供了事务机制，允许生产者将多个消息组合成一个事务，并通过 <code>BEGIN_TRANSACTION</code>、<code>SEND</code> 和 <code>COMMIT_TRANSACTION</code> 操作来保证消息的原子性。</li>
+<li><strong>消费者端去重</strong>：在消费者端，可以通过存储已消费消息的偏移量或消息 ID，来避免重复消费。</li>
+</ul>
+<hr>
+<h3 id="4-如何评估和优化-Kafka-集群的性能？"><a href="#4-如何评估和优化-Kafka-集群的性能？" class="headerlink" title="4. 如何评估和优化 Kafka 集群的性能？"></a>4. 如何评估和优化 Kafka 集群的性能？</h3><p>评估 Kafka 集群性能可以从以下几个方面入手：</p>
+<ul>
+<li><strong>吞吐量</strong>：通过工具（如 <code>kafka-producer-perf-test</code> 和 <code>kafka-consumer-perf-test</code>）测试生产者和消费者的吞吐量。</li>
+<li><strong>延迟</strong>：监控消息从生产者发送到消费者消费的延迟，可以通过 <code>JMX</code> 指标（如 <code>lag</code>）来评估。</li>
+<li><strong>资源使用</strong>：监控 Broker 的 CPU、内存、磁盘 I&#x2F;O 和网络带宽使用情况。</li>
+</ul>
+<p>优化 Kafka 集群性能的策略：</p>
+<ul>
+<li><strong>调整 Partition 数量</strong>：增加 Partition 数量可以提高并行度，但过多的 Partition 会增加管理开销。</li>
+<li><strong>优化磁盘性能</strong>：使用 SSD 或高 IOPS 的磁盘，减少磁盘 I&#x2F;O 延迟。</li>
+<li><strong>调整 JVM 参数</strong>：优化 Kafka Broker 的 JVM 参数（如堆大小、垃圾回收策略）以提高性能。</li>
+<li><strong>合理配置缓存</strong>：调整 <code>num.network.threads</code>、<code>num.io.threads</code> 和 <code>socket.request.max.bytes</code> 等参数，优化网络和 I&#x2F;O 性能。</li>
+<li><strong>清理策略</strong>：根据业务需求选择合适的日志清理策略（如 <code>delete</code> 或 <code>compact</code>），减少磁盘占用。</li>
+</ul>
+<hr>
+<h3 id="5-Kafka-的吞吐量和延迟是如何权衡的？"><a href="#5-Kafka-的吞吐量和延迟是如何权衡的？" class="headerlink" title="5. Kafka 的吞吐量和延迟是如何权衡的？"></a>5. Kafka 的吞吐量和延迟是如何权衡的？</h3><p>Kafka 的吞吐量和延迟是一对矛盾：</p>
+<ul>
+<li><strong>高吞吐量</strong>：可以通过增加 Partition 数量、使用批量发送（<code>batch.size</code> 和 <code>linger.ms</code>）、减少副本数量（<code>replication.factor</code>）等方式提高吞吐量。但这些优化可能会增加延迟。</li>
+<li><strong>低延迟</strong>：可以通过减少消息批量大小、降低 <code>linger.ms</code>、增加副本数量等方式降低延迟。但这些优化可能会降低吞吐量。</li>
+<li><strong>权衡策略</strong>：根据业务需求进行调整。如果业务对实时性要求高，则优先优化延迟；如果业务对数据量要求大，则优先优化吞吐量。</li>
+</ul>
+<hr>
+<h3 id="6-Kafka-集群的扩展性如何实现？"><a href="#6-Kafka-集群的扩展性如何实现？" class="headerlink" title="6. Kafka 集群的扩展性如何实现？"></a>6. Kafka 集群的扩展性如何实现？</h3><p>Kafka 集群的扩展性主要通过以下方式实现：</p>
+<ul>
+<li><strong>增加 Broker 节点</strong>：向集群中添加新的 Broker 节点，并通过重新分配 Partition 来平衡负载。</li>
+<li><strong>动态调整 Partition</strong>：根据业务需求增加或减少 Partition 数量，以提高并行度和负载均衡。</li>
+<li><strong>使用分布式存储</strong>：Kafka 支持将数据存储在分布式存储系统（如 HDFS）中，以扩展存储容量。</li>
+<li><strong>配置负载均衡</strong>：通过合理配置 <code>num.network.threads</code>、<code>num.io.threads</code> 等参数，确保集群的负载均衡。</li>
+</ul>
+<hr>
+<h3 id="7-Kafka-的副本机制（Replication）是如何工作的"><a href="#7-Kafka-的副本机制（Replication）是如何工作的" class="headerlink" title="7. Kafka 的副本机制（Replication）是如何工作的"></a>7. Kafka 的副本机制（Replication）是如何工作的</h3><p>Kafka 的副本机制通过以下步骤工作：</p>
+<ul>
+<li><strong>副本分配</strong>：在创建 Topic 时，Kafka 会根据 <code>replication.factor</code> 参数将 Partition 分配到多个 Broker 上，其中一个副本成为 Leader，其他副本成为 Follower。</li>
+<li><strong>数据同步</strong>：Leader 接收生产者的消息，并将消息同步到 Follower 副本。Follower 会定期从 Leader 拉取数据，并将其写入本地日志。</li>
+<li><strong>ISR 维护</strong>：Kafka 维护一个 ISR（In-Sync Replicas）列表，只有与 Leader 同步的副本才会被加入 ISR。如果 Follower 副本落后太多（超过 <code>replica.lag.time.max.ms</code>），会被移出 ISR。</li>
+<li><strong>故障转移</strong>：当 Leader 副本发生故障时，Kafka 会从 ISR 中选择一个 Follower 副本作为新的 Leader，从而保证服务的可用性。</li>
+</ul>
+<hr>
+<h3 id="8-如何设计-Kafka-的-Topic-和-Partition？"><a href="#8-如何设计-Kafka-的-Topic-和-Partition？" class="headerlink" title="8. 如何设计 Kafka 的 Topic 和 Partition？"></a>8. 如何设计 Kafka 的 Topic 和 Partition？</h3><p>设计 Kafka 的 Topic 和 Partition 时需要考虑以下因素：</p>
+<ul>
+<li><strong>业务需求</strong>：根据业务场景设计 Topic，例如，不同类型的事件可以使用不同的 Topic。</li>
+<li><strong>负载均衡</strong>：合理分配 Partition 数量，以提高并行度和负载均衡。Partition 数量应根据集群规模和业务负载进行调整。</li>
+<li><strong>消费者组</strong>：确保 Partition 数量大于或等于消费者组的消费者数量，以充分利用并行消费能力。</li>
+<li><strong>存储和性能</strong>：过多的 Partition 会增加管理开销和存储压力，因此需要根据实际需求进行权衡。</li>
+</ul>
+<hr>
+<h3 id="9-如何处理-Kafka-中的消息积压问题？"><a href="#9-如何处理-Kafka-中的消息积压问题？" class="headerlink" title="9. 如何处理 Kafka 中的消息积压问题？"></a>9. 如何处理 Kafka 中的消息积压问题？</h3><p>消息积压通常是由于消费者消费速度跟不上生产者生产速度导致的。处理积压的策略包括：</p>
+<ul>
+<li><strong>增加消费者数量</strong>：通过增加消费者组中的消费者数量，提高消费速度。</li>
+<li><strong>调整 Partition 数量</strong>：增加 Partition 数量以提高并行度，但需注意 Partition 数量不能超过消费者数量。</li>
+<li><strong>优化消费者性能</strong>：通过优化消费者代码（如批量消费、减少处理时间）来提高消费速度。</li>
+<li><strong>调整生产者策略</strong>：在生产者端进行限流，减少消息的生产速度。</li>
+<li><strong>使用死信队列</strong>：将积压的消息转移到死信队列中，后续进行批量处理。</li>
+</ul>
+<hr>
+<h3 id="10-Kafka-的日志清理机制有哪些？它们的区别是什么？"><a href="#10-Kafka-的日志清理机制有哪些？它们的区别是什么？" class="headerlink" title="10. Kafka 的日志清理机制有哪些？它们的区别是什么？"></a>10. Kafka 的日志清理机制有哪些？它们的区别是什么？</h3><p>Kafka 提供了两种日志清理机制：</p>
+<ul>
+<li><strong>删除清理（Delete）</strong>：根据日志的大小或时间来删除旧的消息。通过设置 <code>log.retention.bytes</code> 和 <code>log.retention.hours</code> 参数来控制。</li>
+<li><strong>压缩清理（Compact）</strong>：根据消息的 Key 进行压缩，保留每个 Key 的最新消息。适用于需要保留状态信息的场景，例如，日志清理时会保留每个 Key 的最新值，而不是简单地删除旧消息。</li>
+</ul>
+<p>两者的区别：</p>
+<ul>
+<li><strong>适用场景</strong>：删除清理适用于日志量较大但不需要保留历史状态的场景；压缩清理适用于需要保留状态信息的场景。</li>
+<li><strong>性能影响</strong>：删除清理对性能影响较小，但可能会浪费存储空间；压缩清理需要额外的计算资源来维护 Key 的状态。</li>
+</ul>
+<hr>
+<h3 id="11-消费者如何处理消息的重试机制？"><a href="#11-消费者如何处理消息的重试机制？" class="headerlink" title="11. 消费者如何处理消息的重试机制？"></a>11. 消费者如何处理消息的重试机制？</h3><p>消费者可以通过以下方式处理消息重试：</p>
+<ul>
+<li><strong>自动提交偏移量</strong>：如果消费者在处理消息时失败，可以通过设置 <code>enable.auto.commit=false</code>，手动提交偏移量，以便在重试时重新消费消息。</li>
+<li><strong>重试次数</strong>：可以通过设置 <code>max.poll.interval.ms</code> 和 <code>session.timeout.ms</code> 参数，控制消费者重试的间隔和超时时间。</li>
+<li><strong>死信队列</strong>：对于无法处理的消息，可以将其发送到死信队列，后续进行手动处理。</li>
+<li><strong>幂等性处理</strong>：在消费者端对消息进行幂等性处理，避免重复消费导致的问题。</li>
+</ul>
+<hr>
+<h3 id="12-如何实现消费者的负载均衡？"><a href="#12-如何实现消费者的负载均衡？" class="headerlink" title="12. 如何实现消费者的负载均衡？"></a>12. 如何实现消费者的负载均衡？</h3><p>Kafka 通过消费者组（Consumer Group）机制实现负载均衡：</p>
+<ul>
+<li><strong>Partition 分配策略</strong>：Kafka 提供了多种 Partition 分配策略（如 <code>RangeAssignor</code>、<code>RoundRobinAssignor</code>、<code>StickyAssignor</code>），可以根据业务需求选择合适的策略。</li>
+<li><strong>动态调整</strong>：消费者组中的消费者数量可以动态调整，Kafka 会根据当前的消费者数量重新分配 Partition，以实现负载均衡。</li>
+<li><strong>合理配置</strong>：确保 Partition 数量大于或等于消费者数量，以充分利用并行消费能力。同时，避免过多的消费者导致资源浪费。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">ZengCP</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/12/06/%E4%B8%AD%E9%97%B4%E4%BB%B6/MQ/Kafka/Kafka%20%E7%BB%8F%E5%85%B8%E9%9D%A2%E8%AF%95%E9%A2%98/">http://example.com/2024/12/06/%E4%B8%AD%E9%97%B4%E4%BB%B6/MQ/Kafka/Kafka%20%E7%BB%8F%E5%85%B8%E9%9D%A2%E8%AF%95%E9%A2%98/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">ZengCP's BLOGS</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%9D%A2%E8%AF%95%E9%A2%98/">面试题</a><a class="post-meta__tags" href="/tags/MQ/">MQ</a><a class="post-meta__tags" href="/tags/Kafka/">Kafka</a></div><div class="post_share"><div class="social-share" data-image="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/12/06/%E4%B8%AD%E9%97%B4%E4%BB%B6/MQ/Kafka/Kafka%20%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86/" title="Kafka 进阶"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Kafka 进阶</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/12/05/%E4%B8%AD%E9%97%B4%E4%BB%B6/MQ/Kafka/Kafka%20%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/" title="Kafka 原理总结"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-05</div><div class="title">Kafka 原理总结</div></div></a></div><div><a href="/2024/12/06/%E4%B8%AD%E9%97%B4%E4%BB%B6/MQ/Kafka/Kafka%20%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86/" title="Kafka 进阶"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-06</div><div class="title">Kafka 进阶</div></div></a></div><div><a href="/2024/05/22/Java%20%E5%9F%BA%E7%A1%80/JVM%20%E9%9D%A2%E8%AF%95%E9%A2%98/" title="JVM 核心知识点总结"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-22</div><div class="title">JVM 核心知识点总结</div></div></a></div><div><a href="/2024/04/14/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/redis%20%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%88Q+A%EF%BC%89/" title="Redis 面试题 （Q&amp;A）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-14</div><div class="title">Redis 面试题 （Q&amp;A）</div></div></a></div><div><a href="/2024/04/14/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/redis%20%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%88Q%EF%BC%89/" title="Redis 面试题 （Q only）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-14</div><div class="title">Redis 面试题 （Q only）</div></div></a></div><div><a href="/2024/11/17/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%E7%BB%8F%E5%85%B8%E9%9D%A2%E8%AF%95%E9%A2%98/" title="MySQL 经典面试题"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-17</div><div class="title">MySQL 经典面试题</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZengCP</div><div class="author-info__description">记录心得，见证成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">66</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">37</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">27</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Kafka-%E7%BB%8F%E5%85%B8%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">Kafka 经典面试题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Kafka-%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E6%88%96%E6%8F%90%E5%8D%87%E6%B6%88%E6%81%AF%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="toc-number">1.0.1.</span> <span class="toc-text">1. Kafka 如何保障或提升消息可靠性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Kafka-%E5%A6%82%E4%BD%95%E5%BC%80%E5%90%AF%E6%B6%88%E6%81%AF%E7%9A%84%E5%B9%82%E7%AD%89%E6%80%A7"><span class="toc-number">1.0.2.</span> <span class="toc-text">2. Kafka 如何开启消息的幂等性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E9%87%8D%E5%A4%8D%E6%B6%88%E8%B4%B9%EF%BC%8C%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E7%B2%BE%E5%87%86%E4%B8%80%E6%AC%A1%E6%80%A7%E6%B6%88%E8%B4%B9"><span class="toc-number">1.0.3.</span> <span class="toc-text">3. 如何避免重复消费，如何保障精准一次性消费</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%A6%82%E4%BD%95%E8%AF%84%E4%BC%B0%E5%92%8C%E4%BC%98%E5%8C%96-Kafka-%E9%9B%86%E7%BE%A4%E7%9A%84%E6%80%A7%E8%83%BD%EF%BC%9F"><span class="toc-number">1.0.4.</span> <span class="toc-text">4. 如何评估和优化 Kafka 集群的性能？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-Kafka-%E7%9A%84%E5%90%9E%E5%90%90%E9%87%8F%E5%92%8C%E5%BB%B6%E8%BF%9F%E6%98%AF%E5%A6%82%E4%BD%95%E6%9D%83%E8%A1%A1%E7%9A%84%EF%BC%9F"><span class="toc-number">1.0.5.</span> <span class="toc-text">5. Kafka 的吞吐量和延迟是如何权衡的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-Kafka-%E9%9B%86%E7%BE%A4%E7%9A%84%E6%89%A9%E5%B1%95%E6%80%A7%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%EF%BC%9F"><span class="toc-number">1.0.6.</span> <span class="toc-text">6. Kafka 集群的扩展性如何实现？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-Kafka-%E7%9A%84%E5%89%AF%E6%9C%AC%E6%9C%BA%E5%88%B6%EF%BC%88Replication%EF%BC%89%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84"><span class="toc-number">1.0.7.</span> <span class="toc-text">7. Kafka 的副本机制（Replication）是如何工作的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1-Kafka-%E7%9A%84-Topic-%E5%92%8C-Partition%EF%BC%9F"><span class="toc-number">1.0.8.</span> <span class="toc-text">8. 如何设计 Kafka 的 Topic 和 Partition？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86-Kafka-%E4%B8%AD%E7%9A%84%E6%B6%88%E6%81%AF%E7%A7%AF%E5%8E%8B%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-number">1.0.9.</span> <span class="toc-text">9. 如何处理 Kafka 中的消息积压问题？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-Kafka-%E7%9A%84%E6%97%A5%E5%BF%97%E6%B8%85%E7%90%86%E6%9C%BA%E5%88%B6%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F%E5%AE%83%E4%BB%AC%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.0.10.</span> <span class="toc-text">10. Kafka 的日志清理机制有哪些？它们的区别是什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#11-%E6%B6%88%E8%B4%B9%E8%80%85%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%E6%B6%88%E6%81%AF%E7%9A%84%E9%87%8D%E8%AF%95%E6%9C%BA%E5%88%B6%EF%BC%9F"><span class="toc-number">1.0.11.</span> <span class="toc-text">11. 消费者如何处理消息的重试机制？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E6%B6%88%E8%B4%B9%E8%80%85%E7%9A%84%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%EF%BC%9F"><span class="toc-number">1.0.12.</span> <span class="toc-text">12. 如何实现消费者的负载均衡？</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/06/%E4%B8%AD%E9%97%B4%E4%BB%B6/MQ/Kafka/Kafka%20%E7%BB%8F%E5%85%B8%E9%9D%A2%E8%AF%95%E9%A2%98/" title="Kafka 经典面试题">Kafka 经典面试题</a><time datetime="2024-12-06T12:45:18.000Z" title="发表于 2024-12-06 20:45:18">2024-12-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/06/%E4%B8%AD%E9%97%B4%E4%BB%B6/MQ/Kafka/Kafka%20%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86/" title="Kafka 进阶">Kafka 进阶</a><time datetime="2024-12-06T08:09:53.000Z" title="发表于 2024-12-06 16:09:53">2024-12-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/05/%E4%B8%AD%E9%97%B4%E4%BB%B6/MQ/Kafka/Kafka%20%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/" title="Kafka 原理总结">Kafka 原理总结</a><time datetime="2024-12-05T11:38:26.000Z" title="发表于 2024-12-05 19:38:26">2024-12-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/17/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%E7%BB%8F%E5%85%B8%E9%9D%A2%E8%AF%95%E9%A2%98/" title="MySQL 经典面试题">MySQL 经典面试题</a><time datetime="2024-11-17T12:47:38.000Z" title="发表于 2024-11-17 20:47:38">2024-11-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/16/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%20%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E6%8E%92%E6%9F%A5%E6%96%B9%E6%B3%95/" title="MySQL 常见问题及排查方法">MySQL 常见问题及排查方法</a><time datetime="2024-11-16T11:03:17.000Z" title="发表于 2024-11-16 19:03:17">2024-11-16</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By ZengCP</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
