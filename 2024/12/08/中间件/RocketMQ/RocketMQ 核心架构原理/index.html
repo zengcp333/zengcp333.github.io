@@ -1,0 +1,502 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>RocketMQ 核心架构原理 | ZengCP's BLOGS</title><meta name="author" content="ZengCP"><meta name="copyright" content="ZengCP"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一、 总技术架构图 启动流程 二、 生产者原理rocketMQ 消息发送没有 Kafka 那样复杂，没有 底层通用的  batch、sender 线程、inFlightRequest 等机制 或限制，关键问题就下面三个： 1、 发给谁 —— Broker&#x2F;Queue 选取 以及 负载均衡在 RocketMQ 中，消息发送时的负载均衡机制是先选择队列（MessageQueue），再通过队列">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RocketMQ 核心架构原理">
+<meta property="og:url" content="http://example.com/2024/12/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/RocketMQ/RocketMQ%20%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="ZengCP&#39;s BLOGS">
+<meta property="og:description" content="一、 总技术架构图 启动流程 二、 生产者原理rocketMQ 消息发送没有 Kafka 那样复杂，没有 底层通用的  batch、sender 线程、inFlightRequest 等机制 或限制，关键问题就下面三个： 1、 发给谁 —— Broker&#x2F;Queue 选取 以及 负载均衡在 RocketMQ 中，消息发送时的负载均衡机制是先选择队列（MessageQueue），再通过队列">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png">
+<meta property="article:published_time" content="2024-12-08T09:02:36.000Z">
+<meta property="article:modified_time" content="2025-02-22T15:55:32.088Z">
+<meta property="article:author" content="ZengCP">
+<meta property="article:tag" content="MQ">
+<meta property="article:tag" content="RocketMQ">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png"><link rel="shortcut icon" href="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/longmao.png"><link rel="canonical" href="http://example.com/2024/12/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/RocketMQ/RocketMQ%20%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'RocketMQ 核心架构原理',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-02-22 23:55:32'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">73</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">38</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">28</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="ZengCP's BLOGS"><span class="site-name">ZengCP's BLOGS</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">RocketMQ 核心架构原理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-12-08T09:02:36.000Z" title="发表于 2024-12-08 17:02:36">2024-12-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-02-22T15:55:32.088Z" title="更新于 2025-02-22 23:55:32">2025-02-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/MQ/">MQ</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/MQ/RocketMQ/">RocketMQ</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="RocketMQ 核心架构原理"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="一、-总技术架构图"><a href="#一、-总技术架构图" class="headerlink" title="一、 总技术架构图"></a>一、 总技术架构图</h1><p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/584866-20210720170211789-338741620.jpg" alt="img"></p>
+<h2 id="启动流程"><a href="#启动流程" class="headerlink" title="启动流程"></a>启动流程</h2><p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/584866-20210720170224800-1741215271.jpg" alt="img"></p>
+<h1 id="二、-生产者原理"><a href="#二、-生产者原理" class="headerlink" title="二、 生产者原理"></a>二、 生产者原理</h1><p>rocketMQ 消息发送没有 Kafka 那样复杂，没有 底层通用的  batch、sender 线程、inFlightRequest 等机制 或限制，关键问题就下面三个：</p>
+<h2 id="1、-发给谁-——-Broker-Queue-选取-以及-负载均衡"><a href="#1、-发给谁-——-Broker-Queue-选取-以及-负载均衡" class="headerlink" title="1、 发给谁 —— Broker&#x2F;Queue 选取 以及 负载均衡"></a>1、 发给谁 —— Broker&#x2F;Queue 选取 以及 负载均衡</h2><p>在 RocketMQ 中，消息发送时的负载均衡机制是<strong>先选择队列（MessageQueue），再通过队列找到对应的 Broker</strong>。具体过程如下：</p>
+<ul>
+<li><strong>队列选择</strong>：生产者通过负载均衡策略（如轮询、随机选择等）从 Topic 的队列列表中选择一个队列。</li>
+<li><strong>Broker 定位</strong>：根据队列的元信息（QueueId 和 BrokerName），生产者找到对应的 Broker，并将消息发送到该队列。</li>
+</ul>
+<p>这种设计简化了消息发送的逻辑，同时通过队列的负载均衡策略，实现了消息的均匀分布。</p>
+<h3 id="默认轮询策略"><a href="#默认轮询策略" class="headerlink" title="默认轮询策略"></a><strong>默认轮询策略</strong></h3><p>发消息的时候，<strong>默认会轮询所有的message queue发送</strong>，以达到让消息平均落在不同的queue上。而由于queue可以散落在不同的broker，所以消息就发送到不同的broker下</p>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250220232425239.png" alt="image-20250220232425239" style="zoom:67%;" />
+
+<h3 id="自定义队列选择器"><a href="#自定义队列选择器" class="headerlink" title="自定义队列选择器"></a>自定义队列选择器</h3><p>RocketMQ 允许开发者通过实现 <code>MessageQueueSelector</code> 接口来自定义队列选择逻辑。例如，在发送顺序消息时，可以通过自定义队列选择器根据消息的唯一标识选择特定的队列</p>
+<h3 id="MessageGroupHash-模式"><a href="#MessageGroupHash-模式" class="headerlink" title="MessageGroupHash 模式"></a>MessageGroupHash 模式</h3><p>对于顺序消息，相同的<code>shading key</code>只会对应一个<code>Queue</code>发送消息（5.0以上版本发送顺序消息时可配置 MessageGroupHash 模式）</p>
+<p>【注意】： 使用MessageGroupHash模式时，避免出现热点队列</p>
+<h2 id="2、-怎么发-——-消息发送方式-（同步、异步、单向）"><a href="#2、-怎么发-——-消息发送方式-（同步、异步、单向）" class="headerlink" title="2、 怎么发 —— 消息发送方式 （同步、异步、单向）"></a>2、 怎么发 —— 消息发送方式 （同步、异步、单向）</h2><h3 id="同步发送"><a href="#同步发送" class="headerlink" title="同步发送"></a>同步发送</h3><p>在同步发送模式下，RocketMQ 默认采用同步刷盘方式，当生产者将消息发送到 Broker 后，会等待 Broker 的响应（默认超时 5分钟），Broker 接收消息后，会将其写入内存缓存，并进行刷盘操作。因此，如果 Broker 响应成功，代表消息一定成功写入磁盘。</p>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/rocketmq-sync-send2.png" alt="img" style="zoom: 40%;" />
+
+<p>同步消息发出数据后，等到收到接收方发回响应之后才发下一个请求。</p>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/rocketmq-sync-send.png" alt="img" style="zoom:50%;" />
+
+<h3 id="异步发送"><a href="#异步发送" class="headerlink" title="异步发送"></a>异步发送</h3><p>在异步发送模式下，RocketMQ 默认采用异步刷盘方式，当生产者发送消息到 Broker 后，消息写入内存缓存成功后，Broker 立即返回响应（默认超时 5分钟），后台线程再异步将消息批量写入磁盘。因此，这种方式提高了系统的吞吐量和性能，但在系统崩溃时可能会丢失部分未刷盘的消息。</p>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/rocketmq-async-send2.png" alt="img" style="zoom:40%;" />
+
+<p>异步消息通常用在对响应时间敏感的业务场景，即发送端不能容忍长时间地等待Broker的响应。消息发送方在发送了一条消息后，不等接收方发回响应，接着进行第二条消息发送。发送方通过回调接口的方式接收服务器响应，并对响应结果进行处理</p>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/rocketmq-async-send.png" alt="img" style="zoom:50%;" />
+
+<h3 id="单向发送"><a href="#单向发送" class="headerlink" title="单向发送"></a>单向发送</h3><p>单向（OneWay）发送是一种只负责发送消息而不等待任何响应的方式。生产者将消息发送到 Broker 后（默认超时 5分钟），不关心消息是否成功到达或被持久化，主要依赖 Broker 进行刷盘操作，单向发送通常与异步刷盘结合使用，以提高发送效率。</p>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/rocketmq-oneway-send2.png" alt="img" style="zoom:40%;" />
+
+<p>这种方式主要用在不特别关心发送结果的场景，例如日志发送。</p>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/rocketmq-oneway-send.png" alt="img" style="zoom:50%;" />
+
+<h2 id="3、-可靠性保障-——-发完之后如何保证不丢"><a href="#3、-可靠性保障-——-发完之后如何保证不丢" class="headerlink" title="3、 可靠性保障 —— 发完之后如何保证不丢"></a>3、 可靠性保障 —— 发完之后如何保证不丢</h2><ul>
+<li><h3 id="同步发送模式"><a href="#同步发送模式" class="headerlink" title="同步发送模式"></a><strong>同步发送模式</strong></h3><ul>
+<li><p><strong>机制</strong>：在同步发送模式下，生产者会等待 Broker 的确认响应，只有在收到 Broker 的成功响应后，才认为消息发送成功。</p>
+</li>
+<li><p><strong>优点</strong>：可靠性最高，因为生产者会确保消息已经成功写入 Broker。</p>
+</li>
+<li><p><strong>缺点</strong>：性能较低，因为每次发送都需要等待响应。</p>
+</li>
+</ul>
+</li>
+<li><h3 id="发送重试机制"><a href="#发送重试机制" class="headerlink" title="发送重试机制"></a><strong>发送重试机制</strong></h3><ul>
+<li><p><strong>机制</strong>：如果消息发送失败（如网络异常或 Broker 不可用），生产者会自动重试发送。可以通过 <code>setRetryTimesWhenSendFailed</code> 方法设置重试次数。</p>
+</li>
+<li><p><strong>优点</strong>：提高了消息发送的成功率，尤其是在网络不稳定或 Broker 短暂不可用的情况下。</p>
+</li>
+<li><p><strong>缺点</strong>：如果重试次数过多，可能会导致消息发送延迟增加。</p>
+</li>
+</ul>
+</li>
+<li><h3 id="消息幂等性-——-避免因保障可靠性导致的消息重复"><a href="#消息幂等性-——-避免因保障可靠性导致的消息重复" class="headerlink" title="消息幂等性 —— 避免因保障可靠性导致的消息重复"></a><strong>消息幂等性</strong> —— 避免因保障可靠性导致的消息重复</h3><ul>
+<li><p><strong>机制</strong>：生产者可以为每条消息设置一个唯一的 ID（<code>MessageId</code> 或自定义的 <code>Keys</code>）。Broker 在接收消息时会根据这个 ID 进行去重处理，确保相同 ID 的消息不会被重复处理。</p>
+</li>
+<li><p><strong>优点</strong>：避免了因重试导致的消息重复问题，确保消息的幂等性。</p>
+</li>
+<li><p><strong>缺点</strong>：需要生产者端进行额外的逻辑处理，确保消息 ID 的唯一性。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="四、-Broker-消息存储机制"><a href="#四、-Broker-消息存储机制" class="headerlink" title="四、 Broker 消息存储机制"></a>四、 Broker 消息存储机制</h1><p>RocketMQ 的消息存储机制是其高性能、高可靠性的核心设计之一。其存储架构通过 <strong>顺序写、内存映射、异步刷盘、主从同步</strong> 等多种技术手段，实现了高吞吐量和低延迟。以下是 RocketMQ 消息存储机制的详细梳理：</p>
+<h2 id="1、-核心存储结构"><a href="#1、-核心存储结构" class="headerlink" title="1、 核心存储结构"></a>1、 核心存储结构</h2><p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250221002404162.png" alt="image-20250221002404162"></p>
+<p>如上图所示，RocketMQ 的存储模型围绕 <strong>CommitLog</strong>、<strong>ConsumeQueue</strong> 和 <strong>IndexFile</strong> 三个核心文件展开：</p>
+<h3 id="CommitLog（提交日志）"><a href="#CommitLog（提交日志）" class="headerlink" title="CommitLog（提交日志）"></a>CommitLog（提交日志）</h3><ul>
+<li><strong>作用</strong>：所有消息的 <strong>主体内容</strong> 和 <strong>元数据</strong> 均以 <strong>顺序追加（Append-Only）</strong> 的方式写入 CommitLog 文件。</li>
+<li><strong>特点</strong>：<ul>
+<li>所有 Topic 的消息统一存储到 CommitLog，避免随机写磁盘。</li>
+<li>单个文件大小默认 <code>1GB</code>，写满后生成新文件（文件名以起始偏移量命名，如 <code>00000000000000000000</code>）。</li>
+<li>消息存储格式包括：消息长度、存储时间、Topic、Queue ID、物理偏移量（PhyOffset）、Body 内容等。</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/O1CN0117cgOP1WYuMLLPmeP_!!6000000002801-0-tps-1080-250.jpg" alt="img"></p>
+<blockquote>
+<p>RocketMQ 有一套相对复杂的消息存储编码用来将消息对象序列化，随后再将一个非定长的数据落到上述的真实的写入到文件中，值得注意的存储格式中包括了索引队列的编号和位置。</p>
+</blockquote>
+<blockquote>
+<p>存储时单条消息本身元数据占用的存储空间为固定的 91B + 部分属性，而消息的 payload 通常大于 2K，也就是说元数据带来的额外存储开销只增加了 5%-10% 左右。很明显，单条消息越大，存储本身额外的开销（比例）就相对的越少。但如果有大消息的诉求，例如想在 body 中保存一张序列化后的图片（二进制大对象），从目前的实现上说，在消息中保存引用，将真实数据保存到到其他组件，消费时读取引用（比如文件名或者 uk）其实是一个更合适的设计。</p>
+</blockquote>
+<blockquote>
+<p><strong>在数据写入 CommitLog 后，在服务端当 MessageStore 向 CommitLog 写入一些消息后，有一个后端的 ReputMessageService 服务 (dispatch 线程) 会异步的构建多种索引，满足不同形式的读取诉求。</strong></p>
+</blockquote>
+<h3 id="ConsumeQueue（消费队列）"><a href="#ConsumeQueue（消费队列）" class="headerlink" title="ConsumeQueue（消费队列）"></a>ConsumeQueue（消费队列）</h3><ul>
+<li><strong>作用</strong>：作为 CommitLog 的 <strong>逻辑索引</strong>，按 Topic 和 Queue 分目录存储，用于加速消费时的消息查找。</li>
+<li><strong>结构</strong>：<ul>
+<li>每个 ConsumeQueue 条目固定 <code>20B</code>，包含：<ul>
+<li><code>CommitLog Offset</code>（8B）：消息在 CommitLog 中的物理偏移量。</li>
+<li><code>Message Size</code>（4B）：消息大小。</li>
+<li><code>Message Tag HashCode</code>（8B）：消息 Tag 的哈希值（用于 Tag 过滤）。</li>
+</ul>
+</li>
+<li>单个文件默认存储 <code>30万</code> 条记录，文件大小约 <code>5.72MB</code>。</li>
+</ul>
+</li>
+<li><strong>写入流程</strong>：<ul>
+<li>由 dispatch 线程异步地将消息从 CommitLog 取出，再拿出消息在 CommitLog 中的物理偏移量 (相对于文件存储的 Index)，消息长度以及Tag Hash 作为单条消息的索引，分发到对应的消费队列</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>偏移 + 长度构成了对 CommitLog 的引用 (Ref)。这种 Ref 机制对于单挑消息只有 20B，显著降低了索引存储开销。ConsumeQueue 实际写入的实现与 CommitLog 不同，CommitLog 有很多存储策略可以选择且混合存储，一个 ConsumeQueue 只会保存一个 Topic 的一个分区的索引，持久化默认使用 FileChannel，实际上这里使用 mmap 的话对小数据量的请求更加友好，不用陷入中断。</p>
+</blockquote>
+<ul>
+<li><strong>消费流程</strong>：<ul>
+<li>根据 Tag 的 Hash 值查询 ConsumeQueue 文件（由 physicOffset + size + Tag HashCode 组成）</li>
+<li>根据 ConsumeQueue 拿到 physicOffset + size</li>
+<li>根据 physicOffset 查询 CommitLog 文件（上文的MappedFileQueue）获得消息</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/O1CN01aEJjNQ1G61WsrhHRq_!!6000000000572-0-tps-1080-615.jpg" alt="img"></p>
+<h3 id="IndexFile（索引文件）"><a href="#IndexFile（索引文件）" class="headerlink" title="IndexFile（索引文件）"></a>IndexFile（索引文件）</h3><ul>
+<li><strong>作用</strong>：提供基于 <strong>Key</strong>（如 Message ID 或业务 Key）或 <strong>时间区间</strong> 的消息查询能力。</li>
+<li><strong>结构</strong>：<ul>
+<li>单个 IndexFile 大小固定为 <code>400MB</code>，包含：<ul>
+<li><strong>索引头</strong>：存储时间戳等信息。</li>
+<li><strong>哈希槽（Slot）</strong>：用于快速定位 Key 对应的索引条目。</li>
+<li><strong>索引条目</strong>：记录 Key 的 Hash 值、CommitLog Offset、时间差等信息。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/O1CN01JyXo5V1ROJ72cbxLf_!!6000000002101-0-tps-1080-172.jpg" alt="img"></p>
+<h2 id="2、-持久化机制"><a href="#2、-持久化机制" class="headerlink" title="2、 持久化机制"></a>2、 持久化机制</h2><p>在 RocketMQ 中提供了三种方式来持久化，对应了三个不同的线程实现，实际使用中只会选择一个。</p>
+<ul>
+<li>同步持久化，使用 GroupCommitService。</li>
+<li>异步持久化且未开启 TransientStorePool 缓存，使用 FlushRealTimeService。</li>
+<li>异步持久化且开启 TransientStorePool 缓存，使用 CommitRealService。</li>
+</ul>
+<p>同步刷盘的落盘线程统一都是 GroupCommitService。写入线程仅仅负责唤醒落盘线程，将消息转交给存储线程，而不会等待消息存储完成之后就立刻返回了。</p>
+<p>从同步刷盘的实现看，落盘线程每隔 10 ms 会检查一次，如果有数据未持久化，便将 page cache 中的数据刷入磁盘。</p>
+<blockquote>
+<p>Q： 此时操作系统 crash 或者断电，那未落盘的数据丢失会不会对生产者有影响呢？</p>
+<p>A： 此时生产者只要使用了可靠发送 (指非 oneway 的 rpc 调用)，这时对于发送者来说还没有收到成功的响应，此时客户端会进行重试，将消息写入其他可用的节点。</p>
+</blockquote>
+<p>异步持久化对应的线程是 FlushRealTimeService，实现上又分为 固定频率 和 非固定频率 ，核心区别是线程是否响应中断。</p>
+<p>所谓的固定频率是指每次有新的消息到来的时候不管，不响应中断，每隔 500ms（可配置）flush 一次，如果发现未落盘数据不足（默认 16K），直接进入下一个循环，如果数据写入量很少，一直没有填充满16K，就不会落盘了吗？这里还有一个基于时间的兜底方案，即线程发现距离上次写入已经很久了（默认 10 秒），也会执行一次 flush。但事实上 FileChannel 还是 MappedByteBuffer 的 force() 方法都不能精确控制写入的数据量，这里的写行为也只是对内核的一种建议。</p>
+<p>对于非固定频率实现，即每次有新的消息到来的时候，都会发送唤醒信号，当唤醒动作在数据量较大时，存在性能损耗，但消息量较少且情况下实时性好，更省资源。在生产中，具体选择哪种持久化实现由具体的场景决定。是同步写还是多副本异步写来保证数据存储的可靠性，本质上是读写延迟和和成本之间的权衡。<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/O1CN01sGVd9c1HaXXADzyCy_!!6000000000774-0-tps-1080-370.jpg" alt="img"></p>
+<h2 id="3、-消息清理机制"><a href="#3、-消息清理机制" class="headerlink" title="3、 消息清理机制"></a>3、 消息清理机制</h2><p>由于消息是被顺序存储在CommitLog文件中的，且消息长度不定长，因此消息的清理不是以消息为单位进行的，而是以CommitLog为单位进行的。</p>
+<p>默认情况下，Broker会清理单个 CommitLog 文件中最后一条消息超过<strong>72小时的 CommitLog 文件</strong>，除了用户手动清理为，下面几种情况会被默认清理。</p>
+<ul>
+<li><strong>CommitLog清理机制</strong><ul>
+<li>CommitLog文件过期(72小时)，且达到清理时间点(<strong>默认为04:00~05:00</strong>)，自动清理过期的CommitLog文件</li>
+<li>CommitLog文件过期(72小时)，且CommitLog所在磁盘分区占用率已经达到<strong>过期清理警戒线</strong>(默认75%)，无论是否到达清理时间点都会自动清理过期文件</li>
+<li>CommitLog所在磁盘分区占用率已经达到<strong>清理警戒线</strong>(默认85%)，无论是否过期，都会从最早的文件开始清理，一次最多清理10个文件</li>
+<li>CommitLog所在磁盘分区占用率已经达到<strong>系统危险警戒线</strong>(默认90%)，Broker将拒绝消息写入</li>
+<li>Broker至少会保留最新的CommitLog文件</li>
+</ul>
+</li>
+<li><strong>ConsumeQueue清理机制</strong><ul>
+<li>如果ConsumeQueue文件关联CommitLog都被清理，则清理此ConsumeQueue文件</li>
+<li>Broker每个Topic-QueueId至少会保留最新的文件</li>
+</ul>
+</li>
+<li><strong>IndexFile清理机制</strong><ul>
+<li>如果IndexFile所有索引单元关联CommitLog都被清理，则清理此IndexFile</li>
+</ul>
+</li>
+</ul>
+<h4 id="Broker与消息清理相关配置"><a href="#Broker与消息清理相关配置" class="headerlink" title="Broker与消息清理相关配置"></a>Broker与消息清理相关配置</h4><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">properties</span> <span class="string">代码解读复制代码# 文件自动清理时间，单位H，默认72</span></span><br><span class="line"><span class="attr">fileReservedTime</span>=<span class="string">72</span></span><br><span class="line"><span class="comment"># CommitLog物理文件删除间隔，但是ms，默认100</span></span><br><span class="line"><span class="attr">deleteCommitLogFilesInterval</span> = <span class="string">100</span></span><br><span class="line"><span class="comment"># 文件自动清理时间，默认04，即凌晨4点</span></span><br><span class="line"><span class="attr">deleteWhen</span> = <span class="string">&quot;04&quot;</span></span><br><span class="line"><span class="comment"># 硬盘占用率所在分区过期清理警戒线，超过这个值，无论是否到达清理时间，都会自动清理过期文件</span></span><br><span class="line"><span class="attr">diskMaxUsedSpaceRatio</span> = <span class="string">75</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="五、RocketMQ消费原理"><a href="#五、RocketMQ消费原理" class="headerlink" title="五、RocketMQ消费原理"></a>五、RocketMQ消费原理</h1><h2 id="1、-消费模型"><a href="#1、-消费模型" class="headerlink" title="1、 消费模型"></a>1、 消费模型</h2><h3 id="消费模式"><a href="#消费模式" class="headerlink" title="消费模式"></a>消费模式</h3><p>RocketMQ 提供了两种主要的消费模式：<strong>集群模式</strong>和<strong>广播模式</strong>。</p>
+<ul>
+<li><strong>集群模式</strong>：同一消费组（Consumer Group）内的多个消费者共享消息。每个消息只会被其中一个消费者消费，适用于负载均衡的场景。</li>
+<li><strong>广播模式</strong>：同一消费组内的每个消费者都会收到所有消息，适用于每个消费者都需要处理每条消息的场景。</li>
+</ul>
+<h3 id="消息获取方式"><a href="#消息获取方式" class="headerlink" title="消息获取方式"></a>消息获取方式</h3><ul>
+<li><strong>拉模式</strong>：消费者主动从 Broker 拉取消息。这种方式由消费者控制，适合对实时性要求较低的场景。</li>
+<li><strong>推模式</strong>：基于拉模式实现，Broker 在消息到达后主动推送给消费者。这种方式实时性更高，适合对消息响应速度要求较高的场景。</li>
+</ul>
+<h3 id="消费线程模型"><a href="#消费线程模型" class="headerlink" title="消费线程模型"></a>消费线程模型</h3><p>RocketMQ 为每个消费组创建独立的消费线程池：</p>
+<ul>
+<li><strong>并发消费</strong>：线程池中的线程并行处理消息，适合对性能要求较高的场景。</li>
+<li><strong>顺序消费</strong>：通过锁机制保证消息按顺序处理，适用于对消息顺序性要求较高的场景。</li>
+</ul>
+<h2 id="2、-消费可靠性"><a href="#2、-消费可靠性" class="headerlink" title="2、 消费可靠性"></a>2、 消费可靠性</h2><h3 id="消费负载均衡-与-Rebalance"><a href="#消费负载均衡-与-Rebalance" class="headerlink" title="消费负载均衡 与 Rebalance"></a>消费负载均衡 与 Rebalance</h3><ul>
+<li><strong>触发条件</strong>：消费者数量变化、Topic队列数变化。</li>
+<li><strong>分配策略</strong>：平均分配、循环分配、一致性哈希等。</li>
+<li><strong>问题</strong>：Rebalance可能导致短暂消费暂停或重复消费。</li>
+</ul>
+<h3 id="消费进度管理"><a href="#消费进度管理" class="headerlink" title="消费进度管理"></a>消费进度管理</h3><ul>
+<li><strong>存储位置</strong>：集群模式存于Broker，广播模式存于本地。</li>
+<li><strong>提交方式</strong>：同步提交（可靠但延迟高）、异步提交（低延迟但可能丢失）。</li>
+<li><strong>重置策略</strong>：<code>CONSUME_FROM_LAST_OFFSET</code>（默认）、<code>CONSUME_FROM_FIRST_OFFSET</code>等。</li>
+</ul>
+<h3 id="消费重试"><a href="#消费重试" class="headerlink" title="消费重试"></a>消费重试</h3><h4 id="顺序消息的重试"><a href="#顺序消息的重试" class="headerlink" title="顺序消息的重试"></a>顺序消息的重试</h4><p>对于顺序消息，当消费者消费消息失败后，消息队列 RocketMQ 会自动不断进行消息重试</p>
+<p><strong>【注意】</strong>： 重试发生也就意味着应用出现消息消费阻塞情况。因此，在使用顺序消息时，务必保证应用能够及时监控并处理消费失的情况，避免阻塞现象发生。</p>
+<h4 id="无序消息的重试"><a href="#无序消息的重试" class="headerlink" title="无序消息的重试"></a>无序消息的重试</h4><p>对于无序消息（普通、定时、延时、事务消息），当消费者消费消息失败时，您可以通过设置返回状态达到消息重试的结果。</p>
+<p><strong>【注意】</strong>：无序消息的重试只针对集群消费方式生效；广播方式不提供失败重试特性，即消费失败后，失败消息不再重试，继续消费新的消息。</p>
+<h4 id="重试策略"><a href="#重试策略" class="headerlink" title="重试策略"></a>重试策略</h4><ul>
+<li><strong>最大重试次数</strong>：默认情况下，消息会被重试 16 次。可以通过设置 <code>consumer.setMaxReconsumeTimes()</code> 方法自定义最大重试次数。</li>
+<li><strong>重试间隔</strong>：<ul>
+<li>对于无序消息，重试间隔为阶梯时间，随着重试次数增加而逐渐延长。</li>
+<li>对于顺序消息，重试间隔为固定时间，默认为 3 秒。</li>
+</ul>
+</li>
+</ul>
+<h1 id="六、-NameServer-解析"><a href="#六、-NameServer-解析" class="headerlink" title="六、 NameServer 解析"></a>六、 NameServer 解析</h1><p>RocketMQ 的 NameServer 是一个轻量级的无状态服务注册与发现中心，主要负责管理和维护 Broker 集群的路由信息，并为生产者和消费者提供服务发现功能。以下是关于 NameServer 的全面梳理：</p>
+<h2 id="1、-作用"><a href="#1、-作用" class="headerlink" title="1、 作用"></a>1、 作用</h2><p>NameServer 在 RocketMQ 架构中扮演着以下关键角色：</p>
+<ul>
+<li><strong>Broker 注册中心</strong>：Broker 启动时会向所有 NameServer 实例注册自身信息（包括 IP 地址、端口、主题配置等），NameServer 会将这些信息保存下来并对外提供查询服务。</li>
+<li><strong>路由信息管理</strong>：NameServer 负责存储 Broker 集群的路由信息，包括主题（Topic）到 Broker 的映射关系。生产者和消费者通过 NameServer 获取路由信息，从而找到对应的 Broker。</li>
+<li><strong>服务发现</strong>：当 Broker 发生变更（如上线、下线或配置变更）时，NameServer 会及时更新路由信息，确保生产者和消费者能够动态感知 Broker 的变化。</li>
+<li><strong>高可用保障</strong>：NameServer 通常以集群方式部署，各实例之间相互独立，没有主从之分。即使部分 NameServer 宕机，系统仍能正常运行。</li>
+</ul>
+<h2 id="2、-工作原理"><a href="#2、-工作原理" class="headerlink" title="2、 工作原理"></a>2、 工作原理</h2><h3 id="（1）Broker-注册与心跳机制"><a href="#（1）Broker-注册与心跳机制" class="headerlink" title="（1）Broker 注册与心跳机制"></a>（1）<strong>Broker 注册与心跳机制</strong></h3><ul>
+<li><strong>注册流程</strong>：Broker 启动后，会向所有 NameServer 实例注册自身信息，并每隔 30 秒发送心跳包以保持连接。</li>
+<li><strong>心跳检测</strong>：NameServer 接收到心跳包后，会更新 Broker 的状态信息。如果在 120 秒内未收到某个 Broker 的心跳包，NameServer 会认为该 Broker 已下线，并从路由表中移除其信息。</li>
+</ul>
+<h3 id="（2）路由信息的存储与更新"><a href="#（2）路由信息的存储与更新" class="headerlink" title="（2）路由信息的存储与更新"></a>（2）<strong>路由信息的存储与更新</strong></h3><ul>
+<li><strong>存储结构</strong>：NameServer 使用 <code>HashMap</code> 存储路由信息，主要包括：<ul>
+<li><code>topicQueueTable</code>：存储 Topic 的消息队列路由信息。</li>
+<li><code>brokerAddrTable</code>：存储 Broker 的基础信息。</li>
+<li><code>brokerLiveTable</code>：存储 Broker 的状态信息。</li>
+</ul>
+</li>
+<li><strong>更新机制</strong>：NameServer 定期扫描 <code>brokerLiveTable</code>，移除超时未响应的 Broker，并更新路由表。</li>
+</ul>
+<h3 id="（3）路由查询"><a href="#（3）路由查询" class="headerlink" title="（3）路由查询"></a>（3）<strong>路由查询</strong></h3><ul>
+<li>生产者和消费者在发送或接收消息时，会从 NameServer 查询路由信息，获取对应 Topic 的 Broker 地址。之后，它们会直接与 Broker 通信。</li>
+</ul>
+<h2 id="3、-特性"><a href="#3、-特性" class="headerlink" title="3、 特性"></a>3、 特性</h2><h3 id="（1）-散装"><a href="#（1）-散装" class="headerlink" title="（1） 散装"></a>（1） 散装</h3><p>NameServer 可以配成一个集群，但是NameServer 之间没有主从关系，相互独立，甚至不会进行通信。不会在 NameServer 内部去协商出一致性</p>
+<h3 id="（2）-CA"><a href="#（2）-CA" class="headerlink" title="（2） CA"></a>（2） CA</h3><p>RocketMQ的架构设计决定了只需要一个轻量级的元数据服务器就足够了，只需要保持最终一致，而不需要Zookeeper这样的强一致性解决方案，不需要再依赖另一个中间件，从而减少整体维护成本。</p>
+<p>因此，根据CAP理论，NameServer 这个模块的设计上选择了AP，而不是CP</p>
+<h1 id="七、-功能特性"><a href="#七、-功能特性" class="headerlink" title="七、 功能特性"></a>七、 功能特性</h1><h2 id="1、事务消息原理"><a href="#1、事务消息原理" class="headerlink" title="1、事务消息原理"></a>1、事务消息原理</h2><p>RocketMQ 的事务消息是一种分布式事务解决方案，用于保证消息发送与本地事务的最终一致性。它通过事务消息机制，确保在分布式系统中，消息的发送和业务操作的执行能够保持一致性。</p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dv4i6hph3af2c_a542c054daf6446699ec449e4a6c30f8.png" alt="rocketmq-transaction-message-process.png"></p>
+<p><strong>优点</strong>：</p>
+<ul>
+<li><strong>保证消息一致性</strong>：能够确保分布式系统中消息发送与业务逻辑的一致性。</li>
+<li><strong>高性能</strong>：事务消息的处理机制经过优化，能够满足高并发场景。</li>
+<li><strong>易用性</strong>：提供了简单易用的 API，开发者可以通过 <code>TransactionListener</code> 接口实现本地事务逻辑。</li>
+</ul>
+<p><strong>缺点</strong>：</p>
+<ul>
+<li><strong>系统复杂性增加</strong>：引入事务消息后，系统复杂性增加，开发者需要处理事务状态回查等问题。</li>
+<li><strong>消息时延增加</strong>：由于涉及半事务消息存储、事务状态确认和回查等操作，可能会增加消息的处理时延。</li>
+</ul>
+<h2 id="2、-死信队列"><a href="#2、-死信队列" class="headerlink" title="2、 死信队列"></a>2、 死信队列</h2><h3 id="作用"><a href="#作用" class="headerlink" title="作用"></a><strong>作用</strong></h3><ul>
+<li>当消息重试次数达到最大值仍未成功消费时，消息会被发送到死信队列。</li>
+<li>死信队列用于存储那些无法正常消费的消息，方便后续人工介入或特殊处理。</li>
+</ul>
+<h3 id="特性"><a href="#特性" class="headerlink" title="特性"></a><strong>特性</strong></h3><ul>
+<li>死信队列的名称以 <code>%DLQ%</code> 开头，与消费者组一一对应。</li>
+<li>死信队列中的消息不会自动消费，需要人工介入或编写专门的消费者程序来处理。</li>
+<li>死信消息的有效期默认为三天，到期后会被自动删除。</li>
+</ul>
+<h3 id="处理方式"><a href="#处理方式" class="headerlink" title="处理方式"></a><strong>处理方式</strong></h3><ul>
+<li>可以通过控制台或编写代码的方式查询死信队列中的消息。</li>
+<li>如果排查并解决了消息消费失败的原因，可以将死信消息重新发送到原队列进行消费。</li>
+<li>对于顺序消息的死信，不支持直接从死信队列重新发送，需要导出后自行处理</li>
+</ul>
+<h2 id="3、-定时-延时-消息"><a href="#3、-定时-延时-消息" class="headerlink" title="3、 定时&#x2F;延时 消息"></a>3、 定时&#x2F;延时 消息</h2><p>RocketMQ 的定时消息和延时消息是两种重要的消息类型，它们在功能上非常相似，本质上都是通过设置消息的投递时间来实现延迟消费的效果</p>
+<h3 id="定时消息"><a href="#定时消息" class="headerlink" title="定时消息"></a>定时消息</h3><ul>
+<li><strong>定义</strong>：定时消息是指消息发送到服务端后，按照指定的时间戳被投递到消费者端。消息的投递时间由生产者设置为一个未来的毫秒级 Unix 时间戳。</li>
+<li><strong>使用场景</strong>：适用于需要在特定时间触发业务逻辑的场景，例如定时任务、定时通知等。</li>
+<li><strong>设置限制</strong>：<ul>
+<li>定时时间必须是当前时间之后，否则消息会立即投递。</li>
+<li>定时时间范围因 RocketMQ 版本和部署方式而异，标准版最大支持 7 天，专业版和铂金版最大支持 40 天。</li>
+</ul>
+</li>
+</ul>
+<h3 id="延时消息"><a href="#延时消息" class="headerlink" title="延时消息"></a>延时消息</h3><ul>
+<li><strong>定义</strong>：延时消息是指消息发送到服务端后，按照指定的延时时间（如 1 秒、10 分钟、1 小时等）后被投递到消费者端。</li>
+<li><strong>使用场景</strong>：适用于需要在特定时间间隔后触发业务逻辑的场景，例如订单超时未支付提醒、任务调度等。</li>
+<li><strong>设置限制</strong>：<ul>
+<li>延时时间需转换为 Unix 时间戳，且必须在当前时间之后。</li>
+<li>RocketMQ 默认支持 18 种预设的延时时间，包括 1 秒、5 秒、10 秒、30 秒、1 分钟、2 分钟、1 小时、2 小时等。</li>
+</ul>
+</li>
+</ul>
+<h3 id="延迟队列原理"><a href="#延迟队列原理" class="headerlink" title="延迟队列原理"></a>延迟队列原理</h3><p>所有的延迟消息由producer发出之后，都会存放到同一个topic（<code>SCHEDULE_TOPIC_XXXX</code>）下，不同的延迟级别会对应不同的队列序号，当延迟时间到之后，由<strong>定时线程</strong>读取转换为普通的消息存的真实指定的topic下，此时对于consumer端此消息才可见，从而被consumer消费。</p>
+<p><strong>【注意】：RocketMQ不支持任意时间的延时</strong>，只支持以下几个固定的延时等级<br><code>private String messageDelayLevel = &quot;1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h&quot;;</code></p>
+<h3 id="消息生命周期"><a href="#消息生命周期" class="headerlink" title="消息生命周期"></a>消息生命周期</h3><ol>
+<li><strong>初始化</strong>：消息被生产者构建并发送到服务端。</li>
+<li><strong>定时中</strong>：消息存储在定时存储系统中，等待定时时刻到达。</li>
+<li><strong>待消费</strong>：定时时刻到达后，消息被重新写入普通存储引擎，对消费者可见。</li>
+<li><strong>消费中</strong>：消费者获取消息并处理，服务端等待消费者提交消费结果。</li>
+<li><strong>消费提交</strong>：消费者完成消费并向服务端提交结果，消息被逻辑标记为已消费。</li>
+<li><strong>消息删除</strong>：消息在保存时间到期或存储空间不足时被物理删除。</li>
+</ol>
+<h1 id="八、-常见问题"><a href="#八、-常见问题" class="headerlink" title="八、 常见问题"></a>八、 常见问题</h1><h2 id="1、-如何保障顺序消费"><a href="#1、-如何保障顺序消费" class="headerlink" title="1、 如何保障顺序消费"></a>1、 如何保障顺序消费</h2><ul>
+<li>默认保障局部消费顺序， 全局消费顺序需限制queue&#x3D;1<ul>
+<li>或者也可以通过设置分区键（如 <code>ShardingKey</code>），确保相关消息进入同一队列</li>
+</ul>
+</li>
+<li>queue 自身 FIFO</li>
+<li>消费者单线程消费</li>
+</ul>
+<h2 id="2、-消息幂等"><a href="#2、-消息幂等" class="headerlink" title="2、 消息幂等"></a>2、 消息幂等</h2><h3 id="自然幂等"><a href="#自然幂等" class="headerlink" title="自然幂等"></a>自然幂等</h3><p>如HTTP协议中，GET、POST、PUT、DELETE，GET、DELETE方法幂等的，而POST方法不是幂等的。</p>
+<h3 id="限制性幂等"><a href="#限制性幂等" class="headerlink" title="限制性幂等"></a>限制性幂等</h3><p>【核心】 记录已消费信息 —— 唯一标识符 + 去重表等</p>
+<h2 id="3、如何保障消息不丢失"><a href="#3、如何保障消息不丢失" class="headerlink" title="3、如何保障消息不丢失"></a>3、如何保障消息不丢失</h2><h3 id="（1）生产阶段"><a href="#（1）生产阶段" class="headerlink" title="（1）生产阶段"></a>（1）生产阶段</h3><p>通过请求、确认机制来保证消息的可靠传递 —— <strong>同步生产</strong></p>
+<h3 id="（2）消息存储阶段"><a href="#（2）消息存储阶段" class="headerlink" title="（2）消息存储阶段"></a>（2）消息存储阶段</h3><p>如果对消息的可靠性要求非常高，通过调整Broker的参数避免因为服务器故障而丢失消息。</p>
+<p>在RocketMQ中，可以将刷盘的方式 flushDiskType 配置为 SYCN_FLUSH 同步刷盘。</p>
+<p>如果Broker是多个节点组成的集群，至少将消息发送到2个以上的节点，再给客户端发送确认响应。 </p>
+<p><strong>核心——同步全量复制</strong></p>
+<h3 id="（3）消费阶段"><a href="#（3）消费阶段" class="headerlink" title="（3）消费阶段"></a>（3）消费阶段</h3><p>客户端从MQ拉取消息后，执行用户的业务逻辑成功之后，再给MQ发送消费确认响应 —— OFFSET 同步提交</p>
+<h3 id="Q：-如何知道消息丢失"><a href="#Q：-如何知道消息丢失" class="headerlink" title="Q： 如何知道消息丢失"></a>Q： 如何知道消息丢失</h3><p><strong>利用消息队列的有序性来验证是否有消息丢失。</strong>在消息生产端，给每个发出的消息都指定一个附加一个连续递增的版本号，然后在消费端检查序号的连续性。</p>
+<p>落地方案：</p>
+<p>利用拦截器机制，在 Producer 发送消息之前的拦截器中将序号注入到消息中，在 Consumer 收到消息的拦截器中检测序号的连续性。</p>
+<p>细节问题：</p>
+<p>不能能保证在Topic是严格顺序的，只能保证Queue&#x2F;分区的消息是有序的，发消息的必须要指定的分区，在每个分区单独监测消息序号的连续性。</p>
+<p>一般服务都是多实例进行部署，不好协调全局的Producer的发送顺序，每个Producer分别生成各自的消息序号，附加Producer的标识，在Comsumer端按照每个Producer分别来监测序号的连续性。</p>
+<p>Comsumer实例的数量最好和分区数量保持一致。</p>
+<h2 id="4、如何保障精准一次消费"><a href="#4、如何保障精准一次消费" class="headerlink" title="4、如何保障精准一次消费"></a>4、如何保障精准一次消费</h2><p>（2） &#x3D; At most once</p>
+<p>（3） &#x3D; At leastonce</p>
+<p>Exactly Once &#x3D; (2) + (3)</p>
+<h2 id="5、-消费堆积问题处理"><a href="#5、-消费堆积问题处理" class="headerlink" title="5、 消费堆积问题处理"></a>5、 消费堆积问题处理</h2><p><strong>消息积压 &#x3D; 消费者的消费能力不足引起</strong></p>
+<ul>
+<li>如果是突发问题，临时扩容，增加消费者的数量。通过扩容和降级承担流量，应急问题的处理。</li>
+<li>其次，才是排查解决异常问题。监控、日志分析是否消费端的业务逻辑代码出现了问题，优化消费端的业务处理逻辑。</li>
+<li>最后，如果消费端处理不足，水平扩容提升消费端并发处理能力。<strong>在扩容消费者实例的同时，必须要同步扩容Topic分区的数量，确保消费者的实例数和分区数是相同的，分区是单线程消费。</strong></li>
+</ul>
+<p><strong>在设计系统的时候，一定要保障消费端的消费的性能要高于生产端生产的性能。</strong></p>
+<h2 id="6、-Rebalance"><a href="#6、-Rebalance" class="headerlink" title="6、 Rebalance"></a>6、 Rebalance</h2><h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><ol>
+<li><strong>消息队列分配</strong>：RocketMQ 中的消息是按主题（Topic）分类的，每个主题下包含多个消息队列。</li>
+<li><strong>消费者注册</strong>：消费者实例启动时会向 Broker 注册，并加入指定的消费者组。</li>
+<li><strong>触发 Rebalance</strong>：当消费者组中的消费者实例数量发生变化（如新增、移除或崩溃）时，Broker 会触发 Rebalance。</li>
+<li><strong>重新分配队列</strong>：Broker 根据当前消费者实例数量，重新计算每个消费者应消费的消息队列，并通知消费者实例。</li>
+<li><strong>消费者调整</strong>：消费者根据新的分配结果调整消息拉取策略。</li>
+</ol>
+<h3 id="触发条件"><a href="#触发条件" class="headerlink" title="触发条件"></a>触发条件</h3><ol>
+<li><strong>消费者实例新增</strong>：当新的消费者实例加入消费者组时。</li>
+<li><strong>消费者实例移除</strong>：当消费者实例从消费者组中移除时。</li>
+<li><strong>消费者实例崩溃</strong>：当消费者实例崩溃或网络异常时。</li>
+<li><strong>消息队列变化</strong>：当主题下的消息队列数量发生变化时。</li>
+</ol>
+<h3 id="对业务影响"><a href="#对业务影响" class="headerlink" title="对业务影响"></a>对业务影响</h3><ol>
+<li><strong>重复消费</strong>：Rebalance 可能导致部分消息被重复消费，尤其是当消费者的 offset 提交不及时时。</li>
+<li><strong>消费突刺</strong>：Rebalance 可能导致积压消息在结束后瞬间需要大量消费，造成消费突刺。</li>
+<li><strong>性能开销</strong>：频繁的 Rebalance 操作会增加系统开销，影响消息消费的效率。</li>
+<li><strong>消费延迟</strong>：Rebalance 过程中，部分消费者可能会暂停消费，导致消息处理延迟。</li>
+</ol>
+<h3 id="优化策略"><a href="#优化策略" class="headerlink" title="优化策略"></a>优化策略</h3><ol>
+<li><strong>合理配置消费者组</strong>：根据业务需求和系统架构，合理设置消费者组和实例数量，避免频繁触发 Rebalance。</li>
+<li><strong>选择合适的分配策略</strong>：根据业务场景选择合适的负载均衡算法（如轮询、随机、最少消费等），确保消息均匀分布。</li>
+<li><strong>优化 Rebalance 间隔</strong>：调整 Rebalance 的间隔时间（默认 20 秒），避免频繁 Rebalance。</li>
+<li><strong>监控和告警</strong>：建立监控机制，关注 Rebalance 频率、消费者负载等指标，及时发现异常。</li>
+<li><strong>关闭主动触发</strong>：在消费者数量较多或频繁上下线时，可以通过配置关闭主动触发 Rebalance。</li>
+<li><strong>幂等性设计</strong>：在业务逻辑中实现幂等性，避免重复消费导致的问题。</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">ZengCP</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/12/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/RocketMQ/RocketMQ%20%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/">http://example.com/2024/12/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/RocketMQ/RocketMQ%20%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">ZengCP's BLOGS</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/MQ/">MQ</a><a class="post-meta__tags" href="/tags/RocketMQ/">RocketMQ</a></div><div class="post_share"><div class="social-share" data-image="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2025/02/22/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E7%AE%97%E6%B3%95/" title=""><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info"></div></div></a></div><div class="next-post pull-right"><a href="/2024/12/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/RocketMQ/RocketMQ%20%E6%A6%82%E8%BF%B0/" title="RocketMQ 概述"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">RocketMQ 概述</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/12/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/RocketMQ/RocketMQ%20%E6%A6%82%E8%BF%B0/" title="RocketMQ 概述"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-08</div><div class="title">RocketMQ 概述</div></div></a></div><div><a href="/2024/12/06/%E4%B8%AD%E9%97%B4%E4%BB%B6/Kafka/Kafka%20%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/" title="Kafka 原理总结"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-06</div><div class="title">Kafka 原理总结</div></div></a></div><div><a href="/2024/12/07/%E4%B8%AD%E9%97%B4%E4%BB%B6/Kafka/Kafka%20%E7%BB%8F%E5%85%B8%E9%9D%A2%E8%AF%95%E9%A2%98/" title="Kafka 经典面试题"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-07</div><div class="title">Kafka 经典面试题</div></div></a></div><div><a href="/2024/12/07/%E4%B8%AD%E9%97%B4%E4%BB%B6/Kafka/Kafka%20%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86/" title="Kafka 进阶"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-12-07</div><div class="title">Kafka 进阶</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZengCP</div><div class="author-info__description">记录心得，见证成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">73</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">38</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">28</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81-%E6%80%BB%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E5%9B%BE"><span class="toc-number">1.</span> <span class="toc-text">一、 总技术架构图</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B"><span class="toc-number">1.1.</span> <span class="toc-text">启动流程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-%E7%94%9F%E4%BA%A7%E8%80%85%E5%8E%9F%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">二、 生产者原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81-%E5%8F%91%E7%BB%99%E8%B0%81-%E2%80%94%E2%80%94-Broker-Queue-%E9%80%89%E5%8F%96-%E4%BB%A5%E5%8F%8A-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">2.1.</span> <span class="toc-text">1、 发给谁 —— Broker&#x2F;Queue 选取 以及 负载均衡</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%BB%98%E8%AE%A4%E8%BD%AE%E8%AF%A2%E7%AD%96%E7%95%A5"><span class="toc-number">2.1.1.</span> <span class="toc-text">默认轮询策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%98%9F%E5%88%97%E9%80%89%E6%8B%A9%E5%99%A8"><span class="toc-number">2.1.2.</span> <span class="toc-text">自定义队列选择器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MessageGroupHash-%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.1.3.</span> <span class="toc-text">MessageGroupHash 模式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81-%E6%80%8E%E4%B9%88%E5%8F%91-%E2%80%94%E2%80%94-%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81%E6%96%B9%E5%BC%8F-%EF%BC%88%E5%90%8C%E6%AD%A5%E3%80%81%E5%BC%82%E6%AD%A5%E3%80%81%E5%8D%95%E5%90%91%EF%BC%89"><span class="toc-number">2.2.</span> <span class="toc-text">2、 怎么发 —— 消息发送方式 （同步、异步、单向）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E5%8F%91%E9%80%81"><span class="toc-number">2.2.1.</span> <span class="toc-text">同步发送</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%82%E6%AD%A5%E5%8F%91%E9%80%81"><span class="toc-number">2.2.2.</span> <span class="toc-text">异步发送</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E5%90%91%E5%8F%91%E9%80%81"><span class="toc-number">2.2.3.</span> <span class="toc-text">单向发送</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81-%E5%8F%AF%E9%9D%A0%E6%80%A7%E4%BF%9D%E9%9A%9C-%E2%80%94%E2%80%94-%E5%8F%91%E5%AE%8C%E4%B9%8B%E5%90%8E%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%B8%8D%E4%B8%A2"><span class="toc-number">2.3.</span> <span class="toc-text">3、 可靠性保障 —— 发完之后如何保证不丢</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E5%8F%91%E9%80%81%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.3.1.</span> <span class="toc-text">同步发送模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%91%E9%80%81%E9%87%8D%E8%AF%95%E6%9C%BA%E5%88%B6"><span class="toc-number">2.3.2.</span> <span class="toc-text">发送重试机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%88%E6%81%AF%E5%B9%82%E7%AD%89%E6%80%A7-%E2%80%94%E2%80%94-%E9%81%BF%E5%85%8D%E5%9B%A0%E4%BF%9D%E9%9A%9C%E5%8F%AF%E9%9D%A0%E6%80%A7%E5%AF%BC%E8%87%B4%E7%9A%84%E6%B6%88%E6%81%AF%E9%87%8D%E5%A4%8D"><span class="toc-number">2.3.3.</span> <span class="toc-text">消息幂等性 —— 避免因保障可靠性导致的消息重复</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81-Broker-%E6%B6%88%E6%81%AF%E5%AD%98%E5%82%A8%E6%9C%BA%E5%88%B6"><span class="toc-number">3.</span> <span class="toc-text">四、 Broker 消息存储机制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81-%E6%A0%B8%E5%BF%83%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="toc-number">3.1.</span> <span class="toc-text">1、 核心存储结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CommitLog%EF%BC%88%E6%8F%90%E4%BA%A4%E6%97%A5%E5%BF%97%EF%BC%89"><span class="toc-number">3.1.1.</span> <span class="toc-text">CommitLog（提交日志）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ConsumeQueue%EF%BC%88%E6%B6%88%E8%B4%B9%E9%98%9F%E5%88%97%EF%BC%89"><span class="toc-number">3.1.2.</span> <span class="toc-text">ConsumeQueue（消费队列）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IndexFile%EF%BC%88%E7%B4%A2%E5%BC%95%E6%96%87%E4%BB%B6%EF%BC%89"><span class="toc-number">3.1.3.</span> <span class="toc-text">IndexFile（索引文件）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81-%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6"><span class="toc-number">3.2.</span> <span class="toc-text">2、 持久化机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81-%E6%B6%88%E6%81%AF%E6%B8%85%E7%90%86%E6%9C%BA%E5%88%B6"><span class="toc-number">3.3.</span> <span class="toc-text">3、 消息清理机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Broker%E4%B8%8E%E6%B6%88%E6%81%AF%E6%B8%85%E7%90%86%E7%9B%B8%E5%85%B3%E9%85%8D%E7%BD%AE"><span class="toc-number">3.3.0.1.</span> <span class="toc-text">Broker与消息清理相关配置</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81RocketMQ%E6%B6%88%E8%B4%B9%E5%8E%9F%E7%90%86"><span class="toc-number">4.</span> <span class="toc-text">五、RocketMQ消费原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81-%E6%B6%88%E8%B4%B9%E6%A8%A1%E5%9E%8B"><span class="toc-number">4.1.</span> <span class="toc-text">1、 消费模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%88%E8%B4%B9%E6%A8%A1%E5%BC%8F"><span class="toc-number">4.1.1.</span> <span class="toc-text">消费模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%88%E6%81%AF%E8%8E%B7%E5%8F%96%E6%96%B9%E5%BC%8F"><span class="toc-number">4.1.2.</span> <span class="toc-text">消息获取方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%88%E8%B4%B9%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="toc-number">4.1.3.</span> <span class="toc-text">消费线程模型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81-%E6%B6%88%E8%B4%B9%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="toc-number">4.2.</span> <span class="toc-text">2、 消费可靠性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%88%E8%B4%B9%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1-%E4%B8%8E-Rebalance"><span class="toc-number">4.2.1.</span> <span class="toc-text">消费负载均衡 与 Rebalance</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%88%E8%B4%B9%E8%BF%9B%E5%BA%A6%E7%AE%A1%E7%90%86"><span class="toc-number">4.2.2.</span> <span class="toc-text">消费进度管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%88%E8%B4%B9%E9%87%8D%E8%AF%95"><span class="toc-number">4.2.3.</span> <span class="toc-text">消费重试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%BA%E5%BA%8F%E6%B6%88%E6%81%AF%E7%9A%84%E9%87%8D%E8%AF%95"><span class="toc-number">4.2.3.1.</span> <span class="toc-text">顺序消息的重试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%A0%E5%BA%8F%E6%B6%88%E6%81%AF%E7%9A%84%E9%87%8D%E8%AF%95"><span class="toc-number">4.2.3.2.</span> <span class="toc-text">无序消息的重试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%87%8D%E8%AF%95%E7%AD%96%E7%95%A5"><span class="toc-number">4.2.3.3.</span> <span class="toc-text">重试策略</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD%E3%80%81-NameServer-%E8%A7%A3%E6%9E%90"><span class="toc-number">5.</span> <span class="toc-text">六、 NameServer 解析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81-%E4%BD%9C%E7%94%A8"><span class="toc-number">5.1.</span> <span class="toc-text">1、 作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81-%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">5.2.</span> <span class="toc-text">2、 工作原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%881%EF%BC%89Broker-%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%BF%83%E8%B7%B3%E6%9C%BA%E5%88%B6"><span class="toc-number">5.2.1.</span> <span class="toc-text">（1）Broker 注册与心跳机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%882%EF%BC%89%E8%B7%AF%E7%94%B1%E4%BF%A1%E6%81%AF%E7%9A%84%E5%AD%98%E5%82%A8%E4%B8%8E%E6%9B%B4%E6%96%B0"><span class="toc-number">5.2.2.</span> <span class="toc-text">（2）路由信息的存储与更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%883%EF%BC%89%E8%B7%AF%E7%94%B1%E6%9F%A5%E8%AF%A2"><span class="toc-number">5.2.3.</span> <span class="toc-text">（3）路由查询</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81-%E7%89%B9%E6%80%A7"><span class="toc-number">5.3.</span> <span class="toc-text">3、 特性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%881%EF%BC%89-%E6%95%A3%E8%A3%85"><span class="toc-number">5.3.1.</span> <span class="toc-text">（1） 散装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%882%EF%BC%89-CA"><span class="toc-number">5.3.2.</span> <span class="toc-text">（2） CA</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%83%E3%80%81-%E5%8A%9F%E8%83%BD%E7%89%B9%E6%80%A7"><span class="toc-number">6.</span> <span class="toc-text">七、 功能特性</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E4%BA%8B%E5%8A%A1%E6%B6%88%E6%81%AF%E5%8E%9F%E7%90%86"><span class="toc-number">6.1.</span> <span class="toc-text">1、事务消息原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81-%E6%AD%BB%E4%BF%A1%E9%98%9F%E5%88%97"><span class="toc-number">6.2.</span> <span class="toc-text">2、 死信队列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8"><span class="toc-number">6.2.1.</span> <span class="toc-text">作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E6%80%A7"><span class="toc-number">6.2.2.</span> <span class="toc-text">特性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E6%96%B9%E5%BC%8F"><span class="toc-number">6.2.3.</span> <span class="toc-text">处理方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81-%E5%AE%9A%E6%97%B6-%E5%BB%B6%E6%97%B6-%E6%B6%88%E6%81%AF"><span class="toc-number">6.3.</span> <span class="toc-text">3、 定时&#x2F;延时 消息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E6%B6%88%E6%81%AF"><span class="toc-number">6.3.1.</span> <span class="toc-text">定时消息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BB%B6%E6%97%B6%E6%B6%88%E6%81%AF"><span class="toc-number">6.3.2.</span> <span class="toc-text">延时消息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97%E5%8E%9F%E7%90%86"><span class="toc-number">6.3.3.</span> <span class="toc-text">延迟队列原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%88%E6%81%AF%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">6.3.4.</span> <span class="toc-text">消息生命周期</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AB%E3%80%81-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="toc-number">7.</span> <span class="toc-text">八、 常见问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81-%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E9%A1%BA%E5%BA%8F%E6%B6%88%E8%B4%B9"><span class="toc-number">7.1.</span> <span class="toc-text">1、 如何保障顺序消费</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81-%E6%B6%88%E6%81%AF%E5%B9%82%E7%AD%89"><span class="toc-number">7.2.</span> <span class="toc-text">2、 消息幂等</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E7%84%B6%E5%B9%82%E7%AD%89"><span class="toc-number">7.2.1.</span> <span class="toc-text">自然幂等</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%99%90%E5%88%B6%E6%80%A7%E5%B9%82%E7%AD%89"><span class="toc-number">7.2.2.</span> <span class="toc-text">限制性幂等</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E6%B6%88%E6%81%AF%E4%B8%8D%E4%B8%A2%E5%A4%B1"><span class="toc-number">7.3.</span> <span class="toc-text">3、如何保障消息不丢失</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%881%EF%BC%89%E7%94%9F%E4%BA%A7%E9%98%B6%E6%AE%B5"><span class="toc-number">7.3.1.</span> <span class="toc-text">（1）生产阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%882%EF%BC%89%E6%B6%88%E6%81%AF%E5%AD%98%E5%82%A8%E9%98%B6%E6%AE%B5"><span class="toc-number">7.3.2.</span> <span class="toc-text">（2）消息存储阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%883%EF%BC%89%E6%B6%88%E8%B4%B9%E9%98%B6%E6%AE%B5"><span class="toc-number">7.3.3.</span> <span class="toc-text">（3）消费阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Q%EF%BC%9A-%E5%A6%82%E4%BD%95%E7%9F%A5%E9%81%93%E6%B6%88%E6%81%AF%E4%B8%A2%E5%A4%B1"><span class="toc-number">7.3.4.</span> <span class="toc-text">Q： 如何知道消息丢失</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%E3%80%81%E5%A6%82%E4%BD%95%E4%BF%9D%E9%9A%9C%E7%B2%BE%E5%87%86%E4%B8%80%E6%AC%A1%E6%B6%88%E8%B4%B9"><span class="toc-number">7.4.</span> <span class="toc-text">4、如何保障精准一次消费</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5%E3%80%81-%E6%B6%88%E8%B4%B9%E5%A0%86%E7%A7%AF%E9%97%AE%E9%A2%98%E5%A4%84%E7%90%86"><span class="toc-number">7.5.</span> <span class="toc-text">5、 消费堆积问题处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6%E3%80%81-Rebalance"><span class="toc-number">7.6.</span> <span class="toc-text">6、 Rebalance</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">7.6.1.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A6%E5%8F%91%E6%9D%A1%E4%BB%B6"><span class="toc-number">7.6.2.</span> <span class="toc-text">触发条件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E4%B8%9A%E5%8A%A1%E5%BD%B1%E5%93%8D"><span class="toc-number">7.6.3.</span> <span class="toc-text">对业务影响</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5"><span class="toc-number">7.6.4.</span> <span class="toc-text">优化策略</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/23/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" title="无题">无题</a><time datetime="2025-02-22T16:03:33.025Z" title="发表于 2025-02-23 00:03:33">2025-02-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/23/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%BB%E9%94%AE/" title="无题">无题</a><time datetime="2025-02-22T16:03:11.473Z" title="发表于 2025-02-23 00:03:11">2025-02-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/23/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" title="无题">无题</a><time datetime="2025-02-22T16:02:45.511Z" title="发表于 2025-02-23 00:02:45">2025-02-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/22/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E7%AE%97%E6%B3%95/" title="无题">无题</a><time datetime="2025-02-22T15:59:42.003Z" title="发表于 2025-02-22 23:59:42">2025-02-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/RocketMQ/RocketMQ%20%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" title="RocketMQ 核心架构原理">RocketMQ 核心架构原理</a><time datetime="2024-12-08T09:02:36.000Z" title="发表于 2024-12-08 17:02:36">2024-12-08</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By ZengCP</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

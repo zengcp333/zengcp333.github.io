@@ -53,7 +53,7 @@
   isHome: true,
   isHighlightShrink: false,
   isToc: false,
-  postUpdate: '2025-02-18 02:07:59'
+  postUpdate: '2025-02-23 00:11:54'
 }</script><script>(win=>{
       win.saveToLocal = {
         set: (key, value, ttl) => {
@@ -150,7 +150,130 @@
         }
       }
       detectApple()
-    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">66</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">37</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">27</div></a></div><hr class="custom-hr"/></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url('https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/longmao_wallpaper_1.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="ZengCP's BLOGS"><span class="site-name">ZengCP's BLOGS</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">ZengCP's BLOGS</h1></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/04/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/redis%20%E7%BC%93%E5%AD%98%20%E4%B8%8E%20%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%80%E8%87%B4%E6%80%A7/" title="redis 缓存与数据库一致性分析">redis 缓存与数据库一致性分析</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-13T12:19:53.000Z" title="发表于 2024-04-13 20:19:53">2024-04-13</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/redis/">redis</a></span></div><div class="content">redis 缓存与数据库一致性 分析前言谈谈分布式系统中的一致性分布式系统中的一致性指的是在多个节点上存储和处理数据时，确保系统中的数据在不同节点之间保持一致的特性。在分布式系统中，一致性通常可以分为以下几个类别：
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">73</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">38</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">28</div></a></div><hr class="custom-hr"/></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url('https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/longmao_wallpaper_1.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="ZengCP's BLOGS"><span class="site-name">ZengCP's BLOGS</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">ZengCP's BLOGS</h1></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/05/08/Java%20%E5%9F%BA%E7%A1%80/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/" title="并发编程基础">并发编程基础</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-05-08T12:53:17.000Z" title="发表于 2024-05-08 20:53:17">2024-05-08</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/Java/">Java</a></span></div><div class="content">进程与线程什么是进程
+进程可以理解为程序的一次执行过程，系统运行一个程序即是一个进程从创建，运行到消亡的过程。
+现代操作系统对于进程会分配独立的 内存地址空间和其他系统资源（IO）
+对 Java 而言，main() 函数启动时其实就是启动了一个 JVM 的进程，而 main() 函数所在的线程就是这个进程中的一个线程，也称主线程。
+
+什么是线程
+线程是依托于进程的一个指令执行序列
+一个进程可以产生多个线程
+linux中，线程又叫做轻量级进程（light-weight process LWP），也有PCB，创建线程使用的底层函数和进程底层一样，都是clone，但没有独立的地址空间；而进程有独立地址空间，拥有PCB。
+
+进程与线程对比
+本质区别：进程是操作系统资源分配的基本单位，而线程是处理器任务调度和执行的基本单位。
+包含关系：一个进程至少有一个线程，线程是进程的一部分，所以线程也被称为轻权进程或者轻量级进程。
+资源开销：每个进程都有独立的地址空间，进程之间的切换会有较大的开销；线程可以看做轻量级的进程，同一个进程内的线程共享进程的地址空间，每个线程都有自己独立的运行栈和程序计数器，线程 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/05/05/Java%20%E5%9F%BA%E7%A1%80/Java%20%E7%BA%BF%E7%A8%8B/" title="Java 线程">Java 线程</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-05-05T10:31:49.000Z" title="发表于 2024-05-05 18:31:49">2024-05-05</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/Java/">Java</a></span></div><div class="content">Java 线程线程创建方式
+继承Thread 类
+实现 Runable 接口
+实现 callable 接口
+使用线程池
+
+不过，这些方式其实并没有真正创建出线程。准确点来说，这些都属于是在 Java 代码中使用多线程的方法。
+此外，严格来说，Java 其实只有一种方式可以创建线程，那就是通过new Thread().start()创建。不管是哪种方式，最终还是依赖于new Thread().start()。
+线程相关方法
+wait()
+
+调用该方法的线程进入WAITING 状态，只有等待另外线程的通知或被中断才会返回，
+会释放对象的锁
+
+
+sleep()
+
+sleep 导致当前线程休眠，sleep(long)会导致线程进入TIMED-WATING 状态
+不会释放锁
+
+
+yield()
+
+yield 会使当前线程让出 CPU 执行时间片，与其他线程一起重新竞争CPU 时间片。
+不释放锁
+
+
+join()
+
+中断一个线程，其本意是给这个线程一个通知信号，会影响这个线程内部的一个中断标识位，这个线程本身并不会因此而改变状态(如阻塞，终止等)。
+
+
+interrupt()
+
+将一个阻塞状态线程 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/05/05/Java%20%E5%9F%BA%E7%A1%80/Java%20%E9%9B%86%E5%90%88/" title="Java 集合">Java 集合</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-05-05T10:31:49.000Z" title="发表于 2024-05-05 18:31:49">2024-05-05</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a><i class="fas fa-angle-right article-meta-link"></i><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/Java/">Java</a></span></div><div class="content">Java 集合概览Java 集合，也叫作容器，主要是由两大接口派生而来：一个是 Collection接口，主要用于存放单一元素，Collection 接口派生三个子接口 List Set Queue；另一个是 Map 接口，主要用于存放键值对。
+
+
+List (对付顺序的好帮手): 存储的元素是有序的、可重复的。
+ArrayList: 底层 Object 数组
+Vector: 底层 Object 数组
+LinkedList: 底层双向链表
+
+
+Set (注重独一无二的性质): 存储的元素不可重复的。
+HashSet(无序，唯一): 基于 HashMap 实现的，底层采用 HashMap 来保存元素。
+LinkedHashSet: LinkedHashSet 是 HashSet 的子类，并且其内部是通过 LinkedHashMap 来实现的
+TreeSet(有序，唯一): 红黑树(自平衡的排序二叉树)
+
+
+Queue : 按特定的排队规则来确定先后顺序，存储的元素是有序的、可重复的。
+PriorityQueue: Object[] 数组来实现小顶堆
+DelayQueue:&#96;Pri ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/05/04/Java%20%E5%9F%BA%E7%A1%80/Java%20%E5%9F%BA%E7%A1%80/" title="Java 基础">Java 基础</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-05-04T07:19:51.000Z" title="发表于 2024-05-04 15:19:51">2024-05-04</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Java/">Java</a></span></div><div class="content">1.    Java 语言特点
+面向对象
+平台无关
+支持多线程C++ 语言没有内置的多线程机制，因此必须调用操作系统的多线程功能来进行多线程程序设计，而 Java 语言却提供了多线程支持
+编译与解释并存
+
+2.    JDK、JRE、JVM 关系JVM：Java Virtual Machine，也就是 Java 虚拟机，是 Java 实现跨平台的关键所在，针对不同的操作系统，有不同的 JVM 实现。JVM 负责将 Java 字节码转换为特定平台的机器码，并执行。
+JRE：Java Runtime Environment，也就是 Java 运行时环境，包含了运行 Java 程序所必需的库，以及 Java 虚拟机（JVM）。
+JDK：Java Development Kit，是一套完整的 Java SDK（软件开发工具包），包括了 JRE 以及译器（javac）、Java 文档生成工具（Javadoc）、Java 调试器等开发工具。
+简单来说，JDK 包含 JRE，JRE 包含 JVM。
+3.    什么是字节码字节码，就是 Java 程序经过编译之类产生的.class 文件，字节码能够被 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/04/16/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/redis%20%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90/" title="Redis 数据结构深入分析">Redis 数据结构深入分析</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-16T12:41:59.000Z" title="发表于 2024-04-16 20:41:59">2024-04-16</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/redis/">redis</a></span></div><div class="content">Redis 数据结构深入分析本文主要介绍 Redis 的数据结构，包括总体的结构模型，常用的基础数据结构 以及 对应的 底层数据结构，其中基本数据结构与底层数据结构之间的映射表如下，可见每种数据结构都有多种的内部编码实现，且 Redis 实际会在合适的场景选择合适的内部编码。
+
+一、结构模型基础我们在上面了解到了关于键的基本数据结构。而我们Redis中的所有value都是以object的形式存在的。其通用结构结构源码如下：
+1234567typedef struct redisObject &#123;    unsigned [type] 4;    unsigned [encoding] 4;    unsigned [lru] REDIS_LRU_BITS;    int refcount;    void *ptr;&#125; robj;
+
+（1）type指的就是我们的基本数据结构，如string，list等其他类型；
+（2）encoding指的是这些结构内部类型的具体实现方式，如string可以用int来实现也可以用char[]来实现；list可以用ziplist或者链表来 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/04/14/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/redis%20%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%88Q+A%EF%BC%89/" title="Redis 面试题 （Q&amp;A）">Redis 面试题 （Q&amp;A）</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-14T07:18:47.000Z" title="发表于 2024-04-14 15:18:47">2024-04-14</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/redis/">redis</a></span></div><div class="content">Redis 面试题 （Q &amp; A）一、Redis基础概念1、 Redis 的持久化机制是什么？各自的优缺点？Redis提供两种持久化机制 RDB 和 AOF 机制：
+
+RDB（Redis DataBase）持久化方式：是指用数据集快照的方式记录 Redis 数据库的所有键值对
+优点：
+只有一个文件 dump.rdb，方便持久化。
+容灾性好，一个文件可以保存到安全的磁盘。
+性能最大化，fork 子进程来完成写操作，让主进程继续处理命令，所以是 IO 最大化。使用单独子进程来进行持久化，主进程不会进行任何 IO 操作，保证了 Redis的高性能。
+相对于数据集大时，比 AOF 的启动效率更高。
+
+
+缺点：
+数据安全性低。RDB 是间隔一段时间进行持久化，如果持久化之间 Redis 发生故障，会发生数据丢失。所以这种方式更适合数据要求不严谨的时候
+
+
+
+
+AOF（Append-only file）持久化方式：是指所有的命令行记录以 Redis 命令请求协议的格式完全持久化存储保存为 aof 文件
+优点：
+数据安全，aof 持久化可以配置 appendfsync 属性，有 always ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/04/14/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/redis%20%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98%EF%BC%88Q%EF%BC%89/" title="Redis 面试题 （Q only）">Redis 面试题 （Q only）</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-14T06:56:18.000Z" title="发表于 2024-04-14 14:56:18">2024-04-14</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/redis/">redis</a></span></div><div class="content">Redis 面试题 （Q only）
+一、Redis基础概念
+Redis与Memcached的区别是什么？适用场景有哪些？
+Redis为什么读写性能高？单线程模型如何支撑高并发？
+Redis的过期键删除策略有哪些？
+内存淘汰机制（LRU、LFU等）如何工作？
+
+
+二、Redis数据结构与使用场景
+Redis支持哪些数据结构？各自的应用场景是什么？
+如何用Redis实现分布式锁？需要注意哪些问题？
+Redis的HyperLogLog和布隆过滤器（Bloom Filter）的原理与使用场景？
+如何用Redis实现延迟队列或消息队列？
+Redis的Sorted Set底层实现原理是什么？如何实现排行榜功能？
+
+
+三、Redis持久化与高可用
+Redis 的持久化机制是什么？各自的优缺点？
+AOF重写（AOF Rewrite）的过程是怎样的？
+Redis主从复制的原理和数据同步流程？
+哨兵（Sentinel）模式的故障转移流程是怎样的？
+Redis Cluster集群如何实现数据分片（Slot分配）和扩容？
+Redis Cluster的节点间通信机制（Gossip协议）是什么？
+
+
+四、Red ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/04/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/redis%20%E7%BC%93%E5%AD%98%20%E4%B8%8E%20%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%80%E8%87%B4%E6%80%A7/" title="redis 缓存与数据库一致性分析">redis 缓存与数据库一致性分析</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-13T12:19:53.000Z" title="发表于 2024-04-13 20:19:53">2024-04-13</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/redis/">redis</a></span></div><div class="content">redis 缓存与数据库一致性 分析前言谈谈分布式系统中的一致性分布式系统中的一致性指的是在多个节点上存储和处理数据时，确保系统中的数据在不同节点之间保持一致的特性。在分布式系统中，一致性通常可以分为以下几个类别：
 
 强一致性：所有节点在任何时间都看到相同的数据。任何更新操作都会立即对所有节点可见，保证了数据的强一致性。这意味着，如果一个节点完成了写操作，那么所有其他节点读取相同的数据之后，都将看到最新的结果。强一致性通常需要付出更高的代价，例如增加通信开销和降低系统的可用性。
 弱一致性：系统中的数据在某些情况下可能会出现不一致的状态，但最终会收敛到一致状态。弱一致性下的系统允许在一段时间内，不同节点之间看到不同的数据状态。弱一致性通常用于需要在性能和一致性之间进行权衡的场景，例如缓存系统等。
@@ -178,75 +301,13 @@ Redisson分布式锁源码分析流程图如下
 数据分片：在Cluster模式下，Redis集群可以将数据分散在不同的节点上，从而突破单节点内存限制，实现更大规模的数据存储。
 易于扩展：Redis集群可以根据业务需求和系统负载，动态地添加或移除节点，实现水平扩展。
 
-通过了解Redis集群的概念和优势，接下来将详 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/04/09/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%88%9B%E5%BB%BA%E5%9E%8B%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" title="创建型设计模式">创建型设计模式</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-09T15:25:31.000Z" title="发表于 2024-04-09 23:25:31">2024-04-09</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a></span></div><div class="content">[TOC]
-创建型模式创建型设计模式的主要关注点是“怎么创建对象”，它的主要特点是“将对象的创建与使用分离”。这样可以降低系统的耦合度，使用者不需要关注对象的创建细节，对象的创建有相关的工厂来完成。就像我们去商城购买商品时，不需要知道商品是怎么深处出来的一样，因为它们由专业的厂商生产。
-创建型模式分为以下几种：
-
-简单工厂模式：
-单例（Singleton）模式：某个类只能生成一个实例，该实例提供一个全局访问店供外部获取该对象，其扩展时有限多例模式。
-原型（Prototype）模式：将一个对象作为原型，通过对其进行复制而克隆出多个和原型类型的新实例。
-工厂方法（Factory Method）模式：定义一个用于创建产品的接口，有子类决定生产什么产品。
-抽象工厂（Abstract Factory）模式：提供一个创建产品族的接口，其每个子类可以生产一些列相关的产品。
-建造者（Builder）模式：将一个复杂对象分解成多个相对简单的部分，然后根据不同需要分别创建它们，最后构建从复杂对象。
-
-以上 5 种创建型模式，处理工厂方法模式属于（类）创建型模式，其他的全部属于（对象）创建模式。
-单例模式单 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/04/09/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E5%85%AD%E5%A4%A7%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/" title="六大设计原则">六大设计原则</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-09T14:55:56.000Z" title="发表于 2024-04-09 22:55:56">2024-04-09</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a></span></div><div class="content">[TOC]
-六大设计原则单一职责原则单一职责原则是面向对象设计中的一项基本准则，它有助于构建出更加健壮、可维护和可扩展的软件系统
-单一职责原则强调的是软件实体（如类、模块、函数等）应当具有单一的职责，即一个类应该只负责一个功能领域中的相应职责。
-单一职责原则的定义单一职责原则可以表述为：“一个类应该只有一个引起它变化的原因。”换句话说，如果一个类承担了多个职责，那么当其中一个职责发生变化时，可能会影响到其他职责的实现，从而导致类的修改变得复杂和频繁。
-单一职责原则的意义
-提高可维护性：当一个类只负责单一的职责时，它的功能更明确，也更容易理解和维护。如果需要修改某一部分功能，可以定位到具体的类，而不会影响到其他无关的职责。
-降低耦合度：单一职责原则有助于降低类之间的耦合度，因为每个类只关注于自己的职责，减少了对其他类的依赖。
-提高可复用性：职责单一的类更容易被复用，因为它们的功能更纯粹，更不容易受到其他功能变化的影响。
-促进模块化设计：遵循单一职责原则可以促使开发者将系统划分为更小、更独立的模块，每个模块负责一个特定的职责，这有利于系统的扩展和重构。
-
-如何判断职责是否单一判断一个类的职 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2024/04/09/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E6%A6%82%E8%BF%B0/" title="设计模式概述">设计模式概述</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2024-04-09T14:15:13.000Z" title="发表于 2024-04-09 22:15:13">2024-04-09</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a></span></div><div class="content">设计模式概述 —— 代码设计代码设计上来就讲破大天，不如先明确代码设计的核心诉求：
-
-安全性
-正确性
-高效性
-可维护
-易拓展
-
-围绕以上目标，历代开发者总结出的历史经验：
-
-设计原则 —— 心法
-设计模式 —— 剑谱
-
-六大设计原则SOLID
-Single Responsibility Principle：单一职责原则
-Open Closed Principle：开闭原则
-Liskov Substitution Principle：里氏替换原则
-Law of Demeter：迪米特法则
-Interface Segregation Principle：接口隔离原则
-Dependence Inversion Principle：依赖倒置原则
-
-把这六个原则的首字母联合起来（两个 L 算做一个）就是 SOLID （solid，稳定的），其代表的含义就是这六个原则结合使用的好处：建立稳定、灵活、健壮的设计。下面我们来分别看一下这六大设计原则。
-设计模式
-分类根据目的
-创建型
-行为型
-结构型
-
-根据作用对象
-类模式
-对象模式
-
-
-
-
-范围&#x2F;目的
-创建型模式
-结构型模式
-行为型模式
-
-
- ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/6/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/#content-inner">6</a><span class="page-number current">7</span></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZengCP</div><div class="author-info__description">记录心得，见证成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">66</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">37</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">27</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/06/%E4%B8%AD%E9%97%B4%E4%BB%B6/Kafka/Kafka%20%E7%BB%8F%E5%85%B8%E9%9D%A2%E8%AF%95%E9%A2%98/" title="Kafka 经典面试题">Kafka 经典面试题</a><time datetime="2024-12-06T12:45:18.000Z" title="发表于 2024-12-06 20:45:18">2024-12-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/06/%E4%B8%AD%E9%97%B4%E4%BB%B6/Kafka/Kafka%20%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86/" title="Kafka 进阶">Kafka 进阶</a><time datetime="2024-12-06T08:09:53.000Z" title="发表于 2024-12-06 16:09:53">2024-12-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/05/%E4%B8%AD%E9%97%B4%E4%BB%B6/Kafka/Kafka%20%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/" title="Kafka 原理总结">Kafka 原理总结</a><time datetime="2024-12-05T11:38:26.000Z" title="发表于 2024-12-05 19:38:26">2024-12-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/17/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%E7%BB%8F%E5%85%B8%E9%9D%A2%E8%AF%95%E9%A2%98/" title="MySQL 经典面试题">MySQL 经典面试题</a><time datetime="2024-11-17T12:47:38.000Z" title="发表于 2024-11-17 20:47:38">2024-11-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/11/16/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%20%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E6%8E%92%E6%9F%A5%E6%96%B9%E6%B3%95/" title="MySQL 常见问题及排查方法">MySQL 常见问题及排查方法</a><time datetime="2024-11-16T11:03:17.000Z" title="发表于 2024-11-16 19:03:17">2024-11-16</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+通过了解Redis集群的概念和优势，接下来将详 ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/6/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/#content-inner">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/#content-inner">8</a><a class="extend next" rel="next" href="/page/8/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZengCP</div><div class="author-info__description">记录心得，见证成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">73</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">38</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">28</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/23/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" title="无题">无题</a><time datetime="2025-02-22T16:03:33.025Z" title="发表于 2025-02-23 00:03:33">2025-02-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/23/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%BB%E9%94%AE/" title="无题">无题</a><time datetime="2025-02-22T16:03:11.473Z" title="发表于 2025-02-23 00:03:11">2025-02-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/23/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" title="无题">无题</a><time datetime="2025-02-22T16:02:45.511Z" title="发表于 2025-02-23 00:02:45">2025-02-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/22/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E7%AE%97%E6%B3%95/" title="无题">无题</a><time datetime="2025-02-22T15:59:42.003Z" title="发表于 2025-02-22 23:59:42">2025-02-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/RocketMQ/RocketMQ%20%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" title="RocketMQ 核心架构原理">RocketMQ 核心架构原理</a><time datetime="2024-12-08T09:02:36.000Z" title="发表于 2024-12-08 17:02:36">2024-12-08</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
             <i class="fas fa-folder-open"></i>
             <span>分类</span>
             <a class="card-more-btn" href="/categories/" title="查看更多">
     <i class="fas fa-angle-right"></i></a>
             </div>
             <ul class="card-category-list" id="aside-cat-list">
-            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/JVM/"><span class="card-category-list-name">JVM</span><span class="card-category-list-count">3</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/JVM/Java/"><span class="card-category-list-name">Java</span><span class="card-category-list-count">3</span></a></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Java/"><span class="card-category-list-name">Java</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Linux/"><span class="card-category-list-name">Linux</span><span class="card-category-list-count">4</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Linux/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"><span class="card-category-list-name">操作系统</span><span class="card-category-list-count">4</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Linux/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E5%B9%B6%E5%8F%91/"><span class="card-category-list-name">并发</span><span class="card-category-list-count">4</span></a></li></ul></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/MQ/"><span class="card-category-list-name">MQ</span><span class="card-category-list-count">3</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/MQ/Kafka/"><span class="card-category-list-name">Kafka</span><span class="card-category-list-count">3</span></a></li></ul></li>
-            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 1.25em; color: #999fa7">并发</a> <a href="/tags/Kafka/" style="font-size: 1.2em; color: #999da3">Kafka</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 1.3em; color: #99a1ac">操作系统</a> <a href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" style="font-size: 1.3em; color: #99a1ac">负载均衡</a> <a href="/tags/%E8%B0%83%E4%BC%98/" style="font-size: 1.1em; color: #999">调优</a> <a href="/tags/Java/" style="font-size: 1.45em; color: #99a7ba">Java</a> <a href="/tags/hadoop/" style="font-size: 1.25em; color: #999fa7">hadoop</a> <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" style="font-size: 1.25em; color: #999fa7">大数据</a> <a href="/tags/UDP/" style="font-size: 1.15em; color: #999b9e">UDP</a> <a href="/tags/hdfs/" style="font-size: 1.15em; color: #999b9e">hdfs</a> <a href="/tags/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/" style="font-size: 1.45em; color: #99a7ba">服务治理</a> <a href="/tags/MQ/" style="font-size: 1.2em; color: #999da3">MQ</a> <a href="/tags/Netty/" style="font-size: 1.35em; color: #99a3b1">Netty</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 1.15em; color: #999b9e">数据结构</a> <a href="/tags/IO/" style="font-size: 1.15em; color: #999b9e">IO</a> <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/" style="font-size: 1.1em; color: #999">云原生</a> <a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" style="font-size: 1.3em; color: #99a1ac">并发编程</a> <a href="/tags/MySQL/" style="font-size: 1.4em; color: #99a5b6">MySQL</a> <a href="/tags/redis/" style="font-size: 1.35em; color: #99a3b1">redis</a> <a href="/tags/HTTP/" style="font-size: 1.2em; color: #999da3">HTTP</a> <a href="/tags/JVM/" style="font-size: 1.2em; color: #999da3">JVM</a> <a href="/tags/IPC/" style="font-size: 1.2em; color: #999da3">IPC</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E9%A2%98/" style="font-size: 1.3em; color: #99a1ac">面试题</a> <a href="/tags/yarn/" style="font-size: 1.1em; color: #999">yarn</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 1.15em; color: #999b9e">分布式</a> <a href="/tags/%E7%BA%BF%E7%A8%8B%E8%BF%9B%E7%A8%8B/" style="font-size: 1.1em; color: #999">线程进程</a> <a href="/tags/DDD/" style="font-size: 1.1em; color: #999">DDD</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 1.2em; color: #999da3">设计模式</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 1.4em; color: #99a5b6">数据库</a> <a href="/tags/K8S/" style="font-size: 1.1em; color: #999">K8S</a> <a href="/tags/Linux/" style="font-size: 1.25em; color: #999fa7">Linux</a> <a href="/tags/InnoDB/" style="font-size: 1.1em; color: #999">InnoDB</a> <a href="/tags/HAProxy/" style="font-size: 1.1em; color: #999">HAProxy</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 1.5em; color: #99a9bf">计算机网络</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="font-size: 1.1em; color: #999">网络安全</a> <a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 1.15em; color: #999b9e">架构</a> <a href="/tags/TCP/" style="font-size: 1.15em; color: #999b9e">TCP</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/12/"><span class="card-archive-list-date">十二月 2024</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/11/"><span class="card-archive-list-date">十一月 2024</span><span class="card-archive-list-count">7</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/10/"><span class="card-archive-list-date">十月 2024</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/09/"><span class="card-archive-list-date">九月 2024</span><span class="card-archive-list-count">9</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/07/"><span class="card-archive-list-date">七月 2024</span><span class="card-archive-list-count">13</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/06/"><span class="card-archive-list-date">六月 2024</span><span class="card-archive-list-count">9</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/05/"><span class="card-archive-list-date">五月 2024</span><span class="card-archive-list-count">14</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/04/"><span class="card-archive-list-date">四月 2024</span><span class="card-archive-list-count">9</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">66</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-02-17T18:07:58.836Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By ZengCP</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/JVM/"><span class="card-category-list-name">JVM</span><span class="card-category-list-count">3</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/JVM/Java/"><span class="card-category-list-name">Java</span><span class="card-category-list-count">3</span></a></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Java/"><span class="card-category-list-name">Java</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Linux/"><span class="card-category-list-name">Linux</span><span class="card-category-list-count">4</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Linux/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"><span class="card-category-list-name">操作系统</span><span class="card-category-list-count">4</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Linux/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E5%B9%B6%E5%8F%91/"><span class="card-category-list-name">并发</span><span class="card-category-list-count">4</span></a></li></ul></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/MQ/"><span class="card-category-list-name">MQ</span><span class="card-category-list-count">5</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/MQ/Kafka/"><span class="card-category-list-name">Kafka</span><span class="card-category-list-count">3</span></a></li></ul></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/" style="font-size: 1.25em; color: #999fa7">大数据</a> <a href="/tags/MySQL/" style="font-size: 1.4em; color: #99a5b6">MySQL</a> <a href="/tags/K8S/" style="font-size: 1.1em; color: #999">K8S</a> <a href="/tags/yarn/" style="font-size: 1.1em; color: #999">yarn</a> <a href="/tags/HAProxy/" style="font-size: 1.1em; color: #999">HAProxy</a> <a href="/tags/Kafka/" style="font-size: 1.2em; color: #999da3">Kafka</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 1.2em; color: #999da3">设计模式</a> <a href="/tags/JVM/" style="font-size: 1.2em; color: #999da3">JVM</a> <a href="/tags/Linux/" style="font-size: 1.25em; color: #999fa7">Linux</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="font-size: 1.15em; color: #999b9e">数据结构</a> <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="font-size: 1.15em; color: #999b9e">分布式</a> <a href="/tags/redis/" style="font-size: 1.35em; color: #99a3b1">redis</a> <a href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" style="font-size: 1.3em; color: #99a1ac">并发编程</a> <a href="/tags/InnoDB/" style="font-size: 1.1em; color: #999">InnoDB</a> <a href="/tags/TCP/" style="font-size: 1.15em; color: #999b9e">TCP</a> <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="font-size: 1.3em; color: #99a1ac">操作系统</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E9%A2%98/" style="font-size: 1.3em; color: #99a1ac">面试题</a> <a href="/tags/%E8%B0%83%E4%BC%98/" style="font-size: 1.1em; color: #999">调优</a> <a href="/tags/%E6%9E%B6%E6%9E%84/" style="font-size: 1.15em; color: #999b9e">架构</a> <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/" style="font-size: 1.1em; color: #999">云原生</a> <a href="/tags/Netty/" style="font-size: 1.35em; color: #99a3b1">Netty</a> <a href="/tags/hdfs/" style="font-size: 1.15em; color: #999b9e">hdfs</a> <a href="/tags/IO/" style="font-size: 1.15em; color: #999b9e">IO</a> <a href="/tags/RocketMQ/" style="font-size: 1.15em; color: #999b9e">RocketMQ</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="font-size: 1.5em; color: #99a9bf">计算机网络</a> <a href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" style="font-size: 1.3em; color: #99a1ac">负载均衡</a> <a href="/tags/Java/" style="font-size: 1.45em; color: #99a7ba">Java</a> <a href="/tags/IPC/" style="font-size: 1.2em; color: #999da3">IPC</a> <a href="/tags/MQ/" style="font-size: 1.3em; color: #99a1ac">MQ</a> <a href="/tags/DDD/" style="font-size: 1.1em; color: #999">DDD</a> <a href="/tags/hadoop/" style="font-size: 1.25em; color: #999fa7">hadoop</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="font-size: 1.1em; color: #999">网络安全</a> <a href="/tags/UDP/" style="font-size: 1.15em; color: #999b9e">UDP</a> <a href="/tags/%E7%BA%BF%E7%A8%8B%E8%BF%9B%E7%A8%8B/" style="font-size: 1.1em; color: #999">线程进程</a> <a href="/tags/%E5%B9%B6%E5%8F%91/" style="font-size: 1.25em; color: #999fa7">并发</a> <a href="/tags/HTTP/" style="font-size: 1.2em; color: #999da3">HTTP</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" style="font-size: 1.4em; color: #99a5b6">数据库</a> <a href="/tags/%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/" style="font-size: 1.45em; color: #99a7ba">服务治理</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span><a class="card-more-btn" href="/archives/" title="查看更多">
+    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2025/02/"><span class="card-archive-list-date">二月 2025</span><span class="card-archive-list-count">4</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/12/"><span class="card-archive-list-date">十二月 2024</span><span class="card-archive-list-count">5</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/11/"><span class="card-archive-list-date">十一月 2024</span><span class="card-archive-list-count">8</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/10/"><span class="card-archive-list-date">十月 2024</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/09/"><span class="card-archive-list-date">九月 2024</span><span class="card-archive-list-count">9</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/07/"><span class="card-archive-list-date">七月 2024</span><span class="card-archive-list-count">13</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/06/"><span class="card-archive-list-date">六月 2024</span><span class="card-archive-list-count">9</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/05/"><span class="card-archive-list-date">五月 2024</span><span class="card-archive-list-count">14</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">73</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-02-22T16:11:54.140Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By ZengCP</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
