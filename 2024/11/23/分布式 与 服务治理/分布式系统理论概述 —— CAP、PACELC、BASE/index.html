@@ -1,0 +1,361 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>分布式系统理论概述 —— CAP、PACELC、BASE | ZengCP's BLOGS</title><meta name="author" content="ZengCP"><meta name="copyright" content="ZengCP"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="分布式系统理论概述 —— CAP、PACELC、BASE从 CAP 说起 CAP 理论指出，分布式系统在设计时只能同时满足以下三个特性中的两个：  一致性（Consistency） 可用性（Availability）  分区容忍性（Partition Tolerance）  其中，CA 比较好理解， 核心在于 P， 个人的理解如下  一个分布式系统里面，节点组成的网络本来应该是连通的。然而可能因为">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式系统理论概述 —— CAP、PACELC、BASE">
+<meta property="og:url" content="http://example.com/2024/11/23/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BA%E6%A6%82%E8%BF%B0%20%E2%80%94%E2%80%94%20CAP%E3%80%81PACELC%E3%80%81BASE/index.html">
+<meta property="og:site_name" content="ZengCP&#39;s BLOGS">
+<meta property="og:description" content="分布式系统理论概述 —— CAP、PACELC、BASE从 CAP 说起 CAP 理论指出，分布式系统在设计时只能同时满足以下三个特性中的两个：  一致性（Consistency） 可用性（Availability）  分区容忍性（Partition Tolerance）  其中，CA 比较好理解， 核心在于 P， 个人的理解如下  一个分布式系统里面，节点组成的网络本来应该是连通的。然而可能因为">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png">
+<meta property="article:published_time" content="2024-11-23T06:58:42.000Z">
+<meta property="article:modified_time" content="2025-02-23T16:04:15.323Z">
+<meta property="article:author" content="ZengCP">
+<meta property="article:tag" content="分布式">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png"><link rel="shortcut icon" href="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/longmao.png"><link rel="canonical" href="http://example.com/2024/11/23/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BA%E6%A6%82%E8%BF%B0%20%E2%80%94%E2%80%94%20CAP%E3%80%81PACELC%E3%80%81BASE/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '分布式系统理论概述 —— CAP、PACELC、BASE',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-02-24 00:04:15'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">76</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">37</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">31</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="ZengCP's BLOGS"><span class="site-name">ZengCP's BLOGS</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">分布式系统理论概述 —— CAP、PACELC、BASE</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-11-23T06:58:42.000Z" title="发表于 2024-11-23 14:58:42">2024-11-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-02-23T16:04:15.323Z" title="更新于 2025-02-24 00:04:15">2025-02-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%88%86%E5%B8%83%E5%BC%8F/%E4%B8%80%E8%87%B4%E6%80%A7/">一致性</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="分布式系统理论概述 —— CAP、PACELC、BASE"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="分布式系统理论概述-——-CAP、PACELC、BASE"><a href="#分布式系统理论概述-——-CAP、PACELC、BASE" class="headerlink" title="分布式系统理论概述 —— CAP、PACELC、BASE"></a>分布式系统理论概述 —— CAP、PACELC、BASE</h1><h2 id="从-CAP-说起"><a href="#从-CAP-说起" class="headerlink" title="从 CAP 说起"></a>从 CAP 说起</h2><p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/OIP-C.SRq-YhA-je6nz_s614CHRQHaGY" alt="CAP原则_百度百科"></p>
+<p>CAP 理论指出，分布式系统在设计时只能同时满足以下三个特性中的两个：</p>
+<ul>
+<li><strong>一致性（Consistency）</strong></li>
+<li><strong>可用性（Availability）</strong> </li>
+<li><strong>分区容忍性（Partition Tolerance）</strong></li>
+</ul>
+<p>其中，CA 比较好理解， 核心在于 P， 个人的理解如下</p>
+<blockquote>
+<p>一个分布式系统里面，节点组成的网络本来应该是连通的。然而可能因为一些故障，使得有些节点之间不连通了，整个网络就分成了几块区域。数据就散布在了这些不连通的区域中。这就叫分区。</p>
+<p>当你一个数据项只在一个节点中保存，那么分区出现后，和这个节点不连通的部分就访问不到这个数据了。这时分区就是无法容忍的</p>
+<p>提高分区容忍性的办法就是一个数据项复制到多个节点上，那么出现分区之后，这一数据项就可能分布到各个区里。容忍性就提高了。</p>
+</blockquote>
+<p>因此， CAP 中， P 其实是 前提， 必选的， 如果不考虑 P ，那也就没有分布式的问题了</p>
+<p>然后再说回 A 和 C，就比较好理解了</p>
+<blockquote>
+<p>接着上面的，要把数据复制到多个节点，就会带来一致性的问题 —— 多个节点上面的数据可能是不一致的。</p>
+<p>要保证一致，每次写操作就都要等待全部节点写成功，而这等待又会带来可用性的问题。</p>
+</blockquote>
+<p>总的来说就是，存储某一数据的节点数越多，分区容错性越高，一致性就越难以保障，如果强行提升一致性，可用性就必然受到影响。</p>
+<p>回过头再说常容易搞混的 A 和 P 的关系：</p>
+<ul>
+<li>P 指的是 网络分区发生时，还能否提供服务<ul>
+<li><strong>特点：</strong><ul>
+<li>强调系统对<strong>网络故障的容忍能力</strong>。</li>
+<li>当分区发生时，系统需要选择如何处理一致性和可用性的权衡。</li>
+<li>没有 P，系统将无法在分区时运行，但分布式系统通常必须支持 P（否则等同于单机系统）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>A 指的是系统在<strong>任何时刻</strong>都能响应客户端的请求，即使部分节点故障或数据不一致，系统仍能正常处理请求。<ul>
+<li><strong>特点</strong>：<ul>
+<li>强调系统的<strong>服务持续性</strong>。</li>
+<li>所有节点（无论是否最新状态）都必须能响应请求。</li>
+<li>不保证返回的数据是最新的（可能牺牲一致性）。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="再到-PACELC"><a href="#再到-PACELC" class="headerlink" title="再到 PACELC"></a>再到 PACELC</h2><p>PACELC 理论是对 CAP 定理的扩展，旨在更全面地指导分布式系统设计。它不仅考虑了网络分区（Partition）场景下的权衡，还引入了<strong>正常运行时延迟（Latency）</strong>与 <strong>一致性（Consistency）</strong> 的平衡，从而弥补了 CAP 理论在实际应用中的局限性。以下是 PACELC 的核心要点和实际应用分析：</p>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250223195029597.png" alt="image-20250223195029597" style="zoom:80%;" />
+
+<h3 id="1-PACELC-的定义"><a href="#1-PACELC-的定义" class="headerlink" title="1. PACELC 的定义"></a><strong>1. PACELC 的定义</strong></h3><ul>
+<li><strong>PAC</strong>（Partition-Availability-Consistency）：<br>当系统发生网络分区（P）时，需在可用性（A）和一致性（C）之间做出选择，这与 CAP 定理一致。</li>
+<li><strong>ELC</strong>（Else-Latency-Consistency）：<br>当系统无分区（Else，E）时，需在延迟（L）和一致性（C）之间权衡。例如，强一致性可能增加读写延迟，而弱一致性可提升响应速度。</li>
+</ul>
+<h3 id="2-为何需要-PACELC？"><a href="#2-为何需要-PACELC？" class="headerlink" title="2. 为何需要 PACELC？"></a><strong>2. 为何需要 PACELC？</strong></h3><ul>
+<li><strong>CAP 的局限性</strong>：<br>CAP 仅关注分区场景，但系统大部分时间处于无分区状态，此时延迟与一致性的平衡更为关键。例如，即使网络正常，强一致性要求同步所有副本数据，可能导致高延迟。</li>
+<li><strong>业务场景的多样性</strong>：<br>不同业务对一致性和延迟的容忍度不同。例如，电商系统可能允许短暂不一致以降低延迟（最终一致性），而金融系统需优先保证强一致性。</li>
+</ul>
+<h3 id="3-PACELC-的典型实现策略"><a href="#3-PACELC-的典型实现策略" class="headerlink" title="3. PACELC 的典型实现策略"></a><strong>3. PACELC 的典型实现策略</strong></h3><h4 id="（1）分区场景（PAC）的权衡"><a href="#（1）分区场景（PAC）的权衡" class="headerlink" title="（1）分区场景（PAC）的权衡"></a><strong>（1）分区场景（PAC）的权衡</strong></h4><ul>
+<li><strong>AP 系统</strong>：优先保证可用性，牺牲一致性。<ul>
+<li><strong>案例</strong>：Cassandra、DynamoDB 默认允许分区期间写入成功，数据最终一致。</li>
+</ul>
+</li>
+<li><strong>CP 系统</strong>：优先保证一致性，牺牲可用性。<ul>
+<li><strong>案例</strong>：ZooKeeper 在分区期间暂停服务，确保数据强一致。</li>
+</ul>
+</li>
+</ul>
+<h4 id="（2）无分区场景（ELC）的权衡"><a href="#（2）无分区场景（ELC）的权衡" class="headerlink" title="（2）无分区场景（ELC）的权衡"></a><strong>（2）无分区场景（ELC）的权衡</strong></h4><ul>
+<li><strong>高一致性配置</strong>：牺牲延迟，保证强一致。<ul>
+<li><strong>案例</strong>：MySQL 全同步复制要求所有从库同步完成才返回成功，增加写入延迟。</li>
+</ul>
+</li>
+<li><strong>低延迟配置</strong>：放宽一致性要求。<ul>
+<li><strong>案例</strong>：MongoDB 默认异步复制，主节点写入后立即响应，从节点可能存在短暂不一致。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-实际系统的-PACELC-分类"><a href="#4-实际系统的-PACELC-分类" class="headerlink" title="4. 实际系统的 PACELC 分类"></a><strong>4. 实际系统的 PACELC 分类</strong></h3><table>
+<thead>
+<tr>
+<th align="left"><strong>系统类型</strong></th>
+<th align="left"><strong>分区场景（PAC）</strong></th>
+<th align="left"><strong>正常场景（ELC）</strong></th>
+<th align="left"><strong>典型案例</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>PA&#x2F;EL 系统</strong></td>
+<td align="left">选可用性（A）</td>
+<td align="left">选低延迟（L）</td>
+<td align="left">Cassandra、DynamoDB</td>
+</tr>
+<tr>
+<td align="left"><strong>PC&#x2F;EC 系统</strong></td>
+<td align="left">选一致性（C）</td>
+<td align="left">选一致性（C）</td>
+<td align="left">HBase、BigTable</td>
+</tr>
+<tr>
+<td align="left"><strong>PA&#x2F;EC 系统</strong></td>
+<td align="left">选可用性（A）</td>
+<td align="left">选一致性（C）</td>
+<td align="left">MongoDB（默认配置）</td>
+</tr>
+<tr>
+<td align="left"><strong>PC&#x2F;EL 系统</strong></td>
+<td align="left">选一致性（C）</td>
+<td align="left">选低延迟（L）</td>
+<td align="left">较少见，需定制化实现</td>
+</tr>
+</tbody></table>
+<h3 id="5-应用-PACELC-的技术手段"><a href="#5-应用-PACELC-的技术手段" class="headerlink" title="5. 应用 PACELC 的技术手段"></a><strong>5. 应用 PACELC 的技术手段</strong></h3><ul>
+<li><strong>NWR 模型</strong>：<br>通过配置副本数（N）、写入确认数（W）、读取确认数（R）实现灵活权衡。例如，设置 W&#x3D;1、R&#x3D;N 可优先写入速度（低延迟），但可能读到旧数据；设置 W&#x3D;N、R&#x3D;1 则保证强一致性，但写入延迟高。</li>
+<li><strong>异步&#x2F;同步复制</strong>：<ul>
+<li><strong>异步复制</strong>（如 MySQL 默认模式）：牺牲一致性换低延迟。</li>
+<li><strong>半同步复制</strong>：折中方案，写入主库后至少同步到一个从库，平衡一致性与延迟。</li>
+</ul>
+</li>
+</ul>
+<h2 id="再说-BASE-理论"><a href="#再说-BASE-理论" class="headerlink" title="再说 BASE 理论"></a>再说 BASE 理论</h2><h3 id="1-BASE-理论的定义"><a href="#1-BASE-理论的定义" class="headerlink" title="1. BASE 理论的定义"></a><strong>1. BASE 理论的定义</strong></h3><p>BASE 是  。</p>
+<h3 id="2-核心组成"><a href="#2-核心组成" class="headerlink" title="2. 核心组成"></a><strong>2. 核心组成</strong></h3><h4 id="1-基本可用（Basically-Available）"><a href="#1-基本可用（Basically-Available）" class="headerlink" title="(1) 基本可用（Basically Available）"></a><strong>(1) 基本可用（Basically Available）</strong></h4><ul>
+<li><strong>定义</strong>：系统在发生故障时，允许部分功能降级（如响应延迟、非核心功能不可用），但核心功能仍可用。</li>
+<li><strong>示例</strong>：<ul>
+<li>电商系统在流量高峰时限制非核心功能（如商品评论），但保证下单和支付功能可用。</li>
+<li>响应时间延长：正常查询耗时 0.5 秒，故障时可能延长至 2 秒。</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-软状态（Soft-State）"><a href="#2-软状态（Soft-State）" class="headerlink" title="(2) 软状态（Soft State）"></a><strong>(2) 软状态（Soft State）</strong></h4><ul>
+<li><strong>定义</strong>：允许数据在不同节点间存在中间状态（短暂不一致），且这种状态不影响系统整体可用性。</li>
+<li><strong>示例</strong>：<ul>
+<li>订单的“支付中”状态，数据同步完成前允许存在中间状态。</li>
+<li>数据异步复制时，主节点与副本节点的数据可能短暂不同步。</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-最终一致性（Eventually-Consistent）"><a href="#3-最终一致性（Eventually-Consistent）" class="headerlink" title="(3) 最终一致性（Eventually Consistent）"></a><strong>(3) 最终一致性（Eventually Consistent）</strong></h4><ul>
+<li><strong>定义</strong>：系统经过一段时间后，所有副本数据最终达成一致。一致性时间窗口取决于网络延迟、负载等因素。</li>
+<li><strong>一致性变种</strong>：<ul>
+<li><strong>因果一致性</strong>：有因果关系的操作需按顺序生效（如用户 A 修改数据后，用户 B 的修改必须基于 A 的最新值）。</li>
+<li><strong>会话一致性</strong>：同一会话内保证“读己所写”（如用户修改个人资料后，同一会话内读取到最新值）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-BASE-与-CAP-的关系"><a href="#3-BASE-与-CAP-的关系" class="headerlink" title="3. BASE 与 CAP 的关系"></a><strong>3. BASE 与 CAP 的关系</strong></h3><ul>
+<li><strong>CAP 的局限性</strong>：CAP 定理仅在网络分区（P）场景下要求选择 C 或 A，而 BASE 理论进一步细化了非分区场景下延迟（L）与一致性（C）的权衡。</li>
+<li><strong>核心区别</strong>：<ul>
+<li><strong>CAP</strong>：强调整体系统在分区时的选择（C 或 A）。</li>
+<li><strong>BASE</strong>：弱化一致性，通过最终一致性和软状态实现高可用性，更适合业务容忍短暂不一致的场景。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-实际应用场景"><a href="#4-实际应用场景" class="headerlink" title="4. 实际应用场景"></a><strong>4. 实际应用场景</strong></h3><ol>
+<li><strong>电商系统</strong><ul>
+<li>购物车数据允许短暂不一致，异步同步后最终一致。</li>
+</ul>
+</li>
+<li><strong>分布式缓存</strong><ul>
+<li>Redis、Memcached 使用异步更新策略，容忍缓存与数据库的短暂不一致。</li>
+</ul>
+</li>
+<li><strong>消息队列</strong><ul>
+<li>Kafka、RabbitMQ 通过异步消费保证消息最终被处理。</li>
+</ul>
+</li>
+</ol>
+<h3 id="5-实现技术"><a href="#5-实现技术" class="headerlink" title="5. 实现技术"></a><strong>5. 实现技术</strong></h3><ul>
+<li><strong>异步复制</strong>：主节点写入成功后，异步同步到从节点（如 MySQL 异步复制）。</li>
+<li><strong>NWR 模型</strong>：通过调节副本数（N）、写入确认数（W）、读取确认数（R）平衡一致性与延迟。</li>
+<li><strong>数据分区与冗余</strong>：分片存储数据并多副本冗余，提升容错性。</li>
+</ul>
+<h3 id="6-优缺点分析"><a href="#6-优缺点分析" class="headerlink" title="6. 优缺点分析"></a><strong>6. 优缺点分析</strong></h3><table>
+<thead>
+<tr>
+<th align="left"><strong>优点</strong></th>
+<th align="left"><strong>缺点</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">高可用性（故障时仍可服务）</td>
+<td align="left">数据一致性逻辑复杂（需处理冲突）</td>
+</tr>
+<tr>
+<td align="left">高性能（异步操作减少延迟）</td>
+<td align="left">开发难度高（需处理边界条件）</td>
+</tr>
+<tr>
+<td align="left">容错性强（容忍网络分区）</td>
+<td align="left">最终一致性时间窗口不可控</td>
+</tr>
+</tbody></table>
+<h3 id="7-适用场景"><a href="#7-适用场景" class="headerlink" title="7. 适用场景"></a><strong>7. 适用场景</strong></h3><ul>
+<li><strong>高并发、高可用需求</strong>：如电商秒杀、社交网络。</li>
+<li><strong>容忍数据短暂不一致</strong>：如推荐系统、日志处理。</li>
+<li><strong>最终一致性业务</strong>：如分布式数据库（Cassandra）、异步消息队列。</li>
+</ul>
+<h2 id="NWR-模型"><a href="#NWR-模型" class="headerlink" title="NWR 模型"></a>NWR 模型</h2><h2 id="什么是NWR协议？"><a href="#什么是NWR协议？" class="headerlink" title="什么是NWR协议？"></a>什么是NWR协议？</h2><p>NWR是一种在<strong>分布式存储系统</strong>中用于<strong>控制一致性级别</strong>的一种策略。在亚马逊的<strong>云存储系统（DynamoDB）中</strong>，就应用 <strong>NWR</strong>来控制一致性。</p>
+<blockquote>
+<p>N： 在分布式存储系统中，有多少份备份数据 。<br>W：代表一次成功的更新操作要求至少<strong>有w份数据写入成功</strong> <strong>。</strong><br>R： 代表一次成功的读数据操作要求至少<strong>有R份数据成功读取。</strong></p>
+</blockquote>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a><strong>原理</strong></h2><p>NWR值的不同组合会产生不同的一致性效果，当<strong>W+R&gt;N</strong>的时候，整个系统对于客户端来讲能保证<strong>强一致性</strong>。</p>
+<blockquote>
+<p>以常见的N&#x3D;3、W&#x3D;2、R&#x3D;2为例:<br>N&#x3D;3，表示，任何一个对象都必须有<strong>三个副本</strong><br>W&#x3D;2表示，对数据的修改操作只需要在3<strong>个副本中的2个上面完成</strong>就返回<br>R&#x3D;2表示，从<strong>三个对象中要读取到2个</strong>数据对象，才能返回</p>
+</blockquote>
+<p><strong>1.当W是2、R是2的时候，W+R&gt;N，这种情况对于客户端就是强一致性的。</strong></p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/v2-df429eaa2f16310f80fd352d2e6ac401_1440w.jpg" alt="img"></p>
+<p>如果<strong>R+W&gt;N</strong>,则<strong>读取操作和写入操作成功的数据一定会有交集</strong>（如图中的 Node2），这样就可以<strong>保证一定能够读取到最新版本的更新数据</strong>，数据的<strong>强一致性得到了保</strong>证。在满足数据一致性协议的前提下，<strong>R或者W设置的越大</strong>，则<strong>系统延迟越大</strong>，因为这取决于最慢的那份备份数据的响应时间。</p>
+<p><strong>2. 当R+W&lt;&#x3D;N，无法保证数据的强一致性</strong></p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/v2-d9cee1a1daf5924c72ed94be8a8651a1_1440w.jpg" alt="img"></p>
+<p>因为成功<strong>写</strong>和成功<strong>读</strong>集合可能<strong>不存在交集</strong>，这样读操作<strong>无法读取到最新的更新数值</strong>，也就无法保证<strong>数据的强一致性</strong>。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">ZengCP</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/11/23/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BA%E6%A6%82%E8%BF%B0%20%E2%80%94%E2%80%94%20CAP%E3%80%81PACELC%E3%80%81BASE/">http://example.com/2024/11/23/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BA%E6%A6%82%E8%BF%B0%20%E2%80%94%E2%80%94%20CAP%E3%80%81PACELC%E3%80%81BASE/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">ZengCP's BLOGS</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/">分布式</a></div><div class="post_share"><div class="social-share" data-image="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/11/23/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E7%AE%97%E6%B3%95/" title="分布式一致性算法详解"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">分布式一致性算法详解</div></div></a></div><div class="next-post pull-right"><a href="/2024/11/17/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%E7%BB%8F%E5%85%B8%E9%9D%A2%E8%AF%95%E9%A2%98/" title="MySQL 经典面试题"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">MySQL 经典面试题</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/11/23/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E7%AE%97%E6%B3%95/" title="分布式一致性算法详解"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-23</div><div class="title">分布式一致性算法详解</div></div></a></div><div><a href="/2024/04/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/redis%20%E7%BC%93%E5%AD%98%20%E4%B8%8E%20%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%80%E8%87%B4%E6%80%A7/" title="redis 缓存与数据库一致性分析"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-13</div><div class="title">redis 缓存与数据库一致性分析</div></div></a></div><div><a href="/2024/04/13/%E4%B8%AD%E9%97%B4%E4%BB%B6/redis/redisson%20%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E5%8E%9F%E7%90%86/" title="Redisson 分布式锁原理"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-13</div><div class="title">Redisson 分布式锁原理</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZengCP</div><div class="author-info__description">记录心得，见证成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">76</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">37</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">31</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E7%90%86%E8%AE%BA%E6%A6%82%E8%BF%B0-%E2%80%94%E2%80%94-CAP%E3%80%81PACELC%E3%80%81BASE"><span class="toc-number">1.</span> <span class="toc-text">分布式系统理论概述 —— CAP、PACELC、BASE</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E-CAP-%E8%AF%B4%E8%B5%B7"><span class="toc-number">1.1.</span> <span class="toc-text">从 CAP 说起</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%8D%E5%88%B0-PACELC"><span class="toc-number">1.2.</span> <span class="toc-text">再到 PACELC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-PACELC-%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">1. PACELC 的定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%B8%BA%E4%BD%95%E9%9C%80%E8%A6%81-PACELC%EF%BC%9F"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. 为何需要 PACELC？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-PACELC-%E7%9A%84%E5%85%B8%E5%9E%8B%E5%AE%9E%E7%8E%B0%E7%AD%96%E7%95%A5"><span class="toc-number">1.2.3.</span> <span class="toc-text">3. PACELC 的典型实现策略</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%881%EF%BC%89%E5%88%86%E5%8C%BA%E5%9C%BA%E6%99%AF%EF%BC%88PAC%EF%BC%89%E7%9A%84%E6%9D%83%E8%A1%A1"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">（1）分区场景（PAC）的权衡</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%882%EF%BC%89%E6%97%A0%E5%88%86%E5%8C%BA%E5%9C%BA%E6%99%AF%EF%BC%88ELC%EF%BC%89%E7%9A%84%E6%9D%83%E8%A1%A1"><span class="toc-number">1.2.3.2.</span> <span class="toc-text">（2）无分区场景（ELC）的权衡</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%AE%9E%E9%99%85%E7%B3%BB%E7%BB%9F%E7%9A%84-PACELC-%E5%88%86%E7%B1%BB"><span class="toc-number">1.2.4.</span> <span class="toc-text">4. 实际系统的 PACELC 分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%BA%94%E7%94%A8-PACELC-%E7%9A%84%E6%8A%80%E6%9C%AF%E6%89%8B%E6%AE%B5"><span class="toc-number">1.2.5.</span> <span class="toc-text">5. 应用 PACELC 的技术手段</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%8D%E8%AF%B4-BASE-%E7%90%86%E8%AE%BA"><span class="toc-number">1.3.</span> <span class="toc-text">再说 BASE 理论</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-BASE-%E7%90%86%E8%AE%BA%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. BASE 理论的定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%A0%B8%E5%BF%83%E7%BB%84%E6%88%90"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. 核心组成</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC%E5%8F%AF%E7%94%A8%EF%BC%88Basically-Available%EF%BC%89"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">(1) 基本可用（Basically Available）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E8%BD%AF%E7%8A%B6%E6%80%81%EF%BC%88Soft-State%EF%BC%89"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">(2) 软状态（Soft State）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E6%9C%80%E7%BB%88%E4%B8%80%E8%87%B4%E6%80%A7%EF%BC%88Eventually-Consistent%EF%BC%89"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">(3) 最终一致性（Eventually Consistent）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-BASE-%E4%B8%8E-CAP-%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. BASE 与 CAP 的关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.3.4.</span> <span class="toc-text">4. 实际应用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%AE%9E%E7%8E%B0%E6%8A%80%E6%9C%AF"><span class="toc-number">1.3.5.</span> <span class="toc-text">5. 实现技术</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E4%BC%98%E7%BC%BA%E7%82%B9%E5%88%86%E6%9E%90"><span class="toc-number">1.3.6.</span> <span class="toc-text">6. 优缺点分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.3.7.</span> <span class="toc-text">7. 适用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NWR-%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.4.</span> <span class="toc-text">NWR 模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFNWR%E5%8D%8F%E8%AE%AE%EF%BC%9F"><span class="toc-number">1.5.</span> <span class="toc-text">什么是NWR协议？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">1.6.</span> <span class="toc-text">原理</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/23/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BB%BB%E5%8A%A1/" title="无题">无题</a><time datetime="2025-02-22T16:26:50.512Z" title="发表于 2025-02-23 00:26:50">2025-02-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/23/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BC%9A%E8%AF%9D/" title="无题">无题</a><time datetime="2025-02-22T16:26:50.512Z" title="发表于 2025-02-23 00:26:50">2025-02-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/23/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" title="无题">无题</a><time datetime="2025-02-22T16:03:33.025Z" title="发表于 2025-02-23 00:03:33">2025-02-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/23/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E5%88%86%E5%B8%83%E5%BC%8FID/" title="无题">无题</a><time datetime="2025-02-22T16:03:11.473Z" title="发表于 2025-02-23 00:03:11">2025-02-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/23/%E5%88%86%E5%B8%83%E5%BC%8F%20%E4%B8%8E%20%E6%9C%8D%E5%8A%A1%E6%B2%BB%E7%90%86/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" title="无题">无题</a><time datetime="2025-02-22T16:02:45.511Z" title="发表于 2025-02-23 00:02:45">2025-02-23</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By ZengCP</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
