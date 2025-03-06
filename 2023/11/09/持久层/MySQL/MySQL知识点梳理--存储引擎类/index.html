@@ -1,0 +1,676 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>MySQL 知识点梳理 -- 存储引擎相关 | ZengCP's BLOGS</title><meta name="author" content="ZengCP"><meta name="copyright" content="ZengCP"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一、前言数据库存储引擎是数据库底层软件组织，数据库管理系统（DBMS）使用数据引擎进行创建、查询、更新和删除数据。不同的存储引擎提供不同的存储机制、索引技巧、锁定水平等功能，使用不同的存储引擎，还可以获得特定的功能。现在许多不同的数据库管理系统都支持多种不同的数据引擎，MySql的核心就是插件式存储引擎。 Mysql中不同的表可以指定不同的存储引擎，也就是说一套Mysql服务器可以同时使用N种不同">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL 知识点梳理 -- 存储引擎相关">
+<meta property="og:url" content="http://example.com/2023/11/09/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A2%B3%E7%90%86--%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E7%B1%BB/index.html">
+<meta property="og:site_name" content="ZengCP&#39;s BLOGS">
+<meta property="og:description" content="一、前言数据库存储引擎是数据库底层软件组织，数据库管理系统（DBMS）使用数据引擎进行创建、查询、更新和删除数据。不同的存储引擎提供不同的存储机制、索引技巧、锁定水平等功能，使用不同的存储引擎，还可以获得特定的功能。现在许多不同的数据库管理系统都支持多种不同的数据引擎，MySql的核心就是插件式存储引擎。 Mysql中不同的表可以指定不同的存储引擎，也就是说一套Mysql服务器可以同时使用N种不同">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png">
+<meta property="article:published_time" content="2023-11-09T05:37:19.000Z">
+<meta property="article:modified_time" content="2025-03-05T17:04:11.832Z">
+<meta property="article:author" content="ZengCP">
+<meta property="article:tag" content="数据库">
+<meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="InnoDB">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png"><link rel="shortcut icon" href="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/longmao.png"><link rel="canonical" href="http://example.com/2023/11/09/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A2%B3%E7%90%86--%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E7%B1%BB/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'MySQL 知识点梳理 -- 存储引擎相关',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-03-06 01:04:11'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">85</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">38</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="ZengCP's BLOGS"><span class="site-name">ZengCP's BLOGS</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">MySQL 知识点梳理 -- 存储引擎相关</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-11-09T05:37:19.000Z" title="发表于 2023-11-09 13:37:19">2023-11-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-05T17:04:11.832Z" title="更新于 2025-03-06 01:04:11">2025-03-06</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/">MySQL</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="MySQL 知识点梳理 -- 存储引擎相关"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h1><p>数据库存储引擎是数据库底层软件组织，数据库管理系统（DBMS）使用数据引擎进行创建、查询、更新和删除数据。不同的存储引擎提供不同的<strong>存储机制</strong>、<strong>索引技巧</strong>、<strong>锁定水平</strong>等功能，使用不同的存储引擎，还可以获得特定的功能。现在许多不同的数据库管理系统都支持多种不同的数据引擎，MySql的核心就是插件式存储引擎。</p>
+<p>Mysql中不同的表可以指定不同的存储引擎，也就是说一套Mysql服务器可以同时使用N种不同的存储引擎。</p>
+<p>InnoDB 事务型数据库的首选，支持事务安全表（ACID），支持行锁定和外键。</p>
+<p>MySQL 5.5.5 之后，InnoDB 作为默认存储引擎。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** 查看系统所支持的引擎类型 */</span></span><br><span class="line"><span class="keyword">SHOW</span> ENGINES;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> INFORMATION_SCHEMA.ENGINES;</span><br></pre></td></tr></table></figure>
+
+<h2 id="1、-功能对比"><a href="#1、-功能对比" class="headerlink" title="1、 功能对比"></a>1、 功能对比</h2><p>不同的存储引擎都有各自的特点，以适应不同的需求，如表所示。为了做出选择，首先要考虑每一个存储引擎提供了哪些不同的功能。</p>
+<table>
+<thead>
+<tr>
+<th>特点</th>
+<th>Myisam</th>
+<th>BDB</th>
+<th>Memory</th>
+<th>InnoDB</th>
+<th>Archive</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>存储限制</td>
+<td>没有</td>
+<td>没有</td>
+<td>有</td>
+<td>64TB</td>
+<td>没有</td>
+</tr>
+<tr>
+<td>事务安全</td>
+<td></td>
+<td>支持</td>
+<td></td>
+<td>支持</td>
+<td></td>
+</tr>
+<tr>
+<td>锁机制</td>
+<td>表锁</td>
+<td>页锁</td>
+<td>表锁</td>
+<td>行锁</td>
+<td>行锁</td>
+</tr>
+<tr>
+<td>B树索引</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+<td></td>
+</tr>
+<tr>
+<td>哈希索引</td>
+<td></td>
+<td></td>
+<td>支持</td>
+<td>支持</td>
+<td></td>
+</tr>
+<tr>
+<td>全文索引</td>
+<td>支持</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>集群索引</td>
+<td></td>
+<td></td>
+<td></td>
+<td>支持</td>
+<td></td>
+</tr>
+<tr>
+<td>数据缓存</td>
+<td></td>
+<td></td>
+<td>支持</td>
+<td>支持</td>
+<td></td>
+</tr>
+<tr>
+<td>索引缓存</td>
+<td>支持</td>
+<td></td>
+<td>支持</td>
+<td>支持</td>
+<td></td>
+</tr>
+<tr>
+<td>数据可压缩</td>
+<td>支持</td>
+<td></td>
+<td></td>
+<td></td>
+<td>支持</td>
+</tr>
+<tr>
+<td>空间使用</td>
+<td>低</td>
+<td>低</td>
+<td>N&#x2F;A</td>
+<td>高</td>
+<td>非常低</td>
+</tr>
+<tr>
+<td>内存使用</td>
+<td>低</td>
+<td>低</td>
+<td>中等</td>
+<td>高</td>
+<td>低</td>
+</tr>
+<tr>
+<td>批量插入的速度</td>
+<td>高</td>
+<td>高</td>
+<td>高</td>
+<td>低</td>
+<td>非常高</td>
+</tr>
+<tr>
+<td>支持外键</td>
+<td></td>
+<td></td>
+<td></td>
+<td>支持</td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>MyISAM</strong>：默认的MySQL插件式存储引擎，它是在Web、数据仓储和其他应用环境下最常使用的存储引擎之一</p>
+<p><strong>InnoDB</strong>：用于事务处理应用程序，具有众多特性，包括ACID事务支持。</p>
+<p><strong>Memory</strong>：将所有数据保存在RAM中，在需要快速查找引用和其他类似数据的环境下，可提供极快的访问。</p>
+<p>使用下面的语句可以修改数据库临时的默认存储引擎</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> default_storage_engine<span class="operator">=</span><span class="string">&#x27;存储引擎名&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>例如，将 MySQL 数据库的临时默认存储引擎修改为 MyISAM，输入的 SQL 语句和运行结果如图所示。</p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250216143805181.png" alt="image-20250216143805181"></p>
+<p>此时，可以发现 MySQL 的默认存储引擎已经变成了 MyISAM。但是当再次重启客户端时，默认存储引擎仍然是 InnoDB。</p>
+<h2 id="2、-InnoDB-存储引擎简介"><a href="#2、-InnoDB-存储引擎简介" class="headerlink" title="2、 InnoDB 存储引擎简介"></a>2、 InnoDB 存储引擎简介</h2><p><code>InnoDB</code>是一款通用存储引擎，平衡了高可靠性和高性能。</p>
+<ul>
+<li>高可靠性：任何时候可以保证数据是不丢失的</li>
+<li>高性能：数据读取（查询、检索）和数据变更效率高、RT短（Response Time，服务响应时间）</li>
+<li>通常性能和可靠性是相悖的，磁盘的效率是远远低于内存的。</li>
+</ul>
+<p>在MySQL 8.0中，<code>InnoDB</code>是默认的MySQL存储引擎。除非配置了不同的默认存储引擎，否则在没有<code>ENGINE</code>子句的情况下发布<code>CREATE TABLE</code>语句会创建InnoDB表。</p>
+<p><strong>主要优势：</strong></p>
+<ul>
+<li>其DML操作遵循ACID模型（事务模型），其事务具有提交、回滚和崩溃恢复功能（InnoDB redo、Undo日志），以保护用户数据。</li>
+<li>行级锁定和甲骨文风格的一致读取提高了多用户并发性和性能。</li>
+<li><code>InnoDB</code>表在磁盘上排列数据，以根据主键优化查询。每个<code>InnoDB</code>表都有一个名为聚类索引的主键索引，该索引组织数据以最小化主键查找的I&#x2F;O。</li>
+<li>为了保持数据完整性，<code>InnoDB</code>支持<code>FOREIGN KEY</code>约束。使用外键，会检查插入、更新和删除，以确保它们不会导致相关表之间的不一致。</li>
+</ul>
+<h3 id="2-1-InnoDB-架构"><a href="#2-1-InnoDB-架构" class="headerlink" title="2.1    InnoDB 架构"></a>2.1    InnoDB 架构</h3><p>InnoDB架构包括内存和磁盘结构。</p>
+<p>内存结构包括缓冲池、自适应哈希索引、写缓冲区和日志缓冲区。</p>
+<p>磁盘结构包括系统表空间、独立表空间、通用表空间、撤销表空间、临时表空间、重做日志和双写缓冲文件。</p>
+<p>![image (1)](<a target="_blank" rel="noopener" href="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image">https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image</a> (1).png)</p>
+<h1 id="二、-InnoDB-存储引擎的内存结构"><a href="#二、-InnoDB-存储引擎的内存结构" class="headerlink" title="二、 InnoDB 存储引擎的内存结构"></a>二、 InnoDB 存储引擎的内存结构</h1><p>从MySQL5.5版本开始，默认使用的就是InnoDB存储引擎，它擅长处理事务，具有自动崩溃恢复的特性，使用非常广泛。</p>
+<p>InnoDB存储引擎架构主要由两部分组成，<strong>内存结构</strong> 和 <strong>磁盘结构</strong>。</p>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250216020752601.png" alt="image-20250216020752601" style="zoom:80%;" />
+
+<p>InnoDB存储引擎的内存结构由4部分组成：</p>
+<ol>
+<li><strong>Buffer Pool:</strong> 缓冲池，作用就是用来缓存表数据和索引数据，减少磁盘IO操作，提升效率。</li>
+<li><strong>Change Buffer</strong>：写缓冲区，是针对二级索引页（辅助索引）的更新优化措施。</li>
+<li><strong>Log Buffer</strong>：日志缓冲区，用来缓存写入磁盘上log文件（Redo、Undo）的数据,日志缓冲区的内容会定期的刷新到磁盘Log文件中。主要作用是：用来优化每次更新操作之后都要写入redo log产生的磁盘IO的。</li>
+<li><strong>Adaptive Hash Index</strong>： 自适应Hash索引。InnoDB不支持手动创建哈希索引的，但是InnoDB会进行自调优，如果判断建立 自适应哈希索引能够提升查询效率，InnoDB就会在自己的内存中创建相关的Hash索引。自适应指的是不需要人工手动干预，InnoDB会根据自己的需求去创建 自适应Hash索引。</li>
+</ol>
+<h2 id="1、-Buffer-Pool"><a href="#1、-Buffer-Pool" class="headerlink" title="1、 Buffer Pool"></a>1、 Buffer Pool</h2><h3 id="Buffer-Pool-概述"><a href="#Buffer-Pool-概述" class="headerlink" title="Buffer Pool 概述"></a>Buffer Pool 概述</h3><ul>
+<li><p><strong>作用</strong>： Buffer Pool ， 也即缓冲池，用来<strong>缓存表数据和索引数据的，减少磁盘IO</strong>。</p>
+</li>
+<li><p><strong>组成</strong>： Buffer Pool有 <strong>缓存数据页（Page）</strong> 和 对缓存数据页进行描述的 **控制块 ** 组成。</p>
+<ul>
+<li><p><strong>缓存数据页Page</strong>：InnoDB以页为单位，对数据进行划分，以页Page作为磁盘和内存交互的基本单位，一个页大小默认 16KB。</p>
+<ul>
+<li>Buffer Pool 除了缓存了 索引页和数据页，还包括了undo页，自适应哈希索引，插入缓存页，锁信息。</li>
+</ul>
+</li>
+<li><p><strong>控制块</strong>：控制块中存储着对应的缓存页所属的表空间信息，数据页编号，控制块所对应的缓存页在BufferPool中的地址信息。</p>
+</li>
+</ul>
+</li>
+<li><p>BufferPool的默认的大小128M，以Page页为单位，Page页16KB，控制块一般为数据页的5%，大概是800字节。</p>
+</li>
+</ul>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250216020804515.png" alt="image-20250216020804515" style="zoom: 67%;" />
+
+<ul>
+<li>Q: 如何判断一个页是否在BP中存储？<ul>
+<li>在MySQL中有一个Hash表数据结构，它使用表空间号 + 数据页编号，作为一个key，value是缓存页对应的控制块。当我们需要访问某个页的数据时，先从Hash表中根据表空间号+页号，查看是否有对应的缓存页。<br>如果有，则直接使用。<br>如果没有，就会从free链表中选出一个空闲的缓存页，把磁盘中的对应的页加载到该缓存页的位置。</li>
+</ul>
+</li>
+</ul>
+<h3 id="Buffer-Pool-对-Page-页管理机制"><a href="#Buffer-Pool-对-Page-页管理机制" class="headerlink" title="Buffer Pool 对 Page 页管理机制"></a>Buffer Pool 对 Page 页管理机制</h3><ul>
+<li><strong>Page页分类</strong>：在BP的底层采用的是链表数据结构管理Page。Page根据状态可以分为3中类型：</li>
+</ul>
+<ul>
+<li><p><strong>free Page</strong>： 空闲Page，未被使用的Page。</p>
+</li>
+<li><p><strong>clean Page</strong>：被使用的Page，但是数据没有修改过。</p>
+</li>
+<li><p><strong>dirty Page</strong>：脏页，被使用过的Page，并且数据被修改了，缓存页中的数据与磁盘的数据不一致的。</p>
+</li>
+</ul>
+<p>上面说的三种Page类型，InnoDB采用三种链表结构进行维护和管理。</p>
+<ul>
+<li><strong>free list ：</strong>表示空闲缓冲区，管理free Page</li>
+</ul>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250216020814954.png" alt="image-20250216020814954"></p>
+<ul>
+<li><strong>flush list:</strong>  表示的是需要刷新到磁盘的缓冲区，管理dirty page，内部page是按照修改时间排序。</li>
+</ul>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250216020825306.png" alt="image-20250216020825306"></p>
+<ul>
+<li><strong>lru list</strong> :表示正在使用的缓冲区，管理clean page和dirty page，该缓冲区以 midpoint 为基点，前面的链表称为new 列表区，存放经常被访问的数据，占63%，后面的链表称为old列表区，存放的是使用较少的数据占37%。</li>
+</ul>
+<p>注意：脏页在 flush 链表和 LRU 链表中都存在，但是两者互不影响，LRU 链表负责管理 page 的可用性和释放，而 flush list 负责管理脏页的刷盘操作。</p>
+<h4 id="Q-MySQL中为什么没有采用传统的LRU算法？"><a href="#Q-MySQL中为什么没有采用传统的LRU算法？" class="headerlink" title="Q: MySQL中为什么没有采用传统的LRU算法？"></a>Q: MySQL中为什么没有采用传统的LRU算法？</h4><p><strong>普通的LRU算法</strong>：LRU （最近最少使用），就是末尾淘汰法，新数据从链表头部加入，释放空间时从末尾淘汰。</p>
+<p><strong>普通LRU链表的缺点</strong>：</p>
+<ul>
+<li><strong>Buffer Pool污染</strong>：当某一个SQL，扫描了大量数据时，就有可能把BP中所有页都替换出去，导致大量的热数据被淘汰，这些热数据再次被访问时候，就会产生大量的磁盘IO，MySQL性能就会下降，这个过程被称为<strong>Buffer Pool污染</strong>。</li>
+</ul>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250216021110833.png" alt="image-20250216021110833"></p>
+<ul>
+<li><strong>预读失效</strong> —— MySQL中存在预读机制，很多预读的页会被放在LRU链表的头部，如果没有使用到预读页，就会导致很多尾部的缓存页被淘汰，这就是预读失效。</li>
+</ul>
+<h4 id="Q：-MySQL中对于LRU算法进行了哪些优化？"><a href="#Q：-MySQL中对于LRU算法进行了哪些优化？" class="headerlink" title="Q： MySQL中对于LRU算法进行了哪些优化？"></a>Q： MySQL中对于LRU算法进行了哪些优化？</h4><p>改进型LRU算法：链表分为new和old两个区域，加入元素时并不是从表头插入，而是从midpoint位置插入。</p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250216021119612.png" alt="image-20250216021119612"></p>
+<p>冷数据区的数据页什么时候被转到热数据区？</p>
+<p>1）如何数据页在LRU链表中存在时间超过1s,就将其移动到链表的头部（链表指的是整个LRU链表）</p>
+<p>2）如果该数据页在LRU链表中存在的时间短于1s.位置不变。</p>
+<p>3）只有同时满足 【被访问】与【在old区域停留超过1s】两个条件，才会被插入到热数据区的头部。这样就解决了BP污染问题。</p>
+<h2 id="2、-change-Buffer"><a href="#2、-change-Buffer" class="headerlink" title="2、 change Buffer"></a>2、 change Buffer</h2><p>Chnage Buffer，又称写缓冲区、变更&#x2F;更改缓冲区。</p>
+<p>更改缓冲区是一种特殊的数据结构，当<code>辅助索引/次要索引（非唯一索引）</code>页面不在<code>缓冲池</code>中时，它会缓存对这些页面的更改。当页面通过其他读取操作加载到缓冲池时，缓冲更改可能由<code>INSERT</code>、<code>UPDATE</code>或<code>DELETE</code>操作（DML）而合并。</p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250216155459307.png" alt="image-20250216155459307"></p>
+<p><strong>Change Buffer更新机制：</strong></p>
+<p>情况1: 对于唯一索引来说，需要将数据页读入内存，判断到没有冲突，插入这个值，语句执行结束；</p>
+<p>情况2: 对于普通索引来说，则是将更新记录在 Change Buffer，流程如下:</p>
+<ol>
+<li>更新一条记录时，该记录在BufferPool存在，直接在BufferPool修改，一次内存操作。</li>
+<li>如果该记录在Buffer Pool不存在（没有命中），在不影响数据一致性的前提下，InnoDB 会将这些更新操作缓存在 Change Buffer 中不用再去磁盘查询数据，避免一次磁盘IO。</li>
+<li>当下次查询记录时，会将数据页读入内存，然后执行Buffer Pool中与这个页有关的操作，通过这种方式就能保证这个数据逻辑的正确性</li>
+</ol>
+<p>![image (2)](<a target="_blank" rel="noopener" href="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image">https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image</a> (2).png)</p>
+<p><strong>什么情况下进行merge?</strong></p>
+<p>​	1) 访问这个数据页会出发merge。</p>
+<p>​	2）系统有后台线程，定期merge。</p>
+<p>​	3）在数据库正常关闭的过程中，也会执行merge.</p>
+<p><strong>为什么 ChangeBuffer 仅适用于非唯一二级索引页？</strong></p>
+<p>【ANS】： 如果索引设置了唯一性，在进行修改时，InnoDB就必须要做唯一性校验，因此必须查询磁盘，做一次IO操作。会直接将记录查询到Buffer Pool中，然后在缓冲池中修改，不会在CB中操作。</p>
+<h2 id="3、-Log-Buffer"><a href="#3、-Log-Buffer" class="headerlink" title="3、 Log Buffer"></a>3、 Log Buffer</h2><p>Log Buffer：日志缓冲区，用来保存要写入磁盘上log（Redo&#x2F;undo）文件的数据,日志缓冲区的内容定期的刷新到磁盘Log文件中。</p>
+<p>Log Buffer作用：用来优化每次更新操作之后都要写入 redo log而产生的磁盘IO过多的问题。日志缓冲区满时自动将数据刷新到磁盘，当遇到BLOB或者多行更新的大事务操作时，增加日志缓冲区可以节省磁盘IO。</p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250216021219758.png" alt="image-20250216021219758"></p>
+<p><strong>innodb_log_buffer_size参数说明：</strong></p>
+<p><code>innodb_log_buffer_size</code>变量定义日志缓冲区大小由，默认大小为16MB。日志缓冲区的内容定期刷新到磁盘。</p>
+<ul>
+<li>日志缓冲区使事务能够运行，而无需在事务提交之前将重做（Redo）日志数据写入磁盘。</li>
+<li>如果有更新、插入或删除许多行的事务，增加日志缓冲区的大小将保存磁盘I&#x2F;O。</li>
+</ul>
+<p><code>innodb_flush_log_at_trx_commit</code>变量控制日志刷新频率，默认为1</p>
+<ul>
+<li>0 ： 每隔1秒写日志文件和刷盘操作，最多丢失1秒数据</li>
+<li>1：事务提交，立刻写日志文件和刷盘，数据不丢失，但是会频繁IO操作</li>
+<li>2：事务提交，立刻写日志文件，每隔1秒钟进行刷盘操作</li>
+</ul>
+<h2 id="4、-Adaptive-Hash-Index"><a href="#4、-Adaptive-Hash-Index" class="headerlink" title="4、 Adaptive Hash Index"></a>4、 Adaptive Hash Index</h2><p>InnoDB存储引擎会监控对表上索引页（二级索引，非主键的索引）的查询，自动建立合适的Hash索引，提升数据页的访问效率。</p>
+<p>特点：</p>
+<ul>
+<li>哈希索引，查询消耗O(1)，高效</li>
+<li>降低对二级索引树的频繁访问</li>
+<li>自适应（不用开发者自己去维护，由InnoDB引擎去维护）</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>Hash自适应索引会占用Buffer Pool</li>
+<li>只适合与等值查询 </li>
+<li>范围查询不可以</li>
+</ul>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250216143143931.png" alt="image-20250216143143931"></p>
+<p>Adaptive Hash Index，是配合 Buffer Pool 工作的一个功能，使得MySQL的性能更加<strong>接近于</strong>内存服务器。</p>
+<p>用于优化对Buffer Pool数据的查询。InnoDB存储引擎会监控对表索引的查找，如果观察到建立哈希索引可以带来速度的提升，则建立哈希索引，所以称之为自适应。InnoDB存储引擎会自动根据访问的频率和模式来为某些页建立哈希索引。</p>
+<p>自适应散列索引使<code>InnoDB</code>能够在具有适当组合工作负载和缓冲池充足内存的系统上运行更像内存数据库（接近于Redis），而不会牺牲事务功能或可靠性。自适应哈希索引由<code>innodb_adaptive_Hash_index</code>变量启用，或在服务器启动时由<code>--skip-innodb-adaptive-Hash-index</code>关闭。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;%innodb_adaptive_Hash_index%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="三、InnoDB-存储结构"><a href="#三、InnoDB-存储结构" class="headerlink" title="三、InnoDB 存储结构"></a>三、InnoDB 存储结构</h1><p>InnoDB磁盘主要包含Tablespaces、Doublewrite Buffer、Redo Log和Undo Log等。</p>
+<h2 id="1、-表空间"><a href="#1、-表空间" class="headerlink" title="1、 表空间"></a>1、 表空间</h2><p>从 InnoDB存储引擎的逻辑存储结构看,所有数据都被逻辑地存放在一个空间中，称之为表空间( tablespace)。表空间又由段(segment)、区( extent)、页(page)组成。页在一些文档中有时也称为块( block)。</p>
+<p>空间表示一本书，段表示书中的章节，区表示每章节的小节，页表示书的每一页，行就是每页的每行数据。表空间里有多个段，一个段包含256个区，一个区包含64个页，一个页为16K。</p>
+<p>InnoDB存储引擎的逻辑存储结构大致如图所示。</p>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/3a8ef2d5f9c714fdb3dfb2eaad2d859d.png" alt="在这里插入图片描述" style="zoom:75%;" />
+
+<p>在innodb存储引擎中数据是按照表空间来组织存储的。表空间是表空间文件是实际存在的物理文件。</p>
+<p><strong>当我们创建一个表之后，在磁盘上会有对应的表名称.ibd的磁盘文件，这个文件就是这张表的表空间物理文件。</strong></p>
+<h3 id="1-1-系统表空间"><a href="#1-1-系统表空间" class="headerlink" title="1.1    系统表空间"></a>1.1    系统表空间</h3><p><strong>系统表空间组成</strong>：</p>
+<ul>
+<li><strong>数据字典</strong>：其中包含了表结构、数据库名或者表名，字段的类型、视图、索引、表字段信息、MYSQL的版本等信息。</li>
+<li><strong>双写缓冲区</strong>：用于保证写入磁盘时页数据的完整性，防止发生写失效问题。</li>
+<li><strong>修改缓冲区</strong>：内存中change Buffer对应的持久化的区域，为了保证数据的完整性。</li>
+<li><strong>回滚日志（Undo Log）</strong>：记录数据修改前的状态的，逻辑日志。主要用来实现事务回滚，实现多版本并发控制。</li>
+</ul>
+<h3 id="1-2-独立表空间"><a href="#1-2-独立表空间" class="headerlink" title="1.2    独立表空间"></a>1.2    独立表空间</h3><p>每个表都有自己独立的表空间，每个表的数据和索引都会存在自己的表空间中。</p>
+<p>独立表空间的作用：可以实现单表在不同数据库中的移动。独立表空间的空间可以回收（在执行删除或者清空操作后，存储空间会还给操作系统）。</p>
+<h3 id="1-3-其他表空间"><a href="#1-3-其他表空间" class="headerlink" title="1.3    其他表空间"></a>1.3    其他表空间</h3><h4 id="通用表空间（General-Tablespace）"><a href="#通用表空间（General-Tablespace）" class="headerlink" title="通用表空间（General Tablespace）"></a><strong>通用表空间（General Tablespace）</strong></h4><ul>
+<li>多个表可以共享一个表空间文件。</li>
+<li>可以通过 <code>CREATE TABLESPACE</code> 语句创建，并指定存储路径。</li>
+</ul>
+<h4 id="Undo-表空间（Undo-Tablespace）"><a href="#Undo-表空间（Undo-Tablespace）" class="headerlink" title="Undo 表空间（Undo Tablespace）"></a><strong>Undo 表空间（Undo Tablespace）</strong></h4><ul>
+<li>专门用于存储事务回滚所需的数据。</li>
+<li>现代 MySQL 版本中，Undo 表空间独立于系统表空间。</li>
+</ul>
+<h4 id="临时表空间（Temporary-Tablespace）"><a href="#临时表空间（Temporary-Tablespace）" class="headerlink" title="临时表空间（Temporary Tablespace）"></a><strong>临时表空间（Temporary Tablespace）</strong></h4><ul>
+<li>用于存储临时表和排序操作的数据。</li>
+</ul>
+<h2 id="2、-双写缓冲区（Doublewrite-Buffer）"><a href="#2、-双写缓冲区（Doublewrite-Buffer）" class="headerlink" title="2、 双写缓冲区（Doublewrite Buffer）"></a>2、 双写缓冲区（Doublewrite Buffer）</h2><ul>
+<li><p>作用： Doublewrite Buffer是MySQL数据库中InnoDB存储引擎的一种机制，用于解决部分<strong>写失效</strong>的问题，提高数据完整性和可靠</p>
+</li>
+<li><p>结构： Doublewrite Buffer是内存+磁盘的结构，包括内存结构和磁盘结构两个部分。</p>
+<ul>
+<li><p>在内存结构中，DWB 由128个页（Page）构成，大小是2MB。<br>这些页在内存中以 DWB 的形式存在。</p>
+</li>
+<li><p>在磁盘结构中，DWB 在系统表空间上是128个页（2个区，extend1和extend2），大小也是2MB。<br>这些页在磁盘上以Doublewrite File的形式存在。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>Doublewrite Buffer的原理是在将数据页写到数据文件之前，先将它们写入Doublewrite Buffer的共享表空间内。</p>
+<p>在完成写入Doublewrite Buffer后，再将数据页写入到数据文件的适当位置。</p>
+<p>这种方式可以确保数据的一致性和完整性，因为在写入过程中发生意外崩溃时，可以从Doublewrite Buffer中找到完好的数据页副本用于恢复。</p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/0dd42f330707104ac3dbd89df94a130c.png" alt="img"></p>
+<h2 id="3、RedoLog"><a href="#3、RedoLog" class="headerlink" title="3、RedoLog"></a>3、RedoLog</h2><h3 id="3-1-WAL-策略"><a href="#3-1-WAL-策略" class="headerlink" title="3.1    WAL 策略"></a>3.1    WAL 策略</h3><p>WAL 的全称是 Write-Ahead Logging，中文称预写式日志（写前日志），是一种数据安全写入机制。就是先写日志，然后再写入磁盘，这样既能提高性能又可以保证数据的安全性，MySQL中的Redo Log就是采用WAL机制。</p>
+<p><strong>写后日志</strong>：先将数据写入到磁盘，然后将数据写入到日志，这种策略不适合MySQL中使用，适合的场景是内存型数据库的备份。比如Redis 的AOF的持久化策略（记录操作命令），宕机恢复进行AOF日志的回放，该方式本质上就是写入日志。</p>
+<p><strong>为什么使用WAL ?</strong></p>
+<p>磁盘的写（使用SQL语句执行编辑操作）操作是随机IO，比较耗性能，所以如果把每一次的更新操作都先写入Log中，那么就成了顺序写操作（效率远远高于随机IO），实际更新操作由后台线程再根据Log异步写入。这样对于Client端，延迟就降低了。并且，由于顺序写入大概率是在一个磁盘块内，这样产生的IO次数也大大降低。所以WAL的核心在于<strong>将随机写转变为了顺序写</strong>，降低了客户端的延迟，提升了吞吐量。</p>
+<h4 id="Redo-Log-基本概念"><a href="#Redo-Log-基本概念" class="headerlink" title="Redo Log 基本概念"></a>Redo Log 基本概念</h4><p>InnoDB引擎对数据的更新，是先将更新记录写入Redo Log日志，然后会在系统空闲的时候或者是按照设定的更新策略再将日志中的内容更新到磁盘之中。这就是所谓的预写式技术（Write Ahead logging）。这种技术可以大大减少IO操作的频率，提升数据刷新的效率。</p>
+<p>Redo Log：被称作重做日志，包括两部分</p>
+<ul>
+<li>一个是内存中的日志缓冲： <code>Redo Log buffer</code>，</li>
+<li>另一个是磁盘上的日志文件： <code>Redo Log file</code> 。</li>
+</ul>
+<p>默认情况下，重做日志在磁盘上由两个名为<code>ib_logfile0</code>和<code>ib_logfile1</code>的文件物理表示。</p>
+<p>MySQL 每执行一条 DML 语句，先将记录写入 Redo Log Buffer ( Redo日志记录的是事务对数据库做了哪些修改 ) 。后续某个时间点再一次性将多个操作记录写到 Redo Log File（磁盘） 。当故障发生致使内存数据丢失后，InnoDB会在重启时，经过重放 Redo，将Page恢复到崩溃之前的状态 <strong>通过Redo Log可以实现事务的持久性 。</strong></p>
+<h4 id="Redo-Log-落盘流程："><a href="#Redo-Log-落盘流程：" class="headerlink" title="Redo Log 落盘流程："></a>Redo Log 落盘流程：</h4><p>将内存中的数据页持久化到磁盘,需要下面的两个流程来完成 :</p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250216195438878.png" alt="image-20250216195438878"></p>
+<p>当进行数据页的修改操作时: <strong>首先修改在缓冲池中的页，然后再以一定的频率刷新到磁盘上</strong>。</p>
+<p>Redo Log Buffer刷新到 Redo Log File ，下面三种情况刷新：</p>
+<ul>
+<li>Master Thread每一秒将重做日志缓冲刷新到重做日志文件</li>
+<li>每个事务（Commit）提交时会将重做日志缓冲刷新到重做日志文件</li>
+<li>当重做日志缓冲池剩余空间小于1&#x2F;2时，重做日志刷新到重做日志文件</li>
+</ul>
+<p>补充上述三种情况第二种，触发写磁盘过程由参数innodb_flush_log_at_trx_commit控制，表示提交(commit)操作时，处理重做日志的方式。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;%innodb_flush_log_at_trx_commit%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>参数innodb_flush_log_at_trx_commit有效值有0、1、2</p>
+<ul>
+<li><p>0：表示当提交事务时，并不将事务的重做日志写入磁盘上日志文件，而是等待主线程每秒刷新。 </p>
+</li>
+<li><p>1：表示在执行commit时将重做日志缓冲同步写到磁盘（数据安全性有保障，MySQL Server），即伴有fsync的调用 </p>
+</li>
+<li><p>fsync函数式Linux系统的写入磁盘的函数</p>
+</li>
+<li><p>兼顾了效率和安全性</p>
+</li>
+<li><p>2：表示将重做日志异步写到磁盘，即写到文件系统的缓存中，不保证commit时肯定会写入重做日志文件。</p>
+</li>
+</ul>
+<p>0，当数据库发生宕机时，部分日志未刷新到磁盘，因此会丢失最后一段时间的事务。<br>2，当操作系统宕机时，重启数据库后会丢失未从文件系统缓存刷新到重做日志文件那部分事务。</p>
+<h4 id="日志文件组"><a href="#日志文件组" class="headerlink" title="日志文件组"></a>日志文件组</h4><p>硬盘上存储的 redo log 日志文件不只一个，而是以一个<strong>日志文件组</strong>的形式出现的，每个的<code>redo</code>日志文件大小都是一样的。</p>
+<p>比如可以配置为一组<code>4</code>个文件，每个文件的大小是 <code>1GB</code>，整个 redo log 日志文件组可以记录<code>4G</code>的内容。</p>
+<p>它采用的是环形数组形式，从头开始写，写到末尾又回到头循环写，如下图所示。</p>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/10.png" alt="img" style="zoom:80%;" />
+
+<p>在这个<strong>日志文件组</strong>中还有两个重要的属性，分别是 <code>write pos、checkpoint</code></p>
+<ul>
+<li><strong>write pos</strong> 是当前记录的位置，一边写一边后移</li>
+<li><strong>checkpoint</strong> 是当前要擦除的位置，也是往后推移</li>
+</ul>
+<p>每次刷盘 redo log 记录到<strong>日志文件组</strong>中，<code>write pos</code> 位置就会后移更新。</p>
+<p>每次 MySQL 加载<strong>日志文件组</strong>恢复数据时，会清空加载过的 redo log 记录，并把 <code>checkpoint</code> 后移更新。</p>
+<p><code>write pos</code> 和 <code>checkpoint</code> 之间的还空着的部分可以用来写入新的 redo log 记录。</p>
+<p>如果 <code>write pos</code> 追上 <code>checkpoint</code> ，表示<strong>日志文件组</strong>满了，这时候不能再写入新的 redo log 记录，MySQL 得停下来，清空一些记录，把 <code>checkpoint</code> 推进一下。</p>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/12.png" alt="img" style="zoom:80%;" />
+
+<h4 id="Q：-事务还没有提交的时候，-redo-log能不能够被持久化到磁盘？"><a href="#Q：-事务还没有提交的时候，-redo-log能不能够被持久化到磁盘？" class="headerlink" title="Q： 事务还没有提交的时候， redo log能不能够被持久化到磁盘？"></a>Q： 事务还没有提交的时候， redo log能不能够被持久化到磁盘？</h4><p>A： 有可能，因为 redo Log Buffer 是共享的，有可能刚好其他线程触发了刷盘</p>
+<h2 id="4、-Undo-Log"><a href="#4、-Undo-Log" class="headerlink" title="4、 Undo Log"></a>4、 Undo Log</h2><h4 id="Undo-Log-基本概念"><a href="#Undo-Log-基本概念" class="headerlink" title="Undo Log 基本概念"></a>Undo Log 基本概念</h4><p>顾名思义，undo log是一种用于撤销回退的日志，在事务没提交之前，MySQL会先记录更新前的数据到 undo log日志文件里面，当事务回滚时或者数据库崩溃时，可以利用 undo log来进行回退。</p>
+<h4 id="Undo-Log-作用"><a href="#Undo-Log-作用" class="headerlink" title="Undo Log 作用"></a>Undo Log 作用</h4><ul>
+<li><p><strong>提供回滚操作（undo log实现事务的原子性）</strong> </p>
+<ul>
+<li>redo log记录的是物理日志，undolog记录的是逻辑日志，当delete一条记录时，Undo log中会记录一条对应insert。当执行一个update操作时，记录一条相反的update</li>
+</ul>
+</li>
+<li><p><strong>提供多版本并发控制（MVCC）undo log帮助实现MVCC</strong> </p>
+<ul>
+<li>多版本并发控制：当去读取某一行被其他事务锁定的数据时，可以从Undolog中分析出当前行记录以前版本，从而让用户能够读取当前事务操作之前的数据，这种读操作也被称为【快照读】。</li>
+</ul>
+</li>
+</ul>
+<h4 id="Undo-Log-存储机制："><a href="#Undo-Log-存储机制：" class="headerlink" title="Undo Log 存储机制："></a>Undo Log 存储机制：</h4><p>在 InnoDB 存储引擎中，undo log是采用分段(segment)的方式进行存储的。</p>
+<p>rollback segment称为回滚段，每个回滚段中有1024个undo log segment。</p>
+<p>在MySQL5.5之前，只支持1个rollback segment，也就是只能记录1024个undo操作。</p>
+<p>在MySQL5.5之后，可以支持128个rollback segment，分别从resg slot0 - resg slot127，每一个resg slot，也就是每一个回滚段，内部由1024个undo segment 组成，即总共可以记录128 * 1024个undo操作。</p>
+<p>下面以一张图来说明undo log日志里面到底存了哪些信息？</p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/5a59f812d80bc20de9fcf3e1ce9fed85.png" alt="img"></p>
+<p>如上图，可以看到，undo log日志里面不仅存放着数据更新前的记录，还记录着RowID、事务ID、回滚指针。其中事务ID每次递增，回滚指针第一次如果是insert语句的话，回滚指针为NULL，第二次update之后的undo log的回滚指针就会指向刚刚那一条undo log日志，依次类推，就会形成一条undo log的回滚链，方便找到该条记录的历史版本</p>
+<h4 id="Undo-Log-工作原理"><a href="#Undo-Log-工作原理" class="headerlink" title="Undo Log 工作原理"></a>Undo Log 工作原理</h4><p>在更新数据之前，MySQL会提前生成undo log日志，当事务提交的时候，并不会立即删除undo log，因为后面可能需要进行回滚操作，要执行回滚（rollback）操作时，从缓存中读取数据。undo log日志的删除是通过通过后台purge线程进行回收处理的。</p>
+<p>同样，通过一张图来理解undo log的工作原理。<br><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/fe82df2b520ff875d847a234ebaaa6ee.png" alt="img"></p>
+<p>如上图：</p>
+<ul>
+<li>事务A执行update操作，此时事务还没提交，会将数据进行备份到对应的undo buffer，然后由undo buffer持久化到磁盘中的undo log文件中，此时undo log保存了未提交之前的操作日志，接着将操作的数据，也就是Teacher表的数据持久保存到InnoDB的数据文件IBD。</li>
+<li>此时事务B进行查询操作，直接从undo buffer缓存中进行读取，这时事务A还没提交事务，如果要回滚（rollback）事务，是不读磁盘的，先直接从undo buffer缓存读取。</li>
+</ul>
+<h4 id="Undo-Log-类型"><a href="#Undo-Log-类型" class="headerlink" title="Undo Log 类型"></a>Undo Log 类型</h4><p>InnoDB存储引擎中Undo log分为两种：</p>
+<ol>
+<li>insert Undo log：因为insert操作的记录只对当前记录本身可见，对其他事务不可见，所以该log日志可以在事务提交之后直接删除。</li>
+<li>update undo log：包含delete和update操作产生的undo日志。这类日志可能需要保证MVCC机制,因此就不能再事务提交时就进行删除，提交事务时放入Undo log链表中，等待后天线程进行最后的删除。</li>
+</ol>
+<h2 id="5、binlog"><a href="#5、binlog" class="headerlink" title="5、binlog"></a>5、binlog</h2><p>redo log是物理日志，记录的是“在某个数据页做了什么修改”，属于Innodb存储引擎。</p>
+<p>而binlog日志是逻辑日志，记录内容是语句的原始逻辑，属于MySQL Server层。所有的存储引擎只要发生了数据更新，都会产生binlog日志。</p>
+<h4 id="binlog日志的作用"><a href="#binlog日志的作用" class="headerlink" title="binlog日志的作用"></a>binlog日志的作用</h4><p>可以说MySQL数据库的数据备份、主备、主主、住从都离不开binlog，需要依赖binlog来同步数据，保证数据一致性。</p>
+<p>binlog会记录所有涉及更新数据的逻辑规则，并且按顺序写。</p>
+<h4 id="记录格式"><a href="#记录格式" class="headerlink" title="记录格式"></a>记录格式</h4><p>binlog日志有三种格式，可以通过binlog_format参数设置，有以下三种：</p>
+<ul>
+<li>statement</li>
+<li>row</li>
+<li>mixed</li>
+</ul>
+<p>设置 statement 记录的内容是SQL语句原文，比如执行一条<code>update T set update_time = now() where id = 1</code>，记录内容如下：<br><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/1460000041758797" alt="img"></p>
+<p>同步数据时，会执行记录的<code>SQL</code>语句，但是有个问题<code>update_time = now()</code>这里会获取到当前系统问题，直接执行会导致与原库数据不一致。</p>
+<p>为了解决这种问题，我们需要将<code>binlog_format</code>设置成<code>row</code>，记录的不再是简单的<code>SQL</code>语句了，还包含了操作的具体数据，记录内容如下：</p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/1460000041758798" alt="img"></p>
+<p><code>row</code>格式记录的内容看不到详细信息，通过<code>mysqlbinlog</code>工具解析出来。</p>
+<p><code>update_time = now()</code>变成了具体的时间，条件后面的<code>@1、@2</code>都是该行数据第1个~2个字段的原始值（假设这张表只有2个字段）。</p>
+<p>设置成<code>row</code>带来的好处就是同步数据的一致性，通常情况都设置成<code>row</code>，这样可以为数据库的恢复与同步带来更好的可靠性。但是这种格式需要大量的容量来记录，比较占用空间，恢复与同步时会更消耗<code>IO</code>资源，影响执行速度。</p>
+<p>所以又有了一种折中方案，设置为<code>mixed</code>，记录的内容是前两者的混合。</p>
+<p><code>MySQL</code>会判断这条<code>SQL</code>语句是否会引起数据不一致，如果是就用<code>row</code>格式，否则就用<code>statement</code>格式。</p>
+<h4 id="写入机制"><a href="#写入机制" class="headerlink" title="写入机制"></a>写入机制</h4><p><code>binlog</code>的写入时机为事务执行过程中，先把日志写到<code>binlog cache</code>，事务提交的时候再把<code>binlog cache</code>写到<code>binlog</code>文件中（实际先会写入<code>page cache</code>，然后再由<code>fsync</code>写入<code>binlog</code>文件）。</p>
+<p>因为一个事务的<code>binlog</code>不能被拆开，无论这个事务多大，也要确保一次性写入，所以系统会给每个线程分配一块内存作为<code>binlog cache</code>。可以通过<code>binlog_cache_size</code>参数控制单线程<code>binlog_cache</code>大小，如果存储内容超过了这个参数，就要暂存到磁盘。</p>
+<p><code>binlog</code>日志刷盘流程如下：</p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/1460000041758799" alt="img"></p>
+<ul>
+<li>上图的<code>write</code>，是指把日志写入到文件系统的<code>page cache</code>，并没有把数据持久化硬盘，所以速度比较快。</li>
+<li>上图的<code> fsync</code>才是将数据库持久化到硬盘的操作。</li>
+</ul>
+<p><code>write</code>和<code>fsync</code>的时机可以由参数<code>sync_binlog</code>控制，可以配置成<code>0、1、N(N&gt;1)</code>。</p>
+<ul>
+<li>设置成0时：表示每次提交事务都只会<code>write</code>，由系统自行判断什么时候执行<code>fsync</code>。</li>
+<li>设置成1时：表示每次提交事务都会执行<code>fsync</code>，就和<code>redo log</code>日志刷盘流程一样。</li>
+<li>设置成N时：表示每次提交事务都会<code>write</code>，但是积累<code>N</code>个事务后才<code>fsync</code>。</li>
+</ul>
+<p>设置为0时如下图：</p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/1460000041758800" alt="img"></p>
+<p>从上图可知，<code>sync_bilog = 0</code>设置成<code>0</code>，只把日志写入<code>page cache</code>虽然性能得到了提高，但是事务提交了<code>fsync</code>的时候宕机了，可能造成<code>binlog</code>日志的丢失。</p>
+<p>设置为2时如下图：</p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/1460000041758801" alt="img"></p>
+<p>在出现<code>IO</code>瓶颈的场景里，将<code>sync_binlog</code>设置成一个比较大的值，可以提升性能。</p>
+<p>同样的，如果机器宕机，会丢失最近<code>N</code>个事务的<code>binlog</code>日志</p>
+<h4 id="Q：为什么崩溃恢复不使用binlog？"><a href="#Q：为什么崩溃恢复不使用binlog？" class="headerlink" title="Q：为什么崩溃恢复不使用binlog？"></a><strong>Q：为什么崩溃恢复不使用binlog？</strong></h4><p>1）恢复机制：MySQL可以根据redo日志中的各种信息，来确定恢复的起点和终点。</p>
+<p>2）binlog主要用于人工恢复数据，redo log是MySQL自己使用，用于保证在数据库崩溃时的事务持久性。</p>
+<p>当数据库崩溃后，想要恢复未刷盘但已经写入redo log和binlog的数据到内存时，binlog是无法恢复，<strong>虽然binlog拥有全量的数据，但是没有一个标识，能够让InnoDB判断哪些数据已经写入表（写入到磁盘），哪些数据还没有</strong>。</p>
+<p>比如，binlog记录了两条日志</p>
+<ul>
+<li>记录1：给ID&#x3D;2 这一行的c字段+1.</li>
+<li>记录2：给ID&#x3D;2 这一行的c字段+1.</li>
+</ul>
+<p>在记录1入表之后，记录2还没有入表时，数据库挂了。重启后，如果只是通过binlog无法判断两条记录哪条已经写入磁盘了，哪条没写，不管是两条都恢复至内存，还是都不恢复，对于id&#x3D;2的这行数据来说，都不对。</p>
+<p>但是如果有了redolog 就不一样，<strong>只要刷入磁盘的数据，都会从redolog抹除掉。数据库重启之后，直接把redolog中的数据都恢复到内存就可以了</strong>。</p>
+<h2 id="6、-两阶段提交"><a href="#6、-两阶段提交" class="headerlink" title="6、 两阶段提交"></a>6、 两阶段提交</h2><h3 id="6-1-定义与作用"><a href="#6-1-定义与作用" class="headerlink" title="6.1 定义与作用"></a>6.1 定义与作用</h3><p>两阶段提交（Two-Phase Commit，2PC）是 InnoDB 存储引擎用来保证事务持久性和一致性的机制。它主要用于处理跨存储引擎的事务，特别是在涉及 InnoDB 的 redo log（重做日志）和 MySQL Server 层的 binlog（二进制日志）时。两阶段提交确保了事务在两个日志系统中要么都成功，要么都失败，从而避免数据不一致。</p>
+<h3 id="6-2-两阶段提交的流程"><a href="#6-2-两阶段提交的流程" class="headerlink" title="6.2 两阶段提交的流程"></a>6.2 两阶段提交的流程</h3><p>两阶段提交分为两个阶段：<strong>Prepare 阶段</strong>和 <strong>Commit 阶段</strong>。</p>
+<h4 id="（1）Prepare-阶段"><a href="#（1）Prepare-阶段" class="headerlink" title="（1）Prepare 阶段"></a>（1）Prepare 阶段</h4><ul>
+<li>InnoDB 将事务的变更记录到 redo log 中，并将事务状态标记为“准备（Prepared）”。</li>
+<li>此时，InnoDB 会向 MySQL Server 层发送请求，准备写入 binlog，但不会立即提交。</li>
+<li>redo log 中记录事务的 XID（事务标识符），以便后续识别和处理。</li>
+</ul>
+<h4 id="（2）Commit-阶段"><a href="#（2）Commit-阶段" class="headerlink" title="（2）Commit 阶段"></a>（2）Commit 阶段</h4><ul>
+<li>MySQL Server 层将事务信息写入 binlog，并确保其持久化到磁盘。</li>
+<li>一旦 binlog 写入成功，InnoDB 会将 redo log 中的事务状态标记为“已提交（Committed）”，并释放事务持有的锁。</li>
+</ul>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/1460000041758802" alt="img" style="zoom: 50%;" />
+
+<h3 id="6-3-异常情况及处理机制"><a href="#6-3-异常情况及处理机制" class="headerlink" title="6.3 异常情况及处理机制"></a>6.3 异常情况及处理机制</h3><p>在两阶段提交过程中，可能会出现崩溃或故障。InnoDB 通过以下机制处理这些异常情况，以保障数据一致性：</p>
+<h4 id="（1）崩溃发生在-Prepare-阶段之后、Commit-阶段之前"><a href="#（1）崩溃发生在-Prepare-阶段之后、Commit-阶段之前" class="headerlink" title="（1）崩溃发生在 Prepare 阶段之后、Commit 阶段之前"></a>（1）崩溃发生在 Prepare 阶段之后、Commit 阶段之前</h4><ul>
+<li>如果 MySQL 在 Prepare 阶段完成后崩溃，重启时会检查 redo log 和 binlog。</li>
+<li>如果发现某个事务在 redo log 中处于“准备”状态，但在 binlog 中没有记录，则认为该事务提交失败，InnoDB 会自动回滚该事务。</li>
+</ul>
+<h4 id="（2）崩溃发生在-Commit-阶段之后"><a href="#（2）崩溃发生在-Commit-阶段之后" class="headerlink" title="（2）崩溃发生在 Commit 阶段之后"></a>（2）崩溃发生在 Commit 阶段之后</h4><ul>
+<li>如果事务已经提交（redo log 和 binlog 都已写入成功），但 MySQL 在此之后崩溃，重启时会根据 redo log 和 binlog 的记录，将事务的变更应用到数据库中。</li>
+<li>这种情况下，InnoDB 通过重放 redo log 中的记录，确保事务的持久性。</li>
+</ul>
+<h4 id="（3）依赖-Redo-Log-和-Undo-Log"><a href="#（3）依赖-Redo-Log-和-Undo-Log" class="headerlink" title="（3）依赖 Redo Log 和 Undo Log"></a>（3）依赖 Redo Log 和 Undo Log</h4><ul>
+<li>如果在崩溃恢复过程中发现某些页面损坏，InnoDB 会依赖 redo log 进行修复。</li>
+<li>对于未提交的事务，InnoDB 会通过 undo log 进行回滚，确保数据库处于一致状态</li>
+</ul>
+<h2 id="7、-其他"><a href="#7、-其他" class="headerlink" title="7、 其他"></a>7、 其他</h2><h3 id="7-1-page页的结构"><a href="#7-1-page页的结构" class="headerlink" title="7.1    page页的结构"></a>7.1    page页的结构</h3><p>Page页是InnoDB存储的最基本单位，磁盘与内存之间进行数据交互时以页（Page）为单位。</p>
+<p>Page页分为多种类型：数据页、undo页、索引页、系统页等等</p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250216021847718.png" alt="image-20250216021847718"></p>
+<p><strong>页结构整体可以分为三部分：</strong></p>
+<ul>
+<li>通用部分（文件头、文件尾）。</li>
+<li>存储记录的空间</li>
+<li>数据目录</li>
+</ul>
+<p>数据页中行记录是按照主键值由小到大顺序的穿成一个单链表。</p>
+<p>单链表的链表头是最小记录，表尾是最大记录。</p>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250216021852737.png" alt="image-20250216021852737" style="zoom:67%;" />
+
+<p>为了快速的定位到指定的行记录，通过Page directory实现目录的功能，有了目录之后，使用二分查找法快速的定位到所需的记录。</p>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250216021858603.png" alt="image-20250216021858603" style="zoom:67%;" />
+
+<h3 id="行溢出机制介绍"><a href="#行溢出机制介绍" class="headerlink" title="行溢出机制介绍"></a>行溢出机制介绍</h3><h4 id="什么是行溢出"><a href="#什么是行溢出" class="headerlink" title="什么是行溢出"></a>什么是行溢出</h4><ul>
+<li>如果某些字段的信息过长，无法存储在B树的节点中，这时候会被单独分配空间，此时这个页被称为溢出页，这种现象就被称为行溢出。</li>
+<li>Page  &#x3D; 16KB 16384字节，一个varchar类型列最多可以存储 65532个字节，一个页就无法存储这个varchar类型的列。如果一个表有这样一个大字段，一个页就无法存储一条完整的记录，这时候就会发生行溢出，多出的数据就在溢出页中。</li>
+</ul>
+<h4 id="行溢出机制"><a href="#行溢出机制" class="headerlink" title="行溢出机制"></a>行溢出机制</h4><ul>
+<li>当发生行溢出的时候，数据页只保存前768个字节的前缀数据，以及溢出页地址，指向行溢出页。</li>
+</ul>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250216021916889.png" alt="image-20250216021916889"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">ZengCP</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/11/09/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A2%B3%E7%90%86--%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E7%B1%BB/">http://example.com/2023/11/09/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A2%B3%E7%90%86--%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E7%B1%BB/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">ZengCP's BLOGS</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><a class="post-meta__tags" href="/tags/MySQL/">MySQL</a><a class="post-meta__tags" href="/tags/InnoDB/">InnoDB</a></div><div class="post_share"><div class="social-share" data-image="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/11/10/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A2%B3%E7%90%86--%E4%BA%8B%E5%8A%A1%E5%92%8C%E9%94%81%E6%9C%BA%E5%88%B6/" title="MySQL 知识点梳理 -- 事务及锁机制"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">MySQL 知识点梳理 -- 事务及锁机制</div></div></a></div><div class="next-post pull-right"><a href="/2023/11/08/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%20MVCC%20%E4%BB%8B%E7%BB%8D/" title="MVCC 机制介绍"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">MVCC 机制介绍</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/11/08/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%20MVCC%20%E4%BB%8B%E7%BB%8D/" title="MVCC 机制介绍"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-08</div><div class="title">MVCC 机制介绍</div></div></a></div><div><a href="/2023/11/16/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%20%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E6%8E%92%E6%9F%A5%E6%96%B9%E6%B3%95/" title="MySQL 常见问题及排查方法"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-16</div><div class="title">MySQL 常见问题及排查方法</div></div></a></div><div><a href="/2023/11/03/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%20%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E8%AF%A6%E8%A7%A3/" title="MySQL 分库分表详解"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-03</div><div class="title">MySQL 分库分表详解</div></div></a></div><div><a href="/2023/11/10/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A2%B3%E7%90%86--%E4%BA%8B%E5%8A%A1%E5%92%8C%E9%94%81%E6%9C%BA%E5%88%B6/" title="MySQL 知识点梳理 -- 事务及锁机制"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-10</div><div class="title">MySQL 知识点梳理 -- 事务及锁机制</div></div></a></div><div><a href="/2023/11/10/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A2%B3%E7%90%86--%E7%B4%A2%E5%BC%95%E5%8F%8A%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E7%B1%BB/" title="MySQL 知识点梳理 -- 索引及查询优化类"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-10</div><div class="title">MySQL 知识点梳理 -- 索引及查询优化类</div></div></a></div><div><a href="/2023/11/17/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A2%B3%E7%90%86--%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4/" title="MySQL 知识点梳理 -- 高可用集群"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-17</div><div class="title">MySQL 知识点梳理 -- 高可用集群</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZengCP</div><div class="author-info__description">记录心得，见证成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">85</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">38</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、前言</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81-%E5%8A%9F%E8%83%BD%E5%AF%B9%E6%AF%94"><span class="toc-number">1.1.</span> <span class="toc-text">1、 功能对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81-InnoDB-%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E7%AE%80%E4%BB%8B"><span class="toc-number">1.2.</span> <span class="toc-text">2、 InnoDB 存储引擎简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-InnoDB-%E6%9E%B6%E6%9E%84"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1    InnoDB 架构</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-InnoDB-%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E7%9A%84%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84"><span class="toc-number">2.</span> <span class="toc-text">二、 InnoDB 存储引擎的内存结构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81-Buffer-Pool"><span class="toc-number">2.1.</span> <span class="toc-text">1、 Buffer Pool</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Buffer-Pool-%E6%A6%82%E8%BF%B0"><span class="toc-number">2.1.1.</span> <span class="toc-text">Buffer Pool 概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Buffer-Pool-%E5%AF%B9-Page-%E9%A1%B5%E7%AE%A1%E7%90%86%E6%9C%BA%E5%88%B6"><span class="toc-number">2.1.2.</span> <span class="toc-text">Buffer Pool 对 Page 页管理机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Q-MySQL%E4%B8%AD%E4%B8%BA%E4%BB%80%E4%B9%88%E6%B2%A1%E6%9C%89%E9%87%87%E7%94%A8%E4%BC%A0%E7%BB%9F%E7%9A%84LRU%E7%AE%97%E6%B3%95%EF%BC%9F"><span class="toc-number">2.1.2.1.</span> <span class="toc-text">Q: MySQL中为什么没有采用传统的LRU算法？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q%EF%BC%9A-MySQL%E4%B8%AD%E5%AF%B9%E4%BA%8ELRU%E7%AE%97%E6%B3%95%E8%BF%9B%E8%A1%8C%E4%BA%86%E5%93%AA%E4%BA%9B%E4%BC%98%E5%8C%96%EF%BC%9F"><span class="toc-number">2.1.2.2.</span> <span class="toc-text">Q： MySQL中对于LRU算法进行了哪些优化？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81-change-Buffer"><span class="toc-number">2.2.</span> <span class="toc-text">2、 change Buffer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81-Log-Buffer"><span class="toc-number">2.3.</span> <span class="toc-text">3、 Log Buffer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%E3%80%81-Adaptive-Hash-Index"><span class="toc-number">2.4.</span> <span class="toc-text">4、 Adaptive Hash Index</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81InnoDB-%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="toc-number">3.</span> <span class="toc-text">三、InnoDB 存储结构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81-%E8%A1%A8%E7%A9%BA%E9%97%B4"><span class="toc-number">3.1.</span> <span class="toc-text">1、 表空间</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E7%B3%BB%E7%BB%9F%E8%A1%A8%E7%A9%BA%E9%97%B4"><span class="toc-number">3.1.1.</span> <span class="toc-text">1.1    系统表空间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E7%8B%AC%E7%AB%8B%E8%A1%A8%E7%A9%BA%E9%97%B4"><span class="toc-number">3.1.2.</span> <span class="toc-text">1.2    独立表空间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E5%85%B6%E4%BB%96%E8%A1%A8%E7%A9%BA%E9%97%B4"><span class="toc-number">3.1.3.</span> <span class="toc-text">1.3    其他表空间</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%9A%E7%94%A8%E8%A1%A8%E7%A9%BA%E9%97%B4%EF%BC%88General-Tablespace%EF%BC%89"><span class="toc-number">3.1.3.1.</span> <span class="toc-text">通用表空间（General Tablespace）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Undo-%E8%A1%A8%E7%A9%BA%E9%97%B4%EF%BC%88Undo-Tablespace%EF%BC%89"><span class="toc-number">3.1.3.2.</span> <span class="toc-text">Undo 表空间（Undo Tablespace）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%B4%E6%97%B6%E8%A1%A8%E7%A9%BA%E9%97%B4%EF%BC%88Temporary-Tablespace%EF%BC%89"><span class="toc-number">3.1.3.3.</span> <span class="toc-text">临时表空间（Temporary Tablespace）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81-%E5%8F%8C%E5%86%99%E7%BC%93%E5%86%B2%E5%8C%BA%EF%BC%88Doublewrite-Buffer%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">2、 双写缓冲区（Doublewrite Buffer）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E3%80%81RedoLog"><span class="toc-number">3.3.</span> <span class="toc-text">3、RedoLog</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-WAL-%E7%AD%96%E7%95%A5"><span class="toc-number">3.3.1.</span> <span class="toc-text">3.1    WAL 策略</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Redo-Log-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">3.3.1.1.</span> <span class="toc-text">Redo Log 基本概念</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Redo-Log-%E8%90%BD%E7%9B%98%E6%B5%81%E7%A8%8B%EF%BC%9A"><span class="toc-number">3.3.1.2.</span> <span class="toc-text">Redo Log 落盘流程：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6%E7%BB%84"><span class="toc-number">3.3.1.3.</span> <span class="toc-text">日志文件组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q%EF%BC%9A-%E4%BA%8B%E5%8A%A1%E8%BF%98%E6%B2%A1%E6%9C%89%E6%8F%90%E4%BA%A4%E7%9A%84%E6%97%B6%E5%80%99%EF%BC%8C-redo-log%E8%83%BD%E4%B8%8D%E8%83%BD%E5%A4%9F%E8%A2%AB%E6%8C%81%E4%B9%85%E5%8C%96%E5%88%B0%E7%A3%81%E7%9B%98%EF%BC%9F"><span class="toc-number">3.3.1.4.</span> <span class="toc-text">Q： 事务还没有提交的时候， redo log能不能够被持久化到磁盘？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4%E3%80%81-Undo-Log"><span class="toc-number">3.4.</span> <span class="toc-text">4、 Undo Log</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Undo-Log-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">3.4.0.1.</span> <span class="toc-text">Undo Log 基本概念</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Undo-Log-%E4%BD%9C%E7%94%A8"><span class="toc-number">3.4.0.2.</span> <span class="toc-text">Undo Log 作用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Undo-Log-%E5%AD%98%E5%82%A8%E6%9C%BA%E5%88%B6%EF%BC%9A"><span class="toc-number">3.4.0.3.</span> <span class="toc-text">Undo Log 存储机制：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Undo-Log-%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">3.4.0.4.</span> <span class="toc-text">Undo Log 工作原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Undo-Log-%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.4.0.5.</span> <span class="toc-text">Undo Log 类型</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5%E3%80%81binlog"><span class="toc-number">3.5.</span> <span class="toc-text">5、binlog</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#binlog%E6%97%A5%E5%BF%97%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-number">3.5.0.1.</span> <span class="toc-text">binlog日志的作用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%B0%E5%BD%95%E6%A0%BC%E5%BC%8F"><span class="toc-number">3.5.0.2.</span> <span class="toc-text">记录格式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%99%E5%85%A5%E6%9C%BA%E5%88%B6"><span class="toc-number">3.5.0.3.</span> <span class="toc-text">写入机制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Q%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E5%B4%A9%E6%BA%83%E6%81%A2%E5%A4%8D%E4%B8%8D%E4%BD%BF%E7%94%A8binlog%EF%BC%9F"><span class="toc-number">3.5.0.4.</span> <span class="toc-text">Q：为什么崩溃恢复不使用binlog？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6%E3%80%81-%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4"><span class="toc-number">3.6.</span> <span class="toc-text">6、 两阶段提交</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E5%AE%9A%E4%B9%89%E4%B8%8E%E4%BD%9C%E7%94%A8"><span class="toc-number">3.6.1.</span> <span class="toc-text">6.1 定义与作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4%E7%9A%84%E6%B5%81%E7%A8%8B"><span class="toc-number">3.6.2.</span> <span class="toc-text">6.2 两阶段提交的流程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%881%EF%BC%89Prepare-%E9%98%B6%E6%AE%B5"><span class="toc-number">3.6.2.1.</span> <span class="toc-text">（1）Prepare 阶段</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%882%EF%BC%89Commit-%E9%98%B6%E6%AE%B5"><span class="toc-number">3.6.2.2.</span> <span class="toc-text">（2）Commit 阶段</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-%E5%BC%82%E5%B8%B8%E6%83%85%E5%86%B5%E5%8F%8A%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6"><span class="toc-number">3.6.3.</span> <span class="toc-text">6.3 异常情况及处理机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%881%EF%BC%89%E5%B4%A9%E6%BA%83%E5%8F%91%E7%94%9F%E5%9C%A8-Prepare-%E9%98%B6%E6%AE%B5%E4%B9%8B%E5%90%8E%E3%80%81Commit-%E9%98%B6%E6%AE%B5%E4%B9%8B%E5%89%8D"><span class="toc-number">3.6.3.1.</span> <span class="toc-text">（1）崩溃发生在 Prepare 阶段之后、Commit 阶段之前</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%882%EF%BC%89%E5%B4%A9%E6%BA%83%E5%8F%91%E7%94%9F%E5%9C%A8-Commit-%E9%98%B6%E6%AE%B5%E4%B9%8B%E5%90%8E"><span class="toc-number">3.6.3.2.</span> <span class="toc-text">（2）崩溃发生在 Commit 阶段之后</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%883%EF%BC%89%E4%BE%9D%E8%B5%96-Redo-Log-%E5%92%8C-Undo-Log"><span class="toc-number">3.6.3.3.</span> <span class="toc-text">（3）依赖 Redo Log 和 Undo Log</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7%E3%80%81-%E5%85%B6%E4%BB%96"><span class="toc-number">3.7.</span> <span class="toc-text">7、 其他</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-page%E9%A1%B5%E7%9A%84%E7%BB%93%E6%9E%84"><span class="toc-number">3.7.1.</span> <span class="toc-text">7.1    page页的结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%8C%E6%BA%A2%E5%87%BA%E6%9C%BA%E5%88%B6%E4%BB%8B%E7%BB%8D"><span class="toc-number">3.7.2.</span> <span class="toc-text">行溢出机制介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%A1%8C%E6%BA%A2%E5%87%BA"><span class="toc-number">3.7.2.1.</span> <span class="toc-text">什么是行溢出</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A1%8C%E6%BA%A2%E5%87%BA%E6%9C%BA%E5%88%B6"><span class="toc-number">3.7.2.2.</span> <span class="toc-text">行溢出机制</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/06/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%B1%87%E6%80%BB/%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/" title="无题">无题</a><time datetime="2025-03-05T17:42:29.925Z" title="发表于 2025-03-06 01:42:29">2025-03-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/06/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%B1%87%E6%80%BB/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E7%B1%BB/" title="无题">无题</a><time datetime="2025-03-05T17:27:01.124Z" title="发表于 2025-03-06 01:27:01">2025-03-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/RocketMQ/RocketMQ%20%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" title="RocketMQ 核心架构原理">RocketMQ 核心架构原理</a><time datetime="2024-12-08T09:02:36.000Z" title="发表于 2024-12-08 17:02:36">2024-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/RocketMQ/RocketMQ%20%E6%A6%82%E8%BF%B0/" title="RocketMQ 概述">RocketMQ 概述</a><time datetime="2024-12-08T07:16:48.000Z" title="发表于 2024-12-08 15:16:48">2024-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/07/%E4%B8%AD%E9%97%B4%E4%BB%B6/Kafka/Kafka%20%E7%BB%8F%E5%85%B8%E9%9D%A2%E8%AF%95%E9%A2%98/" title="Kafka 经典面试题">Kafka 经典面试题</a><time datetime="2024-12-07T12:45:18.000Z" title="发表于 2024-12-07 20:45:18">2024-12-07</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By ZengCP</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

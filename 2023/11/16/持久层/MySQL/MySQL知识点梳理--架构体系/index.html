@@ -1,0 +1,367 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>MySQL 知识点梳理 -- 架构体系 | ZengCP's BLOGS</title><meta name="author" content="ZengCP"><meta name="copyright" content="ZengCP"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="MySQL 体系架构剖析1、 体系架构MySQL架构基本上是一个客户端-服务器（C&#x2F;S）系统。MySQL数据库服务器是服务器，连接到MySQL数据库服务器的应用程序是客户端。MySQL架构包含以下主要组件。   1.1 连接层MySQL的最上层是连接服务，引入了线程池的概念，允许多台客户端连接。主要工作是：连接处理、授权认证、安全防护、管理连接等。 当客户端连接到 MySQL 服务器时，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL 知识点梳理 -- 架构体系">
+<meta property="og:url" content="http://example.com/2023/11/16/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A2%B3%E7%90%86--%E6%9E%B6%E6%9E%84%E4%BD%93%E7%B3%BB/index.html">
+<meta property="og:site_name" content="ZengCP&#39;s BLOGS">
+<meta property="og:description" content="MySQL 体系架构剖析1、 体系架构MySQL架构基本上是一个客户端-服务器（C&#x2F;S）系统。MySQL数据库服务器是服务器，连接到MySQL数据库服务器的应用程序是客户端。MySQL架构包含以下主要组件。   1.1 连接层MySQL的最上层是连接服务，引入了线程池的概念，允许多台客户端连接。主要工作是：连接处理、授权认证、安全防护、管理连接等。 当客户端连接到 MySQL 服务器时，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png">
+<meta property="article:published_time" content="2023-11-16T07:18:43.000Z">
+<meta property="article:modified_time" content="2025-03-05T17:04:19.219Z">
+<meta property="article:author" content="ZengCP">
+<meta property="article:tag" content="数据库">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png"><link rel="shortcut icon" href="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/longmao.png"><link rel="canonical" href="http://example.com/2023/11/16/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A2%B3%E7%90%86--%E6%9E%B6%E6%9E%84%E4%BD%93%E7%B3%BB/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'MySQL 知识点梳理 -- 架构体系',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-03-06 01:04:19'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">85</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">38</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="ZengCP's BLOGS"><span class="site-name">ZengCP's BLOGS</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">MySQL 知识点梳理 -- 架构体系</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-11-16T07:18:43.000Z" title="发表于 2023-11-16 15:18:43">2023-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-05T17:04:19.219Z" title="更新于 2025-03-06 01:04:19">2025-03-06</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/">MySQL</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="MySQL 知识点梳理 -- 架构体系"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="MySQL-体系架构剖析"><a href="#MySQL-体系架构剖析" class="headerlink" title="MySQL 体系架构剖析"></a>MySQL 体系架构剖析</h1><h2 id="1、-体系架构"><a href="#1、-体系架构" class="headerlink" title="1、 体系架构"></a>1、 体系架构</h2><p>MySQL架构基本上是一个客户端-服务器（C&#x2F;S）系统。MySQL数据库服务器是服务器，连接到MySQL数据库服务器的应用程序是客户端。MySQL架构包含以下主要组件。</p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250217011303243.png" alt="image-20250217011303243"></p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250217011308210.png" alt="image-20250217011308210"></p>
+<h3 id="1-1-连接层"><a href="#1-1-连接层" class="headerlink" title="1.1 连接层"></a>1.1 连接层</h3><p>MySQL的最上层是连接服务，引入了线程池的概念，允许多台客户端连接。主要工作是：<strong>连接处理、授权认证、安全防护、管理连接等</strong>。</p>
+<p>当客户端连接到 MySQL 服务器时，服务器对其进行认证。基于用户名、原始主机信息和密码。一旦客户端连接成功，服务器会继续验证客户端是否具有执行某个特定权限（比如：是否对某张表具有某种操作权限）。</p>
+<p>连接层为通过安全认证的接入用户提供线程，同样，在该层上可以实现基于SSL 的安全连接。连接层中还负责 MySQL Server 与客户端的通信，接受客户端的命令请求，传递 Server 端的结果信息等。</p>
+<p>连接处理：每个客户端连接都会分配一个线程，来自客户端的所有查询都是在该线程中执行，从MySQL5.5版本开始支持线程池。</p>
+<p>授权认证：对客户端进行身份验证，基于用户名、主机信息、密码。</p>
+<p>安全防护：验证客户端发出某些查询的权限。</p>
+<p>连接层为通过安全认证的用户提供线程，也支持SSL的安全连接，还负责MySQL Server与客户端的通信，接受客户端的命令请求，传递Server端处理的结果。</p>
+<h3 id="1-2-服务层"><a href="#1-2-服务层" class="headerlink" title="1.2 服务层"></a>1.2 服务层</h3><ul>
+<li>服务层用于处理核心服务，如标准的SQL接口、NoSQL接口、查询解析、SQL优化和统计、全局的和引擎依赖的缓存与缓冲器等等。</li>
+<li>所有的与存储引擎无关的工作，如过程、函数等，都会在这一层来处理。该层负责MySQL关系数据库系统所有的逻辑功能。</li>
+<li>在该层上，服务器会解析查询并创建相应的内部解析树，并对其完成优化，如确定查询表的顺序，是否利用索引等，最后生成相关的执行操作。</li>
+<li>如果是SELECT 语句，服务器还会查询内部的缓存（Select Id，Name from User_Token where Id&#x3D;1）。如果缓存空间足够大，这样在解决大量读操作的环境中能够很好的提升系统的性能（MySQL8版本中已经将查询缓存移除）。</li>
+</ul>
+<p>MySQL的服务层分为各种子组件：</p>
+<h4 id="组件一：系统管理和实用程序（Management-Service-Utilities）。"><a href="#组件一：系统管理和实用程序（Management-Service-Utilities）。" class="headerlink" title="组件一：系统管理和实用程序（Management Service &amp; Utilities）。"></a><strong>组件一：系统管理和实用程序（Management Service &amp; Utilities）。</strong></h4><p>包括备份恢复、安全管理、集群管理服务和工具。</p>
+<h4 id="组件二：SQL接口（SQL-Interface）"><a href="#组件二：SQL接口（SQL-Interface）" class="headerlink" title="组件二：SQL接口（SQL Interface）"></a><strong>组件二：SQL接口（SQL Interface）</strong></h4><p>接收客户端发送的各种 SQL 语句，比如 DML、DDL 和存储过程等，并且返回用户执行的结果。</p>
+<h4 id="组件三：缓存（Cache-Buffer）"><a href="#组件三：缓存（Cache-Buffer）" class="headerlink" title="组件三：缓存（Cache &amp; Buffer）"></a><strong>组件三：缓存（Cache &amp; Buffer）</strong></h4><p>主要功能是将客户端提交 给MySQL 的 Select 类 Query 请求的返回结果集 Cache 到内存中，与该 Query 的一个 Hash 值做一个对应（将Query对应的查询结果缓存起来，Query的SQL语句做一个Hash，得到一个Hash值。如果大小写、空格等会影响到Hash值的结果，比如：Select Id，Name from User_Token where Id&#x3D;1和Select id，Name from User_Token where Id&#x3D;1不一样的值）。该 Query 所取数据的基表发生任何数据的变化之后， MySQL 会自动使该 Query 的Cache 失效。在读写比例非常高的应用系统中， Query Cache 对性能的提高是非常显著的，当然它对内存的消耗也是非常大的。</p>
+<p>对于SELECT语句，在解析查询之前，服务器会先检查查询缓存（Query Cache），如果查询缓存有命中的查询结果，查询语句就可以直接去查询缓存中取数据。服务器就不必再执行查询解析、优化和执行的整个过程，而是直接返回查询缓存中的结果集。</p>
+<p>这个缓存机制是由一系列小缓存组成的。比如表缓存，记录缓存，key缓存，权限缓存等。</p>
+<p><strong>但不推荐使用查询缓存</strong>，即大多数情况下不建议使用查询缓存。为什么呢？</p>
+<p>原因：查询缓存的失效机制是有缺陷的，只要对一个表有更新操作（增、删、改），这个表所有的查询缓存全部清空。除非你的业务就是一张静态表，很长时间才更新一次。比如：系统配置表、菜单表。</p>
+<h4 id="组件四：SQL解析器（Parser）"><a href="#组件四：SQL解析器（Parser）" class="headerlink" title="组件四：SQL解析器（Parser）"></a><strong>组件四：SQL解析器（Parser）</strong></h4><p>如果缓存没有命中，SQL命令传递到解析器的时候会被解析器验证和解析，最终对 SQL 语句进行语法解析生成解析树（树形的数据结构）。</p>
+<ul>
+<li><p>词法分析 </p>
+</li>
+<li><p>需要识别出SQL语句中的字符串分别是什么，各代表什么</p>
+</li>
+<li><p>通过识别到的Select关键字就可以知道这是一个查询语句</p>
+</li>
+<li><p>把字符串“T”识别为表名，把“Col1”，“Col2”识别为列名</p>
+</li>
+<li><p>语法分析 </p>
+</li>
+<li><p>语法解析器会根据语法规则，判断输入的SQL语句是否满足MySQL语句要求</p>
+</li>
+<li><p>比如检查表名、列名是否正确等等。</p>
+</li>
+</ul>
+<p>如果你的语句不对，就会收到“You have an error in your SQL syntax”的错误提醒，比如下面这个语句 select 少打了开头的字母“s”。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> elect <span class="operator">*</span> <span class="keyword">from</span> t <span class="keyword">where</span> ID<span class="operator">=</span><span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">ERROR <span class="number">1064</span> (<span class="number">42000</span>): You have an error <span class="keyword">in</span> your <span class="keyword">SQL</span> syntax; <span class="keyword">check</span> the manual that corresponds <span class="keyword">to</span> your MySQL server version <span class="keyword">for</span> the <span class="keyword">right</span> syntax <span class="keyword">to</span> use near <span class="string">&#x27;elect * from t where ID=1&#x27;</span> <span class="keyword">at</span> line <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>一般语法错误会提示第一个出现错误的位置，所以你要关注的是紧接“use near”的内容。</p>
+<p><strong>【总结】：</strong></p>
+<p>将SQL语句进行语义和语法的分析，分解成数据结构（解析树），然后按照不同的操作类型进行分类，然后做出针对性的转发到后续步骤，以后SQL语句的传递和处理就是基于这个结构的。如果在分解构成中遇到错误，那么就说明这个SQL语句是不合理的。</p>
+<p>解析树是通过解析器来解析SQL的关键字和非关键字，SQL语句按照关键字和非关键字进行分类，生成树。</p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250217011313374.png" alt="image-20250217011313374"></p>
+<h4 id="组件五：查询优化器（Optimizer）"><a href="#组件五：查询优化器（Optimizer）" class="headerlink" title="组件五：查询优化器（Optimizer）"></a><strong>组件五：查询优化器（Optimizer）</strong></h4><p>接下来并不是直接执行，而是会在优化器这一层进行优化。</p>
+<p>优化器是个非常复杂的部件，它会帮我们去使用他自己认为的最好的方式去优化这条 SQL  语句，并生成一条条的执行计划。</p>
+<p>MySQL 使用 <code>explain + sql 语句</code>查看执行计划，该执行计划不一定完全正确但是可以参考。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">User</span> <span class="keyword">WHERE</span> nid <span class="operator">=</span> <span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250217011318465.png" alt="image-20250217011318465"></p>
+<p>根据解析树生成最优的执行计划。MySQL使用很多优化策略生成最优的执行计划，可以分为两类：静态优化（编译时的优化），动态优化（运行时的优化）。</p>
+<p>（1）等价变换策略：</p>
+<p>​	where 5&#x3D;5 and a&gt;5  —&gt;  where a&gt;5</p>
+<p>（2）优化count、min、max等函数：</p>
+<p>​	Inno引擎min函数只需要查找索引最左边</p>
+<p>​	Inno引擎max函数只需要查找索引最又边</p>
+<p>​	Count()，不需要计算，直接返回</p>
+<p>（3）提前终止查询：</p>
+<p>​	Limit查询，获得Limit所需要的数据之后，不需要遍历后面的数据了</p>
+<p>（4）in的优化：</p>
+<p>​	MySQL针对in查询，会进行排序，再采用区分查找法去找数据。in(2,1,3)  —&gt;  in(1,2,3)</p>
+<p>（5）条件查询：</p>
+<p>SQL语句在查询之前会使用查询优化器对查询进行优化。就是优化客户端请求Query，根据客户端请求的 Query 语句，和数据库中的一些统计信息，在一系列算法的基础上进行分析，得出一个最优的策略，告诉后面的程序如何取得这个 Query 语句的结果。使用的是“选取-投影-联接”策略进行查询。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> uid,name <span class="keyword">from</span> <span class="keyword">User</span> <span class="keyword">where</span> gender <span class="operator">=</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>选取：先根据where语句进行选择，而不是先将表全部查询出来之后再根据gender过滤。</p>
+<p>投影：会根据uid和name进行属性投影，而不是将属性全部取出来再进行过滤。</p>
+<p>联接：将上面这两个查询条件连接起来生成最终的查询结果。</p>
+<p>（6）连接查询：</p>
+<p>在表里面有多个索引的时候，决定使用哪个索引；或者在一个语句有多表关联（join）的时候，决定各个表的连接顺序。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> t1 <span class="keyword">join</span> t2 <span class="keyword">using</span>(ID)  <span class="keyword">where</span> t1.c<span class="operator">=</span><span class="number">10</span> <span class="keyword">and</span> t2.d<span class="operator">=</span><span class="number">20</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>既可以先从表t1里面取出c&#x3D;10的记录的ID值，再根据ID值关联到表t2，再判断t2里面d的值是否等于20。</li>
+<li>也可以先从表t2里面取出d&#x3D;20的记录的ID值，再根据ID值关联到t1，再判断t1里面c的值是否等于10。</li>
+</ul>
+<p>这两种执行方法的逻辑结果是一样的，但是执行的效率会有不同，而优化器的作用就是决定选择使用哪一个方案。</p>
+<p>优化器阶段完成后，这个语句的执行方案就确定下来了，然后进入执行器阶段。</p>
+<h4 id="组件六：执行器"><a href="#组件六：执行器" class="headerlink" title="组件六：执行器"></a><strong>组件六：执行器</strong></h4><p>工作内容：</p>
+<ol>
+<li>判断对这个表有没有查询权限</li>
+<li>有权限, 则继续执行；如果没有，就会返回没有权限的错误</li>
+<li>调用存储引擎接口进行执行查询或其他操作</li>
+<li>最终将查询结果集返回给客户端，语句即执行完成</li>
+</ol>
+<p>简述：</p>
+<ul>
+<li>解析器知道了你想做什么</li>
+<li>优化器知道该怎么做最合适</li>
+<li>执行器去执行</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> T <span class="keyword">where</span> ID<span class="operator">=</span><span class="number">10</span>;</span><br><span class="line">ERROR <span class="number">1142</span> (<span class="number">42000</span>): <span class="keyword">SELECT</span> command denied <span class="keyword">to</span> <span class="keyword">User</span> <span class="string">&#x27;b&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> <span class="keyword">for</span> <span class="keyword">table</span> <span class="string">&#x27;T&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果有权限，就打开表继续执行。打开表的时候，执行器就会根据表的引擎定义（创建表的时候可以执行该表对应的存储迎引擎，如果不指定那么默认使用InnoDB），去使用这个引擎提供的接口。</p>
+<p>比如我们这个例子中的表T中，ID字段没有索引，那么执行器的执行流程是这样的：</p>
+<ol>
+<li>调用InnoDB引擎接口取这个表的第一行，判断ID值是不是10，如果不是则跳过，如果是则将这行存在结果集中；</li>
+<li>调用引擎接口取“下一行”，重复相同的判断逻辑，直到取到这个表的最后一行。</li>
+<li>执行器将上述遍历过程中所有满足条件的行组成的记录集作为结果集返回给客户端。</li>
+</ol>
+<p>至此，这个语句就执行完成了。</p>
+<p>对于有索引的表，执行的逻辑也差不多。第一次调用的是“取满足条件的第一行”这个接口，之后循环取“满足条件的下一行”这个接口，这些接口都是引擎中已经定义好的。</p>
+<h3 id="1-3-存储引擎层"><a href="#1-3-存储引擎层" class="headerlink" title="1.3 存储引擎层"></a>1.3 存储引擎层</h3><p>存储引擎层负责 MySQL 中数据的存储与提取，服务器中的查询执行引擎通过 API 与存储引擎进行通信，通过接口屏蔽了不同存储引擎之间的差异。</p>
+<p>MySQL 采用插件式的存储引擎。MySQL 为我们提供了许多存储引擎，每种存储引擎有不同的特点。我们可以根据不同的业务特点，选择最适合的存储引擎。如果对于存储引擎的性能不满意，可以通过修改源码来得到自己想要达到的性能。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> engines</span><br></pre></td></tr></table></figure>
+
+<p><strong>特点：</strong></p>
+<ul>
+<li>MySQL 采用插件式的存储引擎。</li>
+<li>存储引擎是针对于表的而不是针对库的（一个库中不同表可以使用不同的存储引擎），服务器通过 API 与存储引擎进行通信，用来屏蔽不同存储引擎之间的差异。</li>
+<li>不管表采用什么样的存储引擎，都会在数据区，产生对应的一个 的一个 frm 文件（表结构定义描述文件）</li>
+</ul>
+<h3 id="1-4-物理存储层"><a href="#1-4-物理存储层" class="headerlink" title="1.4 物理存储层"></a>1.4 物理存储层</h3><p>存储引擎底部是物理存储层，是文件的物理存储层（磁盘），包括二进制（BinLog）日志、数据文件、错误日志、慢查询日志、全日志、redo&#x2F;Undo 日志（事务）等。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*数据目录*/</span></span><br><span class="line"><span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;%datadir%&#x27;</span></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> databases;</span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------+</span></span><br><span class="line"><span class="operator">|</span> Database           <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------+</span></span><br><span class="line"><span class="operator">|</span> information_schema <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> mysql              <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> performance_schema <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> sys                <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">--------------------+</span></span><br><span class="line"><span class="number">4</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.02</span> sec)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>mysql：MySQL系统自带的核心库，存储MySQL的用户账户和权限信息，一些存储过程、事件的定义信息，运行过程中产生日志信息，一些帮助信息及其时区信息。</li>
+<li>information_schema：保存着MySQL服务器维护的其他数据库的信息，比如有哪些表、哪些视图、哪些触发器、那些列、哪些索引。</li>
+<li>performance_schema：保存MySQL运行过程中的状态信息，监控服务器的各类性能指标。</li>
+<li>sys：通过视图的形式把performance_schema和information_schema结合起来。</li>
+</ul>
+<h2 id="2、-SQL运行机制"><a href="#2、-SQL运行机制" class="headerlink" title="2、 SQL运行机制"></a>2、 SQL运行机制</h2><p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250217011325215.png" alt="image-20250217011325215"></p>
+<p>流程描述：</p>
+<ol>
+<li>通过客户端&#x2F;服务器通信协议与 MySQL 建立连接。</li>
+<li>查询缓存，如果开启了 Query Cache 且在查询缓存过程中查询到完全相同的 SQL 语句，则将查询结果直接返回给客户端；如果没有开启Query Cache 或没有查询到完全相同的 SQL 语句则会由解析器经过词法分析，语法分析后生成解析树。</li>
+<li>预处理器生成新的解析树，主要工作是处理解析器无法解决的语义，检查权限等，生成新的解析树。</li>
+<li>查询优化器生成执行计划。</li>
+<li>查询执行引擎执行 SQL 语句，此时查询执行引擎会根据 SQL 语句中表的存储引擎类型，以及对应的 API 接口与底层存储引擎缓存或者物理文件的交互情况，得到查询结果。</li>
+<li>由MySQL Server 过滤后将查询结果缓存并返回给客户端。若开启了 Query Cache，这时也会将SQL 语句和结果完整地保存到 Query Cache 中，以后若有相同的 SQL 语句执行则直接返回结果。</li>
+</ol>
+<h3 id="2-1-C-S通信协议"><a href="#2-1-C-S通信协议" class="headerlink" title="2.1 C&#x2F;S通信协议"></a>2.1 C&#x2F;S通信协议</h3><p>建立连接（Connectors&amp;Connection Pool），通过客户端&#x2F;服务器通信协议与MySQL建立连接。MySQL 客户端与服务端的通信方式是 “ 半双工 ”。对于每一个 MySQL 的连接，时刻都有一个线程状态来标识这个连接正在做什么。</p>
+<p>通讯机制：</p>
+<ul>
+<li>全双工：任意时刻，客户端和服务器既可以发送数据，也可以接收数据。</li>
+<li>半双工：在任一时刻，要么是服务器向客户端发送数据，要么是客户端向服务器发送数据，这两个动作不能同时发生。</li>
+<li>单工</li>
+</ul>
+<p>MySQL客户端&#x2F;服务端通信协议是“半双工”的，一旦一端开始发送消息，另一端要接收完整个消息才能响应它，所以我们无法也无须将一个消息切成小块独立发送，也没有办法进行流量控制。</p>
+<p>客户端用一个单独的数据包将查询请求发送给服务器，所以当查询语句很长的时候，需要设置max_allowed_packet参数。但是需要注意的是，如果查询实在是太大，服务端会拒绝接收更多数据并抛出异常。</p>
+<h3 id="2-2-查询缓存"><a href="#2-2-查询缓存" class="headerlink" title="2.2 查询缓存"></a>2.2 查询缓存</h3><p><strong>从MySQL 5.7.20起，查询缓存已被弃用，并在MySQL 8.0中删除。</strong></p>
+<p>在解析一个查询语句前，如果查询缓存是打开的，那么MySQL会检查这个查询语句是否命中查询缓存中的数据（命中率）。如果当前查询恰好命中查询缓存，在检查一次用户权限后直接返回缓存中的结果。这种情况下，查询不会被解析，也不会生成执行计划，更不会执行。</p>
+<p>MySQL将缓存存放在一个引用表（类似于HashMap的数据结构），通过一个哈希值索引（针对于客户端描述信息以及SQL语句），这个哈希值通过查询本身、当前要查询的数据库、客户端协议版本号等一些可能影响结果的信息计算得来。所以两个查询在任何字符上的不同（例如：空格、注释），都会导致缓存不会命中</p>
+<h4 id="查询缓存的优缺点"><a href="#查询缓存的优缺点" class="headerlink" title="查询缓存的优缺点"></a><strong>查询缓存的优缺点</strong></h4><p><strong>优点：</strong><br>Query Cache的查询，发生在MySQL接收到客户端的查询请求、查询权限验证之后和查询SQL解析之前。</p>
+<p>也就是说，当MySQL接收到客户端的查询SQL之后，仅仅只需要对其进行相应的权限验证之后，就会通过Query Cache来查找结果，甚至都不需要经过Optimizer模块进行执行计划的分析优化，更不需要发生任何存储引擎的交互。</p>
+<p>由于Query Cache是基于内存的，直接从内存中返回相应的查询结果，因此减少了大量的磁盘I&#x2F;O和CPU计算，导致效率非常高。</p>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>MySQL会对每条接收到的SELECT类型的查询进行Hash计算，然后查找这个查询的缓存结果是否存在。虽然Hash计算和查找的效率已经足够高了，一条查询语句所带来的开销可以忽略，但一旦涉及到高并发，有成千上万条查询语句时，Hash计算和查找所带来的开销就必须重视了。 </li>
+<li>Query Cache的失效问题。如果表的变更比较频繁，则会造成Query Cache的失效率非常高。表的变更不仅仅指表中的数据发生变化，还包括表结构或者索引的任何变化。 </li>
+<li>查询语句不同，但查询结果相同的查询都会被缓存，这样便会造成内存资源的过度消耗。查询语句的字符大小写、空格或者注释的不同，Query Cache都会认为是不同的查询（因为他们的Hash值会不同）。 </li>
+<li>相关系统变量设置不合理会造成大量的内存碎片，这样便会导致Query Cache频繁清理内存。</li>
+</ul>
+<h4 id="架构级缓存解决方案："><a href="#架构级缓存解决方案：" class="headerlink" title="架构级缓存解决方案："></a><strong>架构级缓存解决方案：</strong></h4><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250217011331491.png" alt="image-20250217011331491" style="zoom:80%;" />
+
+<h3 id="2-3-语法解析和预处理"><a href="#2-3-语法解析和预处理" class="headerlink" title="2.3 语法解析和预处理"></a>2.3 语法解析和预处理</h3><p>MySQL通过关键字将SQL语句进行解析，并生成一颗对应的解析树。</p>
+<p>这个过程解析器主要通过语法规则来验证和解析。比如SQL中是否使用了错误的关键字或者关键字的顺序是否正确等等。预处理则会根据MySQL规则进一步检查解析树是否合法。比如检查要查询的数据表和数据列是否存在等。</p>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250217011345743.png" alt="image-20250217011345743" style="zoom:80%;" />
+
+<h3 id="2-4-查询优化器"><a href="#2-4-查询优化器" class="headerlink" title="2.4 查询优化器"></a>2.4 查询优化器</h3><p>根据解析树生成最优的执行计划。</p>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250217011404327.png" alt="image-20250217011404327" style="zoom:80%;" />
+
+<ol>
+<li>逻辑查询优化：</li>
+</ol>
+<ul>
+<li>对SQL语句做一些等价交换、对条件表达式进行等价谓词重写、条件顺序的调整、条件简化、视图重写、子查询、连接查询优化。</li>
+</ul>
+<ol>
+<li>物理查询优化</li>
+</ol>
+<ul>
+<li>CBO：Cost-Based Optimizer，基于代价的优化，根据模型计算出各个可能的执行计划的代价，选择代价最小的一个，它会利用数据库里面的统计信息来做判断，动态。</li>
+<li>RBO：Rule-Based Optimizer，基于规则的优化，主要基于一些预置的规则，对查询进行优化。</li>
+</ul>
+<h3 id="2-5-查询执行引擎"><a href="#2-5-查询执行引擎" class="headerlink" title="2.5 查询执行引擎"></a>2.5 查询执行引擎</h3><p>查询执行引擎负责执行 SQL 语句（选择对应的存储引擎去执行），此时查询执行引擎会根据 SQL 语句中表的存储引擎类型，以及对应的API接口与底层存储引擎缓存或者物理文件的交互，得到查询结果并返回给客户端。</p>
+<p>若开启用查询缓存，这时会将SQL 语句和结果完整地保存到查询缓存中，以后若有相同的 SQL 语句执行则直接返回结果。</p>
+<ul>
+<li>如果开启了查询缓存，先将查询结果做缓存操作</li>
+<li>返回结果过多，采用增量模式返回</li>
+</ul>
+<h3 id="2-6-流程总结"><a href="#2-6-流程总结" class="headerlink" title="2.6 流程总结"></a>2.6 流程总结</h3><p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250217011418725.png" alt="image-20250217011418725"></p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20250217011432243.png" alt="image-20250217011432243"></p>
+<h4 id="连接流程："><a href="#连接流程：" class="headerlink" title="连接流程："></a><strong>连接流程：</strong></h4><ol>
+<li>客户端发起一条Query请求，监听客户端的‘连接管理模块’接收请求</li>
+<li>将请求转发到‘连接进&#x2F;线程模块’</li>
+<li>调用‘用户模块’来进行授权检查</li>
+<li>通过检查后，‘连接进&#x2F;线程模块’从‘线程连接池’中取出空闲的被缓存的连接线程和客户端请求对接，如果失败则创建一个新的连接请求。</li>
+</ol>
+<h4 id="处理："><a href="#处理：" class="headerlink" title="处理："></a><strong>处理：</strong></h4><ol>
+<li>先查询缓存，检查Query语句是否完全匹配，接着再检查是否具有权限，都成功则直接取数据返回</li>
+<li>上一步有失败则转交给‘命令解析器’，经过词法分析，语法分析后生成解析树</li>
+<li>接下来是预处理阶段，处理解析器无法解决的语义，检查权限等，生成新的解析树</li>
+<li>再转交给对应的模块处理</li>
+<li>如果是SELECT查询还会经由‘查询优化器’做大量的优化，生成执行计划</li>
+<li>模块收到请求后，通过‘访问控制模块’检查所连接的用户是否有访问目标表和目标字段的权限</li>
+<li>有则调用‘表管理模块’，先是查看table cache中是否存在，有则直接对应的表和获取锁，否则重新打开表文件</li>
+<li>根据表的meta数据，获取表的存储引擎类型等信息，通过接口调用对应的存储引擎处理</li>
+<li>上述过程中产生数据变化的时候，若打开日志功能，则会记录到相应二进制日志文件中</li>
+</ol>
+<h4 id="结果："><a href="#结果：" class="headerlink" title="结果："></a><strong>结果：</strong></h4><ol>
+<li>Query请求完成后，将结果集返回给‘连接进&#x2F;线程模块’</li>
+<li>返回的也可以是相应的状态标识，如成功或失败等</li>
+<li>‘连接进&#x2F;线程模块’进行后续的清理工作，并继续等待请求或断开与客户端的连接</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">ZengCP</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/11/16/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A2%B3%E7%90%86--%E6%9E%B6%E6%9E%84%E4%BD%93%E7%B3%BB/">http://example.com/2023/11/16/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A2%B3%E7%90%86--%E6%9E%B6%E6%9E%84%E4%BD%93%E7%B3%BB/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">ZengCP's BLOGS</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><a class="post-meta__tags" href="/tags/MySQL/">MySQL</a></div><div class="post_share"><div class="social-share" data-image="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/11/16/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%20%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E6%8E%92%E6%9F%A5%E6%96%B9%E6%B3%95/" title="MySQL 常见问题及排查方法"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">MySQL 常见问题及排查方法</div></div></a></div><div class="next-post pull-right"><a href="/2023/11/10/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A2%B3%E7%90%86--%E7%B4%A2%E5%BC%95%E5%8F%8A%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E7%B1%BB/" title="MySQL 知识点梳理 -- 索引及查询优化类"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">MySQL 知识点梳理 -- 索引及查询优化类</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/11/08/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%20MVCC%20%E4%BB%8B%E7%BB%8D/" title="MVCC 机制介绍"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-08</div><div class="title">MVCC 机制介绍</div></div></a></div><div><a href="/2023/11/16/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%20%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E6%8E%92%E6%9F%A5%E6%96%B9%E6%B3%95/" title="MySQL 常见问题及排查方法"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-16</div><div class="title">MySQL 常见问题及排查方法</div></div></a></div><div><a href="/2023/11/03/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%20%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E8%AF%A6%E8%A7%A3/" title="MySQL 分库分表详解"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-03</div><div class="title">MySQL 分库分表详解</div></div></a></div><div><a href="/2023/11/10/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A2%B3%E7%90%86--%E4%BA%8B%E5%8A%A1%E5%92%8C%E9%94%81%E6%9C%BA%E5%88%B6/" title="MySQL 知识点梳理 -- 事务及锁机制"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-10</div><div class="title">MySQL 知识点梳理 -- 事务及锁机制</div></div></a></div><div><a href="/2023/11/10/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A2%B3%E7%90%86--%E7%B4%A2%E5%BC%95%E5%8F%8A%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E7%B1%BB/" title="MySQL 知识点梳理 -- 索引及查询优化类"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-10</div><div class="title">MySQL 知识点梳理 -- 索引及查询优化类</div></div></a></div><div><a href="/2023/11/09/%E6%8C%81%E4%B9%85%E5%B1%82/MySQL/MySQL%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A2%B3%E7%90%86--%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E7%B1%BB/" title="MySQL 知识点梳理 -- 存储引擎相关"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-09</div><div class="title">MySQL 知识点梳理 -- 存储引擎相关</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZengCP</div><div class="author-info__description">记录心得，见证成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">85</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">38</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#MySQL-%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84%E5%89%96%E6%9E%90"><span class="toc-number">1.</span> <span class="toc-text">MySQL 体系架构剖析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81-%E4%BD%93%E7%B3%BB%E6%9E%B6%E6%9E%84"><span class="toc-number">1.1.</span> <span class="toc-text">1、 体系架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E8%BF%9E%E6%8E%A5%E5%B1%82"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1 连接层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E6%9C%8D%E5%8A%A1%E5%B1%82"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.2 服务层</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E4%B8%80%EF%BC%9A%E7%B3%BB%E7%BB%9F%E7%AE%A1%E7%90%86%E5%92%8C%E5%AE%9E%E7%94%A8%E7%A8%8B%E5%BA%8F%EF%BC%88Management-Service-Utilities%EF%BC%89%E3%80%82"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">组件一：系统管理和实用程序（Management Service &amp; Utilities）。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E4%BA%8C%EF%BC%9ASQL%E6%8E%A5%E5%8F%A3%EF%BC%88SQL-Interface%EF%BC%89"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">组件二：SQL接口（SQL Interface）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E4%B8%89%EF%BC%9A%E7%BC%93%E5%AD%98%EF%BC%88Cache-Buffer%EF%BC%89"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">组件三：缓存（Cache &amp; Buffer）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E5%9B%9B%EF%BC%9ASQL%E8%A7%A3%E6%9E%90%E5%99%A8%EF%BC%88Parser%EF%BC%89"><span class="toc-number">1.1.2.4.</span> <span class="toc-text">组件四：SQL解析器（Parser）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E4%BA%94%EF%BC%9A%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E5%99%A8%EF%BC%88Optimizer%EF%BC%89"><span class="toc-number">1.1.2.5.</span> <span class="toc-text">组件五：查询优化器（Optimizer）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E5%85%AD%EF%BC%9A%E6%89%A7%E8%A1%8C%E5%99%A8"><span class="toc-number">1.1.2.6.</span> <span class="toc-text">组件六：执行器</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E5%B1%82"><span class="toc-number">1.1.3.</span> <span class="toc-text">1.3 存储引擎层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-%E7%89%A9%E7%90%86%E5%AD%98%E5%82%A8%E5%B1%82"><span class="toc-number">1.1.4.</span> <span class="toc-text">1.4 物理存储层</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81-SQL%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6"><span class="toc-number">1.2.</span> <span class="toc-text">2、 SQL运行机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-C-S%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1 C&#x2F;S通信协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E6%9F%A5%E8%AF%A2%E7%BC%93%E5%AD%98"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.2 查询缓存</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E7%BC%93%E5%AD%98%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">查询缓存的优缺点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84%E7%BA%A7%E7%BC%93%E5%AD%98%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9A"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">架构级缓存解决方案：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E8%AF%AD%E6%B3%95%E8%A7%A3%E6%9E%90%E5%92%8C%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">1.2.3.</span> <span class="toc-text">2.3 语法解析和预处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E5%99%A8"><span class="toc-number">1.2.4.</span> <span class="toc-text">2.4 查询优化器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-%E6%9F%A5%E8%AF%A2%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E"><span class="toc-number">1.2.5.</span> <span class="toc-text">2.5 查询执行引擎</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6-%E6%B5%81%E7%A8%8B%E6%80%BB%E7%BB%93"><span class="toc-number">1.2.6.</span> <span class="toc-text">2.6 流程总结</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E6%B5%81%E7%A8%8B%EF%BC%9A"><span class="toc-number">1.2.6.1.</span> <span class="toc-text">连接流程：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%84%E7%90%86%EF%BC%9A"><span class="toc-number">1.2.6.2.</span> <span class="toc-text">处理：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C%EF%BC%9A"><span class="toc-number">1.2.6.3.</span> <span class="toc-text">结果：</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/06/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%B1%87%E6%80%BB/%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/" title="无题">无题</a><time datetime="2025-03-05T17:42:29.925Z" title="发表于 2025-03-06 01:42:29">2025-03-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/06/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%B1%87%E6%80%BB/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E7%B1%BB/" title="无题">无题</a><time datetime="2025-03-05T17:27:01.124Z" title="发表于 2025-03-06 01:27:01">2025-03-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/RocketMQ/RocketMQ%20%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" title="RocketMQ 核心架构原理">RocketMQ 核心架构原理</a><time datetime="2024-12-08T09:02:36.000Z" title="发表于 2024-12-08 17:02:36">2024-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/RocketMQ/RocketMQ%20%E6%A6%82%E8%BF%B0/" title="RocketMQ 概述">RocketMQ 概述</a><time datetime="2024-12-08T07:16:48.000Z" title="发表于 2024-12-08 15:16:48">2024-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/07/%E4%B8%AD%E9%97%B4%E4%BB%B6/Kafka/Kafka%20%E7%BB%8F%E5%85%B8%E9%9D%A2%E8%AF%95%E9%A2%98/" title="Kafka 经典面试题">Kafka 经典面试题</a><time datetime="2024-12-07T12:45:18.000Z" title="发表于 2024-12-07 20:45:18">2024-12-07</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By ZengCP</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

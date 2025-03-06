@@ -1,0 +1,314 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>并发编程基础 | ZengCP's BLOGS</title><meta name="author" content="ZengCP"><meta name="copyright" content="ZengCP"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="进程与线程什么是进程 进程可以理解为程序的一次执行过程，系统运行一个程序即是一个进程从创建，运行到消亡的过程。 现代操作系统对于进程会分配独立的 内存地址空间和其他系统资源（IO） 对 Java 而言，main() 函数启动时其实就是启动了一个 JVM 的进程，而 main() 函数所在的线程就是这个进程中的一个线程，也称主线程。  什么是线程 线程是依托于进程的一个指令执行序列 一个进程可以产生">
+<meta property="og:type" content="article">
+<meta property="og:title" content="并发编程基础">
+<meta property="og:url" content="http://example.com/2023/05/08/Java%20%E5%9F%BA%E7%A1%80/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="ZengCP&#39;s BLOGS">
+<meta property="og:description" content="进程与线程什么是进程 进程可以理解为程序的一次执行过程，系统运行一个程序即是一个进程从创建，运行到消亡的过程。 现代操作系统对于进程会分配独立的 内存地址空间和其他系统资源（IO） 对 Java 而言，main() 函数启动时其实就是启动了一个 JVM 的进程，而 main() 函数所在的线程就是这个进程中的一个线程，也称主线程。  什么是线程 线程是依托于进程的一个指令执行序列 一个进程可以产生">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png">
+<meta property="article:published_time" content="2023-05-08T12:53:17.000Z">
+<meta property="article:modified_time" content="2025-03-05T17:00:33.247Z">
+<meta property="article:author" content="ZengCP">
+<meta property="article:tag" content="并发编程">
+<meta property="article:tag" content="操作系统">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png"><link rel="shortcut icon" href="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/longmao.png"><link rel="canonical" href="http://example.com/2023/05/08/Java%20%E5%9F%BA%E7%A1%80/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '并发编程基础',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-03-06 01:00:33'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">85</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">38</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="ZengCP's BLOGS"><span class="site-name">ZengCP's BLOGS</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">并发编程基础</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-05-08T12:53:17.000Z" title="发表于 2023-05-08 20:53:17">2023-05-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-05T17:00:33.247Z" title="更新于 2025-03-06 01:00:33">2025-03-06</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Java/">Java</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Java/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Java/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="并发编程基础"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h1><h2 id="什么是进程"><a href="#什么是进程" class="headerlink" title="什么是进程"></a>什么是进程</h2><ul>
+<li>进程可以理解为程序的一次执行过程，系统运行一个程序即是一个进程从创建，运行到消亡的过程。</li>
+<li>现代操作系统对于进程会分配独立的 内存地址空间和其他系统资源（IO）</li>
+<li>对 Java 而言，<code>main()</code> 函数启动时其实就是启动了一个 JVM 的进程，而 <code>main()</code> 函数所在的线程就是这个进程中的一个线程，也称主线程。</li>
+</ul>
+<h2 id="什么是线程"><a href="#什么是线程" class="headerlink" title="什么是线程"></a>什么是线程</h2><ul>
+<li>线程是依托于进程的一个指令执行序列</li>
+<li>一个进程可以产生多个线程</li>
+<li>linux中，线程又叫做轻量级进程（light-weight process LWP），也有PCB，创建线程使用的底层函数和进程底层一样，都是clone，但没有独立的地址空间；而进程有独立地址空间，拥有PCB。</li>
+</ul>
+<h2 id="进程与线程对比"><a href="#进程与线程对比" class="headerlink" title="进程与线程对比"></a>进程与线程对比</h2><ul>
+<li><strong>本质区别</strong>：进程是操作系统资源分配的基本单位，而线程是处理器任务调度和执行的基本单位。</li>
+<li><strong>包含关系</strong>：一个进程至少有一个线程，线程是进程的一部分，所以线程也被称为轻权进程或者轻量级进程。</li>
+<li><strong>资源开销</strong>：每个进程都有独立的地址空间，进程之间的切换会有较大的开销；线程可以看做轻量级的进程，同一个进程内的线程共享进程的地址空间，每个线程都有自己独立的运行栈和程序计数器，线程之间切换的开销小。</li>
+<li><strong>影响关系</strong>：一个进程崩溃后，在保护模式下其他进程不会被影响，但是一个线程崩溃可能导致整个进程被操作系统杀掉，所以多进程要比多线程健壮。</li>
+</ul>
+<h2 id="进程间通信方式"><a href="#进程间通信方式" class="headerlink" title="进程间通信方式"></a>进程间通信方式</h2><ul>
+<li><strong>管道 pipe</strong><ul>
+<li><strong>管道概念</strong>：<ul>
+<li>管道是一种半双工的通信方式，用以传输字节流</li>
+<li>本质是内核中基于环形队列设计的一段缓冲区，对应着两个文件描述符，一个赋予读权限，一个赋予写权限</li>
+<li>数据只能单向流动，一端写和一端读</li>
+</ul>
+</li>
+<li><strong>分类</strong><ul>
+<li><strong>匿名管道</strong>： 只能在父子或亲缘进程间使用</li>
+<li><strong>命名管道</strong>：允许非情缘关系进程间进行通信</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>消息队列</strong>：本质是 OS 内核中维护的一个 尾插头读 的链表，<ul>
+<li>与管道通信相比，其优势是对每个消息指定特定的消息类型，接收的时候不需要按照队列次序，而是可以根据自定义条件接收特定类型的消息</li>
+</ul>
+</li>
+<li><strong>共享存储</strong>：共享内存就是映射一段能被其他进程所访问的内存，这段共享内存由一个进程创建，但多个进程都可以访问。共享内存是最快的 IPC 方式，它是针对其他进程间通信方式运行效率低而专门设计的。它往往与其他通信机制，如信号量，配合使用，来实现进程间的同步和通信。<ul>
+<li><strong>优点</strong>：其他IPC一般涉及数据拷贝、传输，而共享内存不需要，因此 CPU、内存负载更低，同时提高了处理速度</li>
+<li><strong>缺点</strong>：会引入并发安全问题，需引入信号量等机制，确保线程安全性</li>
+<li><strong>实现方式</strong>：有 mmap 和 shmget 两种</li>
+</ul>
+</li>
+<li><strong>信号量</strong>：信号量本质上是一个计数器，用于协调多个进程（包括但不限于父子进程）对共享数据对象的读&#x2F;写。它不以传送数据为目的，主要是用来保护共享资源（信号量、消息队列、socket连接等），保证共享资源在一个时刻只有一个进程独享。</li>
+<li><strong>套接字</strong>：套解口也是一种进程间通信机制，与其他通信机制不同的是，它可用于不同机器间的进程通信。</li>
+<li><strong>信号</strong>： 信号是一种比较复杂的通信方式，用于通知接收进程某个事件已经发生。</li>
+</ul>
+<h2 id="进程互斥-与-同步"><a href="#进程互斥-与-同步" class="headerlink" title="进程互斥 与 同步"></a>进程互斥 与 同步</h2><h3 id="临界资源"><a href="#临界资源" class="headerlink" title="临界资源"></a>临界资源</h3><p>在操作系统中，进程是占有资源的最小单位。对于某些资源来说，可能有多个进程需要占用，但是为了保障操作系统和指令的正常执行，有些资源在同一时间只能被其中一个进程所占用。这些一次只能被一个进程所占用的资源就是所谓的临界资源。</p>
+<p>典型的临界资源比如物理上的打印机，或是存在硬盘或内存中被多个进程所共享的一些变量和数据等(如果这类资源不被看成临界资源加以保护，那么很有可能造成丢数据的问题)。</p>
+<p> 对于临界资源的访问，必须是互斥进行。也就是当临界资源被占用时，另一个申请临界资源的进程会被阻塞，直到其所申请的临界资源被释放。而进程内访问临界资源的代码被成为临界区。</p>
+<p>  对于临界区的访问过程分为四个部分：</p>
+<ol>
+<li><strong>进入区</strong>:  查看临界区是否可访问，如果可以访问，则转到步骤二，否则进程会被阻塞</li>
+<li><strong>临界区</strong>:  在临界区做操作</li>
+<li><strong>退出区</strong>:  清除临界区被占用的标志</li>
+<li><strong>剩余区</strong>：进程与临界区不相关部分的代码</li>
+</ol>
+<h3 id="进程同步"><a href="#进程同步" class="headerlink" title="进程同步"></a>进程同步</h3><p>多进程完成某个任务时，进程之间 部分指令 或 代码块 的执行需按照指定先后关系按序执行</p>
+<h3 id="进程互斥"><a href="#进程互斥" class="headerlink" title="进程互斥"></a>进程互斥</h3><p>并行的多个进程 访问临界资源，在其中一个进程A进入临界区后，其他线程在进入临界区前必须阻塞等待进程 A 退出临界区</p>
+<h1 id="CPU-Cache-一致性"><a href="#CPU-Cache-一致性" class="headerlink" title="CPU Cache 一致性"></a>CPU Cache 一致性</h1><p>在单核 CPU 中，只需要考虑 Cache 与 内存 的一致性。但是在多核 CPU 中，由于每个核心都有一份独占的 Cache，就会存在一个核心修改数据后，两个核心 Cache 数据不一致的问题。因此， CPU 缓存一致性问题应该从 2 个维度理解：</p>
+<ul>
+<li><strong>纵向：Cache 与 内存 的一致性问题：</strong> 在修改 Cache 数据后，如何同步回内存？</li>
+<li><strong>横向：多核心 Cache 的一致性问题：</strong> 在一个核心修改 Cache 数据后，如何同步给其他核心 Cache？</li>
+</ul>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20240511022424797.png" alt="image-20240511022424797" style="zoom:50%;" />
+
+<h2 id="单核场景-cache-与-内存数据一致性"><a href="#单核场景-cache-与-内存数据一致性" class="headerlink" title="单核场景 cache 与 内存数据一致性"></a>单核场景 cache 与 内存数据一致性</h2><ul>
+<li><strong>写直达</strong>：CPU每次访问修改数据时，无论数据在不在缓存中，都将修改后的数据同步到内存中，缓存数据与内存数据保持<strong>强一致性</strong>，这种做法影响写操作的性能。</li>
+<li><strong>写回</strong>：数据在被写入到 CPU 缓存时不会立即同步到内存，而是暂时保存在缓存中。只有在缓存行被替换出缓存（缓存算法对其进行淘汰）时，才会将该缓存行的数据写回到内存中。</li>
+</ul>
+<h2 id="多核场景-cache-一致性"><a href="#多核场景-cache-一致性" class="headerlink" title="多核场景 cache 一致性"></a>多核场景 cache 一致性</h2><h3 id="多核-cache-一致性保证条件"><a href="#多核-cache-一致性保证条件" class="headerlink" title="多核 cache 一致性保证条件"></a>多核 cache 一致性保证条件</h3><ul>
+<li><strong>写传播</strong> —— 某个core 修改某个变量后，其他 core 需要及时感知</li>
+<li>**串行化 ** —— 某个 core 的连续操作，对其他 core 而言，观察到的顺序一致</li>
+</ul>
+<h3 id="cache-一致性协议基石"><a href="#cache-一致性协议基石" class="headerlink" title="cache 一致性协议基石"></a>cache 一致性协议基石</h3><ul>
+<li><strong>写传播 - 总线嗅探：</strong> 总线除了能在一个主模块和一个从模块之间传输数据，还支持一个主模块对多个从模块写入数据，这种操作就是广播。要实现写传播，其实就是将所有的读写操作广播到所有 CPU 核心，而其它 CPU 核心时刻监听总线上的广播，再修改本地的数据；</li>
+<li><strong>事务串行化 - 总线仲裁：</strong> 总线的独占性要求同一时刻最多只有一个主模块占用总线，天然地会将所有核心对内存的读写操作串行化。如果多个核心同时发起总线事务，此时总线仲裁单元会对竞争做出仲裁，未获胜的事务只能等待获胜的事务处理完成后才能执行。</li>
+</ul>
+<h2 id="MESI-协议-（默认生效）"><a href="#MESI-协议-（默认生效）" class="headerlink" title="MESI 协议 （默认生效）"></a><strong>MESI 协议</strong> （默认生效）</h2><p>MESI 对应 CPU Cache 中的四种状态</p>
+<ul>
+<li><strong>M</strong>: modified</li>
+<li><strong>E</strong>: Exclusive</li>
+<li><strong>S</strong>: Share</li>
+<li><strong>I</strong>: invalid</li>
+</ul>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20240511015059650.png" alt="image-20240511015059650" style="zoom:60%;" />
+
+<p>由于 修改等操作 需其他 CPU 进行ACK ，影响速率，因此引入 Store Buffer 和 Invalid Queue</p>
+<p>CPU A 修改某个值时，直接将值写入 Store Buffer，并向其他 CPU 失效队列投递 invalid 通知，Invalid 通知成功（兑入对应invalid queue） 再将 store buffer 值 写入 cache</p>
+<img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20240511015623898.png" alt="image-20240511015623898" style="zoom:50%;" />
+
+<p>store buffer 和 invalid queue 加快了程序运行速度，但 也带来了问题 —— CPU 间 数据强一致性为了最终一致 &#x2F; 弱一致</p>
+<h2 id="内存屏障解决-有序性问题"><a href="#内存屏障解决-有序性问题" class="headerlink" title="内存屏障解决 有序性问题"></a>内存屏障解决 有序性问题</h2><h3 id="编译器内存屏障"><a href="#编译器内存屏障" class="headerlink" title="编译器内存屏障"></a>编译器内存屏障</h3><p>Linux 内核提供函数 <code>barrier()</code> 用于让编译器保证其之前的内存访问先于其之后的完成——内存屏障调用前后指令不乱序执行</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> barrier() __asm__ __volatile__(<span class="string">&quot;&quot;</span> ::: <span class="string">&quot;memory&quot;</span>)</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="CPU-内存屏障"><a href="#CPU-内存屏障" class="headerlink" title="CPU 内存屏障"></a>CPU 内存屏障</h3><h4 id="写屏障"><a href="#写屏障" class="headerlink" title="写屏障"></a>写屏障</h4><p>先看例子：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="number">0</span> , b = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">fun0</span><span class="params">()</span> &#123;   </span><br><span class="line">  a = <span class="number">1</span>;   </span><br><span class="line">  b = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">fun1</span><span class="params">()</span> &#123;   </span><br><span class="line">  <span class="keyword">while</span> (b == <span class="number">0</span>) <span class="keyword">continue</span>;</span><br><span class="line">  assert(a == <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>若某一时刻， CPU0 cache 占有 变量 b&#x3D;0，准备执行 func0()， CPU1 cache 占有变量 a&#x3D;0， 准备执行 func1()； 且后续执行流程如下：</p>
+<ol>
+<li>CPU 0 执行赋值语句 a&#x3D;1，由于 a 不在 local cache 中，CPU 0 将 a 值放到 store buffer 中之后，并向总线发送 read invalidate 命令</li>
+<li>CPU 0 继续执行赋值语句 b&#x3D;1，由于 b 就在自身 local cache （cacheline 处于 M 状态或者 E 状态），CPU0 直接操作将新的值 1 写入cache line。</li>
+<li>CPU 1执行 while (b &#x3D;&#x3D; 0) 循环，由于 b 不在CPU 1 的 cache 中，因此，CPU发送一个 read message 到总线上，尝试从其他 cpu 的 localcache 或者 memory 中读取数据。</li>
+<li>CPU 0 收到 read message，将最新的 b 值 1 回送给 CPU1，同时将 b cacheline的状态设定为 S。</li>
+<li>CPU 1 收到了来自 CPU 0 的 read response，将 b 变量最新值 1 值写入自己的 cacheline，状态修改为shared。</li>
+<li>由于 b 值等于 1 ，CPU 1跳出while (b &#x3D;&#x3D; 0)的循环，继续执行。</li>
+<li>CPU 1 执行 assert(a &#x3D;&#x3D; 1)，这时候 CPU1 中的local cache中还是旧的a值，因此assert(a &#x3D;&#x3D; 1)失败。<strong>程序异常</strong></li>
+</ol>
+<p>为避免缓存不一致问题引起的 异常结果， 可在 a&#x3D;1 的赋值操作之后加上写内存屏障，此时 ：</p>
+<ol>
+<li>CPU 0 执行赋值语句 a&#x3D;1，由于 a 不在 local cache 中，CPU 0 将 a 值放到 store buffer 中之后，并向总线发送 read invalidate 命令</li>
+<li>cpu0 完成 a&#x3D;1 复制操作之后，遇到写内存屏障，执行 flush store buffer</li>
+<li>cpu0 阻塞等待 store buffer 中所有记录 得到 ACK</li>
+<li>cpu1 cache line 收到 a 变量 invalid 消息，并自动 ACK</li>
+<li><strong>cpu1 完成 invalid  queue 处理，修改 local cache 中 cacheline a&#x3D;1 状态为 I</strong></li>
+<li>cpu0 阻塞结束，继续执行 b&#x3D;1 赋值， 由于 b 就在自身 local cache （cacheline 处于 M 状态或者 E 状态），CPU0 直接操作将新的值 1 写入cache line</li>
+<li>若不考虑 cpu1 的 invalid queue 主动 ack，则cpu1 判断 a&#x3D;&#x3D;1 时，将发现cache line 中的 缓存已失效，需重新从总线获取，此时 assert t通过</li>
+</ol>
+<h4 id="读屏障"><a href="#读屏障" class="headerlink" title="读屏障"></a>读屏障</h4><p>仍以上例说明，由于 cpu1 存在 invalid queue ，会自动回复 ACK，所以：</p>
+<ul>
+<li>若 cpu1 未及时完成 invalid queue 处理， 则 CPU1 后续执行 a&#x3D;&#x3D;1 判断时，会判断 cache 中 有cacheline 命中，因此仍有可能失败</li>
+</ul>
+<p>因此，为确保 invalid queue 数据及时处理</p>
+<ul>
+<li>进一步在 assert(a&#x3D;&#x3D;1) 之前加上 读内存屏障</li>
+</ul>
+<p>读内存屏障作用为——cpu 下一次读取操作前，必须 flush invalid queue</p>
+<p>因此，以上例子在无锁添加下，可通过以下改造确保程序运行正确</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="number">0</span> , b = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">fun0</span><span class="params">()</span> &#123;   </span><br><span class="line">  a = <span class="number">1</span>;</span><br><span class="line">  smp_mb();  <span class="comment">// 写内存屏障</span></span><br><span class="line">  b = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> <span class="title function_">fun1</span><span class="params">()</span> &#123;   </span><br><span class="line">  <span class="keyword">while</span> (b == <span class="number">0</span>) <span class="keyword">continue</span>;</span><br><span class="line">  smp_rmb();	<span class="comment">// 读内存屏障</span></span><br><span class="line">  assert(a == <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="并发安全性基础"><a href="#并发安全性基础" class="headerlink" title="并发安全性基础"></a>并发安全性基础</h1><ul>
+<li><strong>原子性</strong> —— 一个线程的一组操作要么未执行，要么全部执行，即使中间因线程调度而中断，其总体执行结果与一次性执行完毕的结果无异，本质就是 多线程&#x2F;进程 对临界资源的互斥访问</li>
+<li><strong>可见性</strong> —— 多个线程修改同一个共享变量时，一个线程修改后，其他线程能马上获得修改后的值</li>
+<li><strong>有序性</strong> —— 即程序执行的顺序按照代码的先后顺序执行</li>
+</ul>
+<h1 id="指令重排"><a href="#指令重排" class="headerlink" title="指令重排"></a>指令重排</h1><h2 id="什么是指令重排"><a href="#什么是指令重排" class="headerlink" title="什么是指令重排"></a>什么是指令重排</h2><p>指令重排是计算机编译器或处理器为了提高性能而对指令执行顺序进行的一种优化手段。</p>
+<p>在多核和多线程的计算机系统中，指令重排的目标是通过优化执行顺序来提高指令级别的并行度，充分发挥计算资源，加速程序的执行</p>
+<h2 id="指令重排序分类"><a href="#指令重排序分类" class="headerlink" title="指令重排序分类"></a>指令重排序分类</h2><p>在执行程序时为了提高性能，编译器和处理器常常会对指令做重排序。</p>
+<h3 id="编译器优化重排序"><a href="#编译器优化重排序" class="headerlink" title="编译器优化重排序"></a>编译器优化重排序</h3><p>编译器在不改变单线程程序语义的前提下，可以重新安排语句的执行顺序</p>
+<h3 id="指令级并行的重排序"><a href="#指令级并行的重排序" class="headerlink" title="指令级并行的重排序"></a>指令级并行的重排序</h3><p>现代处理器采用了指令级并行技术（Instruction-Level Parallelism， ILP）来将多条指令重叠执行。如果不存在数据依赖性，处理器可以改变语句对应机器指令的执行顺序。</p>
+<h3 id="内存系统的重排"><a href="#内存系统的重排" class="headerlink" title="内存系统的重排"></a>内存系统的重排</h3><p>由于处理器使用缓存和读&#x2F;写缓冲区，这使得加载和存储操作看上去可能是在乱序执行。</p>
+<p>也即源代码从编译到最终运行之间可能涉及的重排序流程如下：</p>
+<p><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/image-20240526135057956.png" alt="image-20240526135057956"></p>
+<h2 id="指令重排的准则-（以-java-为例）"><a href="#指令重排的准则-（以-java-为例）" class="headerlink" title="指令重排的准则 （以 java 为例）"></a>指令重排的准则 （以 java 为例）</h2><h3 id="as-if-serial"><a href="#as-if-serial" class="headerlink" title="as-if-serial"></a>as-if-serial</h3><h4 id="语义"><a href="#语义" class="headerlink" title="语义:"></a><strong>语义:</strong></h4><p><strong>不管怎么重排序</strong> ，程序在单线程情况下的运行结果不能改变。</p>
+<p>编译器、runtime和处理器都必须遵守as-if-serial语 义。</p>
+<p>为了遵守 as-if-serial ，编译器和处理器不会对存在数据依赖关系的操作做重排序， 因为这种重排序会改变执行结果。</p>
+<p>但是，如果操作之间不存在数据依赖关系，这些操作就可 能被编译器和处理器重排序。但这种重排序可能在多线程情况下引入问题</p>
+<h3 id="happens-before"><a href="#happens-before" class="headerlink" title="happens-before"></a>happens-before</h3><h4 id="程序顺序原则"><a href="#程序顺序原则" class="headerlink" title="程序顺序原则"></a>程序顺序原则</h4><p>　　即在一个线程内必须保证语义串行性，也就是说按照代码顺序执行。</p>
+<h4 id="锁规则"><a href="#锁规则" class="headerlink" title="锁规则"></a>锁规则</h4><p>　　解锁(unlock)操作必然发生在后续的同一个锁的加锁(lock)之前，也就是 说，如果对于一个锁解锁后，再加锁，那么加锁的动作必须在解锁动作之后(同一个 锁)。</p>
+<h4 id="volatile规则"><a href="#volatile规则" class="headerlink" title="volatile规则"></a>volatile规则</h4><p>　　volatile变量的写，先发生于读，这保证了volatile变量的可见性，简 单的理解就是，volatile变量在每次被线程访问时，<strong>都强迫从主内存中读该变量的 值</strong>，而<strong>当该变量发生变化时，又会强迫将最新的值刷新到主内存</strong>，任何时刻，不同的 线程总是能够看到该变量的最新值。</p>
+<h4 id="线程启动规则"><a href="#线程启动规则" class="headerlink" title="线程启动规则"></a>线程启动规则</h4><p>　　线程的start()方法先于它的每一个动作，即如果线程A在执行线程B 的start方法之前修改了共享变量的值，那么当线程B执行start方法时，线程A对共享 变量的修改对线程B可见</p>
+<h4 id="传递性"><a href="#传递性" class="headerlink" title="传递性"></a>传递性</h4><p>　　A先于B ，B先于C 那么A必然先于C</p>
+<h4 id="线程终止规则"><a href="#线程终止规则" class="headerlink" title="线程终止规则"></a>线程终止规则</h4><p>　　线程的所有操作先于线程的终结，Thread.join()方法的作用是等待 当前执行的线程终止。假设在线程B终止之前，修改了共享变量，线程A从线程B的 join方法成功返回后，线程B对共享变量的修改将对线程A可见。</p>
+<h4 id="线程中断规则"><a href="#线程中断规则" class="headerlink" title="线程中断规则"></a>线程中断规则</h4><p>　　对线程 interrupt()方法的调用先行发生于被中断线程的代码检测到 中断事件的发生，可以通过Thread.interrupted()方法检测线程是否中断。</p>
+<h4 id="对象终结规则"><a href="#对象终结规则" class="headerlink" title="对象终结规则"></a>对象终结规则</h4><p>　　对象的构造函数执行，结束先于finalize()方法 </p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">ZengCP</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/05/08/Java%20%E5%9F%BA%E7%A1%80/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/">http://example.com/2023/05/08/Java%20%E5%9F%BA%E7%A1%80/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">ZengCP's BLOGS</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/">并发编程</a><a class="post-meta__tags" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></div><div class="post_share"><div class="social-share" data-image="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/05/08/Java%20%E5%9F%BA%E7%A1%80/ThreadLocal%20%E6%80%BB%E7%BB%93/" title="ThreadLocal 总结"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">ThreadLocal 总结</div></div></a></div><div class="next-post pull-right"><a href="/2023/05/05/Java%20%E5%9F%BA%E7%A1%80/Java%20%E7%BA%BF%E7%A8%8B/" title="Java 线程"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Java 线程</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/05/08/Java%20%E5%9F%BA%E7%A1%80/AQS%20%E8%AF%A6%E8%A7%A3/" title="AQS 详解"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-08</div><div class="title">AQS 详解</div></div></a></div><div><a href="/2023/05/05/Java%20%E5%9F%BA%E7%A1%80/Java%20%E7%BA%BF%E7%A8%8B/" title="Java 线程"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-05</div><div class="title">Java 线程</div></div></a></div><div><a href="/2023/05/11/Java%20%E5%9F%BA%E7%A1%80/Java%20%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B/" title="Java 并发编程"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-11</div><div class="title">Java 并发编程</div></div></a></div><div><a href="/2023/05/08/Java%20%E5%9F%BA%E7%A1%80/ThreadLocal%20%E6%80%BB%E7%BB%93/" title="ThreadLocal 总结"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-08</div><div class="title">ThreadLocal 总结</div></div></a></div><div><a href="/2024/05/12/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B/IPC--%E4%BF%A1%E5%8F%B7%20%E4%B8%8E%20%E4%BF%A1%E5%8F%B7%E9%87%8F/" title="IPC --- 信号量"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-12</div><div class="title">IPC --- 信号量</div></div></a></div><div><a href="/2024/05/12/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/%E8%BF%9B%E7%A8%8B/IPC--%E7%AE%A1%E9%81%93/" title="IPC --- 管道"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-12</div><div class="title">IPC --- 管道</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZengCP</div><div class="author-info__description">记录心得，见证成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">85</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">38</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">进程与线程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.1.</span> <span class="toc-text">什么是进程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%BA%BF%E7%A8%8B"><span class="toc-number">1.2.</span> <span class="toc-text">什么是线程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B%E5%AF%B9%E6%AF%94"><span class="toc-number">1.3.</span> <span class="toc-text">进程与线程对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F"><span class="toc-number">1.4.</span> <span class="toc-text">进程间通信方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E4%BA%92%E6%96%A5-%E4%B8%8E-%E5%90%8C%E6%AD%A5"><span class="toc-number">1.5.</span> <span class="toc-text">进程互斥 与 同步</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%B4%E7%95%8C%E8%B5%84%E6%BA%90"><span class="toc-number">1.5.1.</span> <span class="toc-text">临界资源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5"><span class="toc-number">1.5.2.</span> <span class="toc-text">进程同步</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E4%BA%92%E6%96%A5"><span class="toc-number">1.5.3.</span> <span class="toc-text">进程互斥</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CPU-Cache-%E4%B8%80%E8%87%B4%E6%80%A7"><span class="toc-number">2.</span> <span class="toc-text">CPU Cache 一致性</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E6%A0%B8%E5%9C%BA%E6%99%AF-cache-%E4%B8%8E-%E5%86%85%E5%AD%98%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7"><span class="toc-number">2.1.</span> <span class="toc-text">单核场景 cache 与 内存数据一致性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E6%A0%B8%E5%9C%BA%E6%99%AF-cache-%E4%B8%80%E8%87%B4%E6%80%A7"><span class="toc-number">2.2.</span> <span class="toc-text">多核场景 cache 一致性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E6%A0%B8-cache-%E4%B8%80%E8%87%B4%E6%80%A7%E4%BF%9D%E8%AF%81%E6%9D%A1%E4%BB%B6"><span class="toc-number">2.2.1.</span> <span class="toc-text">多核 cache 一致性保证条件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cache-%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE%E5%9F%BA%E7%9F%B3"><span class="toc-number">2.2.2.</span> <span class="toc-text">cache 一致性协议基石</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MESI-%E5%8D%8F%E8%AE%AE-%EF%BC%88%E9%BB%98%E8%AE%A4%E7%94%9F%E6%95%88%EF%BC%89"><span class="toc-number">2.3.</span> <span class="toc-text">MESI 协议 （默认生效）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C%E8%A7%A3%E5%86%B3-%E6%9C%89%E5%BA%8F%E6%80%A7%E9%97%AE%E9%A2%98"><span class="toc-number">2.4.</span> <span class="toc-text">内存屏障解决 有序性问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%99%A8%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C"><span class="toc-number">2.4.1.</span> <span class="toc-text">编译器内存屏障</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CPU-%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C"><span class="toc-number">2.4.2.</span> <span class="toc-text">CPU 内存屏障</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%99%E5%B1%8F%E9%9A%9C"><span class="toc-number">2.4.2.1.</span> <span class="toc-text">写屏障</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%BB%E5%B1%8F%E9%9A%9C"><span class="toc-number">2.4.2.2.</span> <span class="toc-text">读屏障</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91%E5%AE%89%E5%85%A8%E6%80%A7%E5%9F%BA%E7%A1%80"><span class="toc-number">3.</span> <span class="toc-text">并发安全性基础</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92"><span class="toc-number">4.</span> <span class="toc-text">指令重排</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92"><span class="toc-number">4.1.</span> <span class="toc-text">什么是指令重排</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92%E5%BA%8F%E5%88%86%E7%B1%BB"><span class="toc-number">4.2.</span> <span class="toc-text">指令重排序分类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%99%A8%E4%BC%98%E5%8C%96%E9%87%8D%E6%8E%92%E5%BA%8F"><span class="toc-number">4.2.1.</span> <span class="toc-text">编译器优化重排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4%E7%BA%A7%E5%B9%B6%E8%A1%8C%E7%9A%84%E9%87%8D%E6%8E%92%E5%BA%8F"><span class="toc-number">4.2.2.</span> <span class="toc-text">指令级并行的重排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E7%B3%BB%E7%BB%9F%E7%9A%84%E9%87%8D%E6%8E%92"><span class="toc-number">4.2.3.</span> <span class="toc-text">内存系统的重排</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92%E7%9A%84%E5%87%86%E5%88%99-%EF%BC%88%E4%BB%A5-java-%E4%B8%BA%E4%BE%8B%EF%BC%89"><span class="toc-number">4.3.</span> <span class="toc-text">指令重排的准则 （以 java 为例）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#as-if-serial"><span class="toc-number">4.3.1.</span> <span class="toc-text">as-if-serial</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%AD%E4%B9%89"><span class="toc-number">4.3.1.1.</span> <span class="toc-text">语义:</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#happens-before"><span class="toc-number">4.3.2.</span> <span class="toc-text">happens-before</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E9%A1%BA%E5%BA%8F%E5%8E%9F%E5%88%99"><span class="toc-number">4.3.2.1.</span> <span class="toc-text">程序顺序原则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%94%81%E8%A7%84%E5%88%99"><span class="toc-number">4.3.2.2.</span> <span class="toc-text">锁规则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#volatile%E8%A7%84%E5%88%99"><span class="toc-number">4.3.2.3.</span> <span class="toc-text">volatile规则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E5%90%AF%E5%8A%A8%E8%A7%84%E5%88%99"><span class="toc-number">4.3.2.4.</span> <span class="toc-text">线程启动规则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%A0%E9%80%92%E6%80%A7"><span class="toc-number">4.3.2.5.</span> <span class="toc-text">传递性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E7%BB%88%E6%AD%A2%E8%A7%84%E5%88%99"><span class="toc-number">4.3.2.6.</span> <span class="toc-text">线程终止规则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E4%B8%AD%E6%96%AD%E8%A7%84%E5%88%99"><span class="toc-number">4.3.2.7.</span> <span class="toc-text">线程中断规则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E7%BB%88%E7%BB%93%E8%A7%84%E5%88%99"><span class="toc-number">4.3.2.8.</span> <span class="toc-text">对象终结规则</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/06/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%B1%87%E6%80%BB/%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/" title="无题">无题</a><time datetime="2025-03-05T17:42:29.925Z" title="发表于 2025-03-06 01:42:29">2025-03-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/03/06/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%B1%87%E6%80%BB/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E7%B1%BB/" title="无题">无题</a><time datetime="2025-03-05T17:27:01.124Z" title="发表于 2025-03-06 01:27:01">2025-03-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/RocketMQ/RocketMQ%20%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" title="RocketMQ 核心架构原理">RocketMQ 核心架构原理</a><time datetime="2024-12-08T09:02:36.000Z" title="发表于 2024-12-08 17:02:36">2024-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/RocketMQ/RocketMQ%20%E6%A6%82%E8%BF%B0/" title="RocketMQ 概述">RocketMQ 概述</a><time datetime="2024-12-08T07:16:48.000Z" title="发表于 2024-12-08 15:16:48">2024-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/07/%E4%B8%AD%E9%97%B4%E4%BB%B6/Kafka/Kafka%20%E7%BB%8F%E5%85%B8%E9%9D%A2%E8%AF%95%E9%A2%98/" title="Kafka 经典面试题">Kafka 经典面试题</a><time datetime="2024-12-07T12:45:18.000Z" title="发表于 2024-12-07 20:45:18">2024-12-07</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By ZengCP</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
