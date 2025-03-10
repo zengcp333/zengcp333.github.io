@@ -1,0 +1,296 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>MySQL 常见问题及排查方法 | ZengCP's BLOGS</title><meta name="author" content="ZengCP"><meta name="copyright" content="ZengCP"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1. 连接问题现象：应用程序无法连接 MySQL。  可能原因： MySQL 服务未启动。 网络不通（防火墙、端口限制）。 用户权限配置错误。 连接数达到上限。   排查方法： 检查服务状态：systemctl status mysqld 或 service mysql status。 测试网络连通性：telnet &lt;IP&gt; 3306 或 nc -zv &lt;IP&gt; 3306。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL 常见问题及排查方法">
+<meta property="og:url" content="http://example.com/2023/11/16/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/MySQL%20%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E6%8E%92%E6%9F%A5%E6%96%B9%E6%B3%95/index.html">
+<meta property="og:site_name" content="ZengCP&#39;s BLOGS">
+<meta property="og:description" content="1. 连接问题现象：应用程序无法连接 MySQL。  可能原因： MySQL 服务未启动。 网络不通（防火墙、端口限制）。 用户权限配置错误。 连接数达到上限。   排查方法： 检查服务状态：systemctl status mysqld 或 service mysql status。 测试网络连通性：telnet &lt;IP&gt; 3306 或 nc -zv &lt;IP&gt; 3306。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png">
+<meta property="article:published_time" content="2023-11-16T11:03:17.000Z">
+<meta property="article:modified_time" content="2025-03-05T17:03:58.690Z">
+<meta property="article:author" content="ZengCP">
+<meta property="article:tag" content="数据库">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png"><link rel="shortcut icon" href="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/longmao.png"><link rel="canonical" href="http://example.com/2023/11/16/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/MySQL%20%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E6%8E%92%E6%9F%A5%E6%96%B9%E6%B3%95/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'MySQL 常见问题及排查方法',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-03-06 01:03:58'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.2.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">86</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">38</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="ZengCP's BLOGS"><span class="site-name">ZengCP's BLOGS</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">MySQL 常见问题及排查方法</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-11-16T11:03:17.000Z" title="发表于 2023-11-16 19:03:17">2023-11-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-05T17:03:58.690Z" title="更新于 2025-03-06 01:03:58">2025-03-06</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/">MySQL</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="MySQL 常见问题及排查方法"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="1-连接问题"><a href="#1-连接问题" class="headerlink" title="1. 连接问题"></a><strong>1. 连接问题</strong></h3><p><strong>现象</strong>：应用程序无法连接 MySQL。</p>
+<ul>
+<li><strong>可能原因</strong>：<ul>
+<li>MySQL 服务未启动。</li>
+<li>网络不通（防火墙、端口限制）。</li>
+<li>用户权限配置错误。</li>
+<li>连接数达到上限。</li>
+</ul>
+</li>
+<li><strong>排查方法</strong>：<ul>
+<li>检查服务状态：<code>systemctl status mysqld</code> 或 <code>service mysql status</code>。</li>
+<li>测试网络连通性：<code>telnet &lt;IP&gt; 3306</code> 或 <code>nc -zv &lt;IP&gt; 3306</code>。</li>
+<li>检查用户权限：<code>SHOW GRANTS FOR &#39;user&#39;@&#39;host&#39;;</code>。</li>
+<li>查看连接数限制：<code>SHOW VARIABLES LIKE &#39;max_connections&#39;;</code> 和当前连接数 <code>SHOW STATUS LIKE &#39;Threads_connected&#39;;</code>。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="2-性能问题"><a href="#2-性能问题" class="headerlink" title="2. 性能问题"></a><strong>2. 性能问题</strong></h3><p><strong>现象</strong>：查询缓慢、响应时间长。</p>
+<ul>
+<li><strong>可能原因</strong>：<ul>
+<li>未合理使用索引（全表扫描）。</li>
+<li>锁竞争（行锁、表锁、死锁）。</li>
+<li>硬件资源瓶颈（CPU、内存、磁盘 I&#x2F;O）。</li>
+<li>配置参数不合理（如 <code>innodb_buffer_pool_size</code> 过小）。</li>
+</ul>
+</li>
+<li><strong>排查方法</strong>：<ul>
+<li>启用慢查询日志，分析耗时 SQL：<code>SET GLOBAL slow_query_log = ON;</code>。</li>
+<li>使用 <code>EXPLAIN</code> 分析查询执行计划。</li>
+<li>检查锁状态：<code>SHOW ENGINE INNODB STATUS;</code> 或 <code>SELECT * FROM information_schema.INNODB_LOCKS;</code>。</li>
+<li>监控资源使用：<code>top</code>, <code>vmstat</code>, <code>iostat</code> 或工具（如 Prometheus + Grafana）。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="3-主从复制异常"><a href="#3-主从复制异常" class="headerlink" title="3. 主从复制异常"></a><strong>3. 主从复制异常</strong></h3><p><strong>现象</strong>：主从数据不同步、复制延迟或中断。</p>
+<ul>
+<li><strong>可能原因</strong>：<ul>
+<li>主从网络中断。</li>
+<li>主库或从库 SQL 执行失败（如约束冲突）。</li>
+<li>二进制日志损坏或配置不一致。</li>
+</ul>
+</li>
+<li><strong>排查方法</strong>：<ul>
+<li>查看从库状态：<code>SHOW SLAVE STATUS\G</code>，关注 <code>Last_IO_Error</code> 和 <code>Last_SQL_Error</code>。</li>
+<li>检查主从配置一致性（如 <code>server_id</code>、<code>binlog_format</code>）。</li>
+<li>手动跳过错误（谨慎操作）：<code>SET GLOBAL SQL_SLAVE_SKIP_COUNTER=1;</code>。</li>
+<li>重新同步数据：通过 <code>mysqldump</code> 或 <code>xtrabackup</code> 重建从库。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="4-死锁问题"><a href="#4-死锁问题" class="headerlink" title="4. 死锁问题"></a><strong>4. 死锁问题</strong></h3><p><strong>现象</strong>：事务被回滚，日志中提示 <code>Deadlock found</code>。</p>
+<ul>
+<li><strong>排查方法</strong>：<ul>
+<li>查看最近死锁信息：<code>SHOW ENGINE INNODB STATUS;</code>（输出中的 <code>LATEST DETECTED DEADLOCK</code> 部分）。</li>
+<li>优化事务逻辑，减少事务粒度。</li>
+<li>调整隔离级别：如从 <code>REPEATABLE READ</code> 改为 <code>READ COMMITTED</code>。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="5-数据损坏或丢失"><a href="#5-数据损坏或丢失" class="headerlink" title="5. 数据损坏或丢失"></a><strong>5. 数据损坏或丢失</strong></h3><p><strong>现象</strong>：表无法打开，提示 <code>Table is marked as crashed</code>。</p>
+<ul>
+<li><strong>排查方法</strong>：<ul>
+<li>使用修复工具：对 MyISAM 表执行 <code>REPAIR TABLE table_name;</code>，或命令行工具 <code>myisamchk</code>。</li>
+<li>对 InnoDB 表尝试强制恢复模式：在 <code>my.cnf</code> 中添加 <code>innodb_force_recovery=1~6</code>（逐步尝试）。</li>
+<li>从备份恢复数据，并检查硬件（如磁盘坏道）。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="6-磁盘空间不足"><a href="#6-磁盘空间不足" class="headerlink" title="6. 磁盘空间不足"></a><strong>6. 磁盘空间不足</strong></h3><p><strong>现象</strong>：写入失败，提示 <code>No space left on device</code>。</p>
+<ul>
+<li><strong>排查方法</strong>：<ul>
+<li>清理日志文件（如二进制日志、慢查询日志）：<code>PURGE BINARY LOGS BEFORE &#39;yyyy-mm-dd&#39;;</code>。</li>
+<li>收缩表空间：对 InnoDB 表执行 <code>OPTIMIZE TABLE table_name;</code>。</li>
+<li>扩展磁盘或迁移数据目录。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="7-内存不足（OOM）"><a href="#7-内存不足（OOM）" class="headerlink" title="7. 内存不足（OOM）"></a><strong>7. 内存不足（OOM）</strong></h3><p><strong>现象</strong>：MySQL 进程被系统杀死，日志提示 <code>Out of memory</code>。</p>
+<ul>
+<li><strong>排查方法</strong>：<ul>
+<li>调整内存参数：<code>innodb_buffer_pool_size</code>（通常设置为物理内存的 60-80%）、<code>key_buffer_size</code>。</li>
+<li>监控内存使用：<code>free -h</code>、<code>pmap</code> 或 <code>/proc/&lt;pid&gt;/smaps</code>。</li>
+<li>优化查询，减少内存临时表的使用。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="8-权限问题"><a href="#8-权限问题" class="headerlink" title="8. 权限问题"></a><strong>8. 权限问题</strong></h3><p><strong>现象</strong>：用户无法执行操作，提示 <code>Access denied</code>。</p>
+<ul>
+<li><strong>排查方法</strong>：<ul>
+<li>检查权限配置：<code>SHOW GRANTS FOR &#39;user&#39;@&#39;host&#39;;</code>。</li>
+<li>确认用户密码是否过期：<code>ALTER USER &#39;user&#39;@&#39;host&#39; IDENTIFIED BY &#39;new_password&#39;;</code>。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="9-字符集乱码"><a href="#9-字符集乱码" class="headerlink" title="9. 字符集乱码"></a><strong>9. 字符集乱码</strong></h3><p><strong>现象</strong>：数据存储或显示为乱码。</p>
+<ul>
+<li><strong>排查方法</strong>：<ul>
+<li>检查字符集配置：<code>SHOW VARIABLES LIKE &#39;character_set%&#39;;</code>。</li>
+<li>确保建表时指定字符集（如 <code>CREATE TABLE ... DEFAULT CHARSET=utf8mb4;</code>）。</li>
+<li>客户端连接时指定字符集：添加参数 <code>--default-character-set=utf8mb4</code>。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="10-版本兼容性问题"><a href="#10-版本兼容性问题" class="headerlink" title="10. 版本兼容性问题"></a><strong>10. 版本兼容性问题</strong></h3><p><strong>现象</strong>：升级后 SQL 报错或功能异常。</p>
+<ul>
+<li><strong>排查方法</strong>：<ul>
+<li>查阅官方文档的版本变更说明，确认语法或配置变更。</li>
+<li>使用 <code>mysql_upgrade</code> 工具升级系统表结构。</li>
+<li>测试环境验证后再进行生产环境升级。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="通用排查工具"><a href="#通用排查工具" class="headerlink" title="通用排查工具"></a><strong>通用排查工具</strong></h3><ol>
+<li><strong>日志分析</strong>：<ul>
+<li>错误日志：<code>SHOW VARIABLES LIKE &#39;log_error&#39;;</code>。</li>
+<li>慢查询日志：<code>SHOW VARIABLES LIKE &#39;slow_query_log_file&#39;;</code>。</li>
+</ul>
+</li>
+<li><strong>内置命令</strong>：<ul>
+<li><code>SHOW PROCESSLIST;</code>：查看当前活跃会话。</li>
+<li><code>SHOW STATUS;</code> 和 <code>SHOW VARIABLES;</code>：获取运行状态和配置。</li>
+</ul>
+</li>
+<li><strong>外部工具</strong>：<ul>
+<li><code>pt-query-digest</code>（Percona Toolkit）：分析慢查询日志。</li>
+<li><code>mysqltuner.pl</code>：性能优化建议。</li>
+</ul>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">ZengCP</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/11/16/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/MySQL%20%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E6%8E%92%E6%9F%A5%E6%96%B9%E6%B3%95/">http://example.com/2023/11/16/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/MySQL%20%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E6%8E%92%E6%9F%A5%E6%96%B9%E6%B3%95/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">ZengCP's BLOGS</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><a class="post-meta__tags" href="/tags/MySQL/">MySQL</a></div><div class="post_share"><div class="social-share" data-image="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/11/17/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/MySQL%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A2%B3%E7%90%86--%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4/" title="MySQL 知识点梳理 -- 高可用集群"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">MySQL 知识点梳理 -- 高可用集群</div></div></a></div><div class="next-post pull-right"><a href="/2023/11/16/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/MySQL%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A2%B3%E7%90%86--%E6%9E%B6%E6%9E%84%E4%BD%93%E7%B3%BB/" title="MySQL 知识点梳理 -- 架构体系"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">MySQL 知识点梳理 -- 架构体系</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/11/08/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/MySQL%20MVCC%20%E4%BB%8B%E7%BB%8D/" title="MVCC 机制介绍"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-08</div><div class="title">MVCC 机制介绍</div></div></a></div><div><a href="/2023/11/03/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/MySQL%20%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8%E8%AF%A6%E8%A7%A3/" title="MySQL 分库分表详解"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-03</div><div class="title">MySQL 分库分表详解</div></div></a></div><div><a href="/2023/11/09/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/MySQL%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A2%B3%E7%90%86--%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E7%B1%BB/" title="MySQL 知识点梳理 -- 存储引擎相关"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-09</div><div class="title">MySQL 知识点梳理 -- 存储引擎相关</div></div></a></div><div><a href="/2023/11/10/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/MySQL%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A2%B3%E7%90%86--%E4%BA%8B%E5%8A%A1%E5%92%8C%E9%94%81%E6%9C%BA%E5%88%B6/" title="MySQL 知识点梳理 -- 事务及锁机制"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-10</div><div class="title">MySQL 知识点梳理 -- 事务及锁机制</div></div></a></div><div><a href="/2023/11/10/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/MySQL%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A2%B3%E7%90%86--%E7%B4%A2%E5%BC%95%E5%8F%8A%E6%9F%A5%E8%AF%A2%E4%BC%98%E5%8C%96%E7%B1%BB/" title="MySQL 知识点梳理 -- 索引及查询优化类"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-10</div><div class="title">MySQL 知识点梳理 -- 索引及查询优化类</div></div></a></div><div><a href="/2023/11/16/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/MySQL%E7%9F%A5%E8%AF%86%E7%82%B9%E6%A2%B3%E7%90%86--%E6%9E%B6%E6%9E%84%E4%BD%93%E7%B3%BB/" title="MySQL 知识点梳理 -- 架构体系"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-16</div><div class="title">MySQL 知识点梳理 -- 架构体系</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://my-blog-images-1314066800.cos.ap-guangzhou.myqcloud.com/images/dog.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ZengCP</div><div class="author-info__description">记录心得，见证成长</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">86</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">38</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%BF%9E%E6%8E%A5%E9%97%AE%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">1. 连接问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">2. 性能问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%BC%82%E5%B8%B8"><span class="toc-number">3.</span> <span class="toc-text">3. 主从复制异常</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%AD%BB%E9%94%81%E9%97%AE%E9%A2%98"><span class="toc-number">4.</span> <span class="toc-text">4. 死锁问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%95%B0%E6%8D%AE%E6%8D%9F%E5%9D%8F%E6%88%96%E4%B8%A2%E5%A4%B1"><span class="toc-number">5.</span> <span class="toc-text">5. 数据损坏或丢失</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4%E4%B8%8D%E8%B6%B3"><span class="toc-number">6.</span> <span class="toc-text">6. 磁盘空间不足</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E5%86%85%E5%AD%98%E4%B8%8D%E8%B6%B3%EF%BC%88OOM%EF%BC%89"><span class="toc-number">7.</span> <span class="toc-text">7. 内存不足（OOM）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E6%9D%83%E9%99%90%E9%97%AE%E9%A2%98"><span class="toc-number">8.</span> <span class="toc-text">8. 权限问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-%E5%AD%97%E7%AC%A6%E9%9B%86%E4%B9%B1%E7%A0%81"><span class="toc-number">9.</span> <span class="toc-text">9. 字符集乱码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-%E7%89%88%E6%9C%AC%E5%85%BC%E5%AE%B9%E6%80%A7%E9%97%AE%E9%A2%98"><span class="toc-number">10.</span> <span class="toc-text">10. 版本兼容性问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E7%94%A8%E6%8E%92%E6%9F%A5%E5%B7%A5%E5%85%B7"><span class="toc-number">11.</span> <span class="toc-text">通用排查工具</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/15/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%B1%87%E6%80%BB/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E7%B1%BB/" title="系统设计类场景题">系统设计类场景题</a><time datetime="2025-02-15T10:26:53.000Z" title="发表于 2025-02-15 18:26:53">2025-02-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/02/15/%E5%9C%BA%E6%99%AF%E9%A2%98%E6%B1%87%E6%80%BB/%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/" title="面试常见场景题汇总">面试常见场景题汇总</a><time datetime="2025-02-15T07:26:53.000Z" title="发表于 2025-02-15 15:26:53">2025-02-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/RocketMQ/RocketMQ%20%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86/" title="RocketMQ 核心架构原理">RocketMQ 核心架构原理</a><time datetime="2024-12-08T09:02:36.000Z" title="发表于 2024-12-08 17:02:36">2024-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/08/%E4%B8%AD%E9%97%B4%E4%BB%B6/RocketMQ/RocketMQ%20%E6%A6%82%E8%BF%B0/" title="RocketMQ 概述">RocketMQ 概述</a><time datetime="2024-12-08T07:16:48.000Z" title="发表于 2024-12-08 15:16:48">2024-12-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/12/07/%E4%B8%AD%E9%97%B4%E4%BB%B6/Kafka/Kafka%20%E7%BB%8F%E5%85%B8%E9%9D%A2%E8%AF%95%E9%A2%98/" title="Kafka 经典面试题">Kafka 经典面试题</a><time datetime="2024-12-07T12:45:18.000Z" title="发表于 2024-12-07 20:45:18">2024-12-07</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By ZengCP</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
